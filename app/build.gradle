@@ -31,15 +31,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
-    compile "com.github.frodoking:app-architecture-framework:1.0.0-SNAPSHOT"
-    compile "com.github.frodoking:app-architecture-android:1.0.0-SNAPSHOT"
-
+    compile "com.github.frodoking:app-architecture-android:1.0.1-SNAPSHOT"
+    compile 'com.github.alorma:github-sdk:3.2.5'
     compile project(":icon")
+
+    compile 'io.reactivex:rxandroid:1.1.0'
+
 }

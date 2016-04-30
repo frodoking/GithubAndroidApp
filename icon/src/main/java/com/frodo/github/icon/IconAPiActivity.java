@@ -36,6 +36,9 @@ public class IconAPiActivity extends AppCompatActivity {
             R.drawable.octicon_tag,
             R.drawable.octicon_file_directory,
             R.drawable.octicon_file_text,
+            R.drawable.octicon_megaphone,
+            R.drawable.octicon_hubot,
+            R.drawable.octicon_flame,
     };
 
     private static final String[] iconTexts = {
@@ -55,6 +58,9 @@ public class IconAPiActivity extends AppCompatActivity {
             "tag",
             "file_directory",
             "file_text",
+            "megaphone",
+            "hubot",
+            "flame",
     };
 
     @Override

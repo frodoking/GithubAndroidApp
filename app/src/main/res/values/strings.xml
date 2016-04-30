@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Github</string>
+    <string name="menu_explore">Explore</string>
 </resources>
