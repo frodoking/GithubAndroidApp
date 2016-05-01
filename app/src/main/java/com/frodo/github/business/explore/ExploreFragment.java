@@ -10,8 +10,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.app.framework.config.Environment;
 import com.frodo.github.R;
+import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
 
 import java.util.List;
@@ -41,6 +41,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     @Override
     protected void onFirstTimeLaunched() {
         loadShowCasesWithReactor();
+        loadTrendingRepositoriesWithReactor();
     }
 
     @Override
@@ -87,9 +88,9 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                     @Override
                     public void call(Throwable throwable) {
                         if (getModel().isEnableCached()) {
-                            List<ShowCase> movies = getModel().getShowCasesFromCache();
-                            if (movies != null) {
-                                getUIView().showShowCaseList(movies);
+                            List<ShowCase> showCases = getModel().getShowCasesFromCache();
+                            if (showCases != null) {
+                                getUIView().showShowCaseList(showCases);
                                 return;
                             }
                         }
@@ -97,5 +98,33 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                     }
                 }
         );
+    }
+
+    private void loadTrendingRepositoriesWithReactor() {
+        Observable
+                .create(new Observable.OnSubscribe<List<Repository>>() {
+                    @Override
+                    public void call(Subscriber<? super List<Repository>> subscriber) {
+                        getModel().loadRepositoriesWithReactor(subscriber);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<Repository>>() {
+                            @Override
+                            public void call(List<Repository> result) {
+                                getUIView().showTrendingRepositoryList(result);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                if (getModel().isEnableCached()) {
+                                }
+                                getUIView().showError(throwable.getMessage());
+                            }
+                        }
+                );
     }
 }

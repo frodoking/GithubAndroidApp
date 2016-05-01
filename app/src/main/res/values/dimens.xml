@@ -19,6 +19,15 @@
     <dimen name="item_height_small">35dp</dimen>
     <dimen name="item_height_large">50dp</dimen>
 
+    <dimen name="text_size_xxlarge">36sp</dimen>
+    <dimen name="text_size_xlarge">24sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_xmiddle">18dp</dimen>
+    <dimen name="text_size_middle">14sp</dimen>
+    <dimen name="text_size_xxsmall">10sp</dimen>
+    <dimen name="text_size_small">8sp</dimen>
+    <dimen name="text_size_xsmall">5sp</dimen>
+
     <dimen name="image_size_default">25dp</dimen>
     <dimen name="image_size_small">20dp</dimen>
     <dimen name="corner_radius_default">3dp</dimen>

@@ -1,12 +1,14 @@
 package com.frodo.github.business.explore;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +17,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
 import com.frodo.github.R;
+import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.view.BaseListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,11 @@ public class ExploreView extends UIView {
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private List<View> pager = new ArrayList<>();
+
+    private ListView trendingRepositoriesLV;
+    private Adapter repositoryAdapter;
+    private View trendingRepositoriesHeaderView;
+    private View trendingRepositoriesFooterView;
 
     public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container, int layoutResId) {
         super(presenter, inflater, container, layoutResId);
@@ -59,15 +68,30 @@ public class ExploreView extends UIView {
             }
         };
         viewPager.setAdapter(pagerAdapter);
+
+        trendingRepositoriesLV = (ListView) getRootView().findViewById(R.id.trending_repositories_lv);
+        trendingRepositoriesHeaderView = View.inflate(getRootView().getContext(), R.layout.view_repository_header, null);
+        trendingRepositoriesFooterView = View.inflate(getRootView().getContext(), R.layout.view_footer, null);
+        trendingRepositoriesLV.addHeaderView(trendingRepositoriesHeaderView);
+        trendingRepositoriesLV.addFooterView(trendingRepositoriesFooterView);
+        ((TextView)trendingRepositoriesFooterView.findViewById(R.id.text_tv)).setText("View more trending repositories");
+        repositoryAdapter = new Adapter(getRootView().getContext());
+        trendingRepositoriesLV.setAdapter(repositoryAdapter);
     }
 
     @Override
     public void registerListener() {
+        trendingRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(view.getContext(), String.format("View repository %s", position), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void showShowCaseList(List<ShowCase> showCases) {
-        if (showCases!=null && !showCases.isEmpty()){
-            for (ShowCase showcase: showCases) {
+        if (showCases != null && !showCases.isEmpty()) {
+            for (ShowCase showcase : showCases) {
                 View itemView = LayoutInflater.from(getRootView().getContext()).inflate(R.layout.view_showcases_viewpager_item, null);
                 ImageView imageView = (ImageView) itemView.findViewById(R.id.img_iv);
                 TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
@@ -75,18 +99,72 @@ public class ExploreView extends UIView {
                         .load(showcase.imageUrl)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .centerCrop()
+                        .placeholder(R.drawable.octicon_mark_github)
                         .into(imageView);
                 textView.setText(showcase.name);
 
                 pager.add(itemView);
             }
             pagerAdapter.notifyDataSetChanged();
+            viewPager.setVisibility(View.VISIBLE);
+        }else {
+            viewPager.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void showTrendingRepositoryList(List<Repository> repositories) {
+        if (repositories != null && !repositories.isEmpty()) {
+            repositoryAdapter.refreshObjects(repositories);
+            repositoryAdapter.notifyDataSetChanged();
+            ((View)trendingRepositoriesLV.getParent()).setVisibility(View.VISIBLE);
+        }else {
+            ((View)trendingRepositoriesLV.getParent()).setVisibility(View.INVISIBLE);
         }
     }
 
     public void showError(String message) {
         if (isOnShown()) {
             Toast.makeText(getPresenter().getAndroidContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class Adapter extends BaseListViewAdapter<Repository> {
+        public Adapter(Context context) {
+            super(context, R.layout.view_repositories_item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final ViewHolder vh;
+            if (convertView == null) {
+                convertView = inflateItemView();
+                vh = new ViewHolder();
+                vh.ownerHeadIV = (ImageView) convertView.findViewById(R.id.owner_head_iv);
+                vh.repoTV = (TextView) convertView.findViewById(R.id.repo_tv);
+                vh.deteTV = (TextView) convertView.findViewById(R.id.date_tv);
+                convertView.setTag(vh);
+            } else {
+                vh = (ViewHolder) convertView.getTag();
+            }
+
+            final Repository bean = getItem(position);
+            if (bean.owner != null && bean.owner.avatarUrl != null) {
+                Glide.with(getPresenter().getAndroidContext())
+                        .load(bean.owner.avatarUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .centerCrop()
+                        .into(vh.ownerHeadIV);
+            }
+
+            vh.repoTV.setText(bean.name);
+            vh.deteTV.setText(String.valueOf(bean.stargazers_count));
+            return convertView;
+        }
+
+        class ViewHolder {
+            ImageView ownerHeadIV;
+            TextView repoTV;
+            TextView deteTV;
         }
     }
 }

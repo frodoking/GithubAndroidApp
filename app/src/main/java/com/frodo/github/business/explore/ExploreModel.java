@@ -8,6 +8,7 @@ import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
+import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.common.Path;
 
@@ -24,10 +25,10 @@ import rx.Subscriber;
 public class ExploreModel extends AbstractModel {
     private boolean enableCached;
     private List<ShowCase> showCases;
-    private List<ShowCase> showCasesFromCache;
-
     private AndroidFetchNetworkDataTask fetchShowCasesNetworkDataTask;
     private ShowCaseListCache showCaseListCache;
+
+    private AndroidFetchNetworkDataTask fetchRepositoriesNetworkDataTask;
 
     public ExploreModel(MainController controller) {
         super(controller);
@@ -93,6 +94,53 @@ public class ExploreModel extends AbstractModel {
         getMainController().getBackgroundExecutor().execute(fetchShowCasesNetworkDataTask);
     }
 
+    public void loadRepositoriesWithReactor(final Subscriber<? super List<Repository>> subscriber) {
+        Request request = new Request("GET", Path.v2_trending_repositories);
+        request.addQueryParam("since", "weekly");
+        request.addQueryParam("language", "");
+        final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+        networkTransport.setAPIUrl("http://trending.codehub-app.com");
+        fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                subscriber.onStart();
+            }
+
+            @Override
+            public void onCompleted() {
+                subscriber.onCompleted();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                subscriber.onError(e);
+            }
+
+            @Override
+            public void onNext(String s) {
+                final String listString = s;
+                try {
+                    new JSONArray(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                    return;
+                }
+
+                if (listString != null) {
+                    List<Repository> repositories = JsonConverter.convert(listString, new TypeReference<List<Repository>>() {
+                    });
+                    subscriber.onNext(repositories);
+                } else {
+                    subscriber.onNext(null);
+                }
+            }
+        });
+        getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
+    }
+
     public void setShowCases(List<ShowCase> showCases) {
         this.showCases = showCases;
         if (enableCached) {
@@ -105,6 +153,6 @@ public class ExploreModel extends AbstractModel {
     }
 
     public List<ShowCase> getShowCasesFromCache() {
-        return showCasesFromCache;
+        return showCases;
     }
 }

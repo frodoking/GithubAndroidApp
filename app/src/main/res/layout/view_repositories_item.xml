@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_height_default"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/margin_middle"
+    android:paddingRight="@dimen/margin_middle"
+    android:background="@drawable/item_selector">
+
+    <ImageView
+        android:id="@+id/owner_head_iv"
+        android:layout_width="@dimen/image_size_default"
+        android:layout_height="@dimen/image_size_default"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/octicon_mark_github"/>
+
+    <TextView
+        android:id="@+id/repo_tv"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="@dimen/text_size_middle"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_xxsmall"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginRight="@dimen/margin_xsmall"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/octicon_star"/>
+</LinearLayout>

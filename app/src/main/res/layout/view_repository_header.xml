@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_height_default"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/margin_middle"
+    android:paddingRight="@dimen/margin_middle">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/octicon_flame"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_marginLeft="@dimen/margin_middle"
+        android:layout_marginRight="@dimen/margin_middle"
+        android:layout_height="wrap_content"
+        android:text="Trending repositories"
+        android:textSize="@dimen/text_size_middle"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_xxsmall"
+        android:textColor="@android:color/darker_gray"
+        android:text="this week"/>
+</LinearLayout>

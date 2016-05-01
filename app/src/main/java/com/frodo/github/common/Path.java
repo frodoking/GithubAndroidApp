@@ -5,4 +5,5 @@ package com.frodo.github.common;
  */
 public class Path {
     public static final String v2_showcases = "/v2/showcases";
+    public static final String v2_trending_repositories = "/v2/trending";
 }

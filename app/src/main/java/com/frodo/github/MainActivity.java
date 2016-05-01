@@ -3,9 +3,11 @@ package com.frodo.github;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +32,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_main;
+        return R.layout.activity_main;
     }
 
     @Override
@@ -50,6 +52,13 @@ public class MainActivity extends FragmentContainerActivity {
 
     @Override
     public void registerListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                actionBarDrawerToggle.onDrawerSlide(null, 1);
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     private MenuItem mPreMenuItem;
@@ -58,9 +67,6 @@ public class MainActivity extends FragmentContainerActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         if (mPreMenuItem != null) {
                             mPreMenuItem.setChecked(false);
-                            if (mPreMenuItem.equals(menuItem)) {
-                                return true;
-                            }
                         }
 
                         menuItem.setChecked(true);
@@ -70,10 +76,10 @@ public class MainActivity extends FragmentContainerActivity {
                         toolbar.setTitle(menuItem.getTitle());
                         switch (menuItem.getItemId()) {
                             case R.id.action_icon_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, IconAPiFragment.class, null);
+                                FragmentScheduler.nextFragment(MainActivity.this, IconAPiFragment.class, null, true);
                                 return true;
                             case R.id.action_explore:
-                                FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class, null);
+                                FragmentScheduler.nextFragment(MainActivity.this, ExploreFragment.class, null, true);
                                 return true;
                             default:
                                 return true;
@@ -93,7 +99,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     @Override
     public void initBusiness() {
-        FragmentScheduler.nextFragment(this, ExploreFragment.class, null, true);
+        FragmentScheduler.nextFragment(this, MainFragment.class, null, true);
     }
 
     @Override
@@ -107,6 +113,15 @@ public class MainActivity extends FragmentContainerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
