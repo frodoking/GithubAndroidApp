@@ -8,5 +8,5 @@
         android:id="@+id/showcases_vp"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_margin="@dimen/normal_padding_length"/>
+        android:layout_margin="@dimen/margin_middle"/>
 </LinearLayout>

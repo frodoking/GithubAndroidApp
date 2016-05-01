@@ -6,18 +6,21 @@
     <!-- Top bar -->
     <dimen name="action_bar_height">50dp</dimen>
 
-    <!-- Regular Sizes -->
-    <dimen name="small_padding_length">5dip</dimen>
-    <dimen name="little_padding_length">6dip</dimen>
-    <dimen name="normal_padding_length">10dip</dimen>
-    <dimen name="normal_padding_12_length">12dip</dimen>
-    <dimen name="normal_padding_15_length">15dip</dimen>
-    <dimen name="big_padding_20_length">20dip</dimen>
-    <dimen name="big_padding_25_length">25dip</dimen>
-    <dimen name="normal_divider_height">10dip</dimen>
-    <dimen name="item_height">45dp</dimen>
-    <dimen name="item_height_mid">40dp</dimen>
-    <dimen name="item_height_min">35dp</dimen>
-    <dimen name="normal_corner_radius">3dp</dimen>
+    <!-- margin & padding -->
+    <dimen name="margin_xxlarge">30dp</dimen>
+    <dimen name="margin_xlarge">20dp</dimen>
+    <dimen name="margin_large">15dp</dimen>
+    <dimen name="margin_xmiddle">12dp</dimen>
+    <dimen name="margin_middle">10dp</dimen>
+    <dimen name="margin_xxsmall">8dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
+    <dimen name="margin_xsmall">3dp</dimen>
+    <dimen name="item_height_default">45dp</dimen>
+    <dimen name="item_height_small">35dp</dimen>
+    <dimen name="item_height_large">50dp</dimen>
+
+    <dimen name="image_size_default">25dp</dimen>
+    <dimen name="image_size_small">20dp</dimen>
+    <dimen name="corner_radius_default">3dp</dimen>
 
 </resources>

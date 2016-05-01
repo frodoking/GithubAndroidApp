@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimaryDark"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large">
+
+    <ImageView
+        android:id="@+id/header_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/octicon_mark_github"/>
+
+    <TextView
+        android:id="@+id/id_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="frodo"/>
+
+    <TextView
+        android:id="@+id/id_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="http://frodoking.github.io/"/>
+</LinearLayout>

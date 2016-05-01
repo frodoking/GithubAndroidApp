@@ -2,8 +2,8 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="@dimen/normal_corner_radius"
-    android:layout_margin="@dimen/normal_padding_length"
+    app:cardCornerRadius="@dimen/corner_radius_default"
+    android:layout_margin="@dimen/margin_middle"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 

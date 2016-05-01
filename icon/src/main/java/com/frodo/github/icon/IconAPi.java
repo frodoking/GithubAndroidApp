@@ -1,9 +1,6 @@
 package com.frodo.github.icon;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,7 +14,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/4/28.
  */
-public class IconAPiActivity extends AppCompatActivity {
+public class IconAPi {
 
     private static final Integer[] iconIds = {
             R.drawable.octicon_book,
@@ -63,12 +60,13 @@ public class IconAPiActivity extends AppCompatActivity {
             "flame",
     };
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.icon_api_layout);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 6);
+    public int getLayoutId(){
+        return R.layout.icon_api_layout;
+    }
+
+    public void initView(View view) {
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 6);
         recyclerView.setLayoutManager(layoutManager);
         List<Pair<Integer, String>> list = new ArrayList<>(iconIds.length);
         for (int i = 0; i < iconIds.length; i++) {
