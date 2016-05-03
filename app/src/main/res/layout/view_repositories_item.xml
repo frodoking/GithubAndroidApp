@@ -29,7 +29,7 @@
         android:textColor="?attr/colorPrimary"/>
 
     <TextView
-        android:id="@+id/date_tv"
+        android:id="@+id/star_count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"

@@ -1,6 +1,7 @@
 package com.frodo.github.business.explore;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -16,9 +17,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
+import com.frodo.app.android.core.toolbox.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 
 import java.util.ArrayList;
@@ -38,8 +42,8 @@ public class ExploreView extends UIView {
     private View trendingRepositoriesHeaderView;
     private View trendingRepositoriesFooterView;
 
-    public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container, int layoutResId) {
-        super(presenter, inflater, container, layoutResId);
+    public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
+        super(presenter, inflater, container, R.layout.fragment_explore);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ExploreView extends UIView {
         trendingRepositoriesFooterView = View.inflate(getRootView().getContext(), R.layout.view_footer, null);
         trendingRepositoriesLV.addHeaderView(trendingRepositoriesHeaderView);
         trendingRepositoriesLV.addFooterView(trendingRepositoriesFooterView);
-        ((TextView)trendingRepositoriesFooterView.findViewById(R.id.text_tv)).setText("View more trending repositories");
+        ((TextView) trendingRepositoriesFooterView.findViewById(R.id.text_tv)).setText("View more trending repositories");
         repositoryAdapter = new Adapter(getRootView().getContext());
         trendingRepositoriesLV.setAdapter(repositoryAdapter);
     }
@@ -91,7 +95,7 @@ public class ExploreView extends UIView {
 
     public void showShowCaseList(List<ShowCase> showCases) {
         if (showCases != null && !showCases.isEmpty()) {
-            for (ShowCase showcase : showCases) {
+            for (final ShowCase showcase : showCases) {
                 View itemView = LayoutInflater.from(getRootView().getContext()).inflate(R.layout.view_showcases_viewpager_item, null);
                 ImageView imageView = (ImageView) itemView.findViewById(R.id.img_iv);
                 TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
@@ -102,12 +106,20 @@ public class ExploreView extends UIView {
                         .placeholder(R.drawable.octicon_mark_github)
                         .into(imageView);
                 textView.setText(showcase.name);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle arguments = new Bundle();
+                        arguments.putString("slug", showcase.slug);
+                        FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ShowCaseDetailFragment.class, arguments, false);
+                    }
+                });
 
                 pager.add(itemView);
             }
             pagerAdapter.notifyDataSetChanged();
             viewPager.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             viewPager.setVisibility(View.INVISIBLE);
         }
     }
@@ -116,9 +128,9 @@ public class ExploreView extends UIView {
         if (repositories != null && !repositories.isEmpty()) {
             repositoryAdapter.refreshObjects(repositories);
             repositoryAdapter.notifyDataSetChanged();
-            ((View)trendingRepositoriesLV.getParent()).setVisibility(View.VISIBLE);
-        }else {
-            ((View)trendingRepositoriesLV.getParent()).setVisibility(View.INVISIBLE);
+            ((View) trendingRepositoriesLV.getParent()).setVisibility(View.VISIBLE);
+        } else {
+            ((View) trendingRepositoriesLV.getParent()).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -141,7 +153,7 @@ public class ExploreView extends UIView {
                 vh = new ViewHolder();
                 vh.ownerHeadIV = (ImageView) convertView.findViewById(R.id.owner_head_iv);
                 vh.repoTV = (TextView) convertView.findViewById(R.id.repo_tv);
-                vh.deteTV = (TextView) convertView.findViewById(R.id.date_tv);
+                vh.starCountTV = (TextView) convertView.findViewById(R.id.star_count_tv);
                 convertView.setTag(vh);
             } else {
                 vh = (ViewHolder) convertView.getTag();
@@ -156,15 +168,15 @@ public class ExploreView extends UIView {
                         .into(vh.ownerHeadIV);
             }
 
-            vh.repoTV.setText(bean.name);
-            vh.deteTV.setText(String.valueOf(bean.stargazers_count));
+            vh.repoTV.setText(bean.full_name);
+            vh.starCountTV.setText(String.valueOf(bean.stargazers_count));
             return convertView;
         }
 
         class ViewHolder {
             ImageView ownerHeadIV;
             TextView repoTV;
-            TextView deteTV;
+            TextView starCountTV;
         }
     }
 }

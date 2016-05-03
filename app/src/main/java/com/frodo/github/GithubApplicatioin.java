@@ -42,7 +42,7 @@ public class GithubApplicatioin extends MicroApplication {
 
     @Override
     public Configuration loadConfiguration() {
-        final Environment environment =  new Environment(0, "githubV3", "api.github.com", "", true);
+        final Environment environment = new Environment(0, "githubV3", "api.github.com", "", true);
         return new AndroidConfig(getMainController(), environment);
     }
 

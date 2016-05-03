@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/corner_radius_default"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/item_height_default"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_middle"
+            android:paddingRight="@dimen/margin_middle"
+            android:background="@drawable/item_selector">
+
+            <ImageView
+                android:id="@+id/owner_head_iv"
+                android:layout_width="@dimen/image_size_default"
+                android:layout_height="@dimen/image_size_default"
+                android:contentDescription="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/octicon_mark_github"/>
+
+            <TextView
+                android:id="@+id/repo_tv"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_middle"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"/>
+
+            <TextView
+                android:id="@+id/language_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_xxsmall"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:textColor="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/star_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_xxsmall"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:textColor="@android:color/darker_gray"/>
+        </LinearLayout>
+
+        <View style="@style/LineStyle"/>
+
+        <TextView
+            android:id="@+id/description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_middle"
+            android:minHeight="@dimen/item_height_default"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_middle"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

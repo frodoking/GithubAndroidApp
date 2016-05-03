@@ -14,4 +14,8 @@ public class ShowCase {
     public String description;
     @JsonProperty("image_url")
     public String imageUrl;
+    @JsonProperty("image")
+    public String image;
+    @JsonProperty("repositories")
+    public Repository[] repositories;
 }

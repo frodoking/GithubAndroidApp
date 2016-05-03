@@ -15,6 +15,7 @@ import android.view.View;
 import com.frodo.app.android.core.toolbox.FragmentScheduler;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
+import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconAPiFragment;
 
@@ -55,7 +56,6 @@ public class MainActivity extends FragmentContainerActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                actionBarDrawerToggle.onDrawerSlide(null, 1);
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
@@ -95,6 +95,23 @@ public class MainActivity extends FragmentContainerActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        getMainController().getLocalBroadcastManager().register("drawer", new LocalBroadcastManager.MessageInterceptor() {
+            @Override
+            public Boolean intercept(Object o) {
+                if (o instanceof Boolean) {
+                    boolean isEnableShowDrawer = (boolean) o;
+                    if (isEnableShowDrawer) {
+                        actionBarDrawerToggle.onDrawerSlide(null, 0);
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+                    } else {
+                        actionBarDrawerToggle.onDrawerSlide(null, 1);
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -121,6 +138,7 @@ public class MainActivity extends FragmentContainerActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         }
+        getMainController().getLocalBroadcastManager().unRegisterGroup("drawer");
         return super.onKeyDown(keyCode, event);
     }
 

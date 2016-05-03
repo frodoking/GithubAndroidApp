@@ -30,7 +30,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
     @Override
     public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new ExploreView(this, inflater, container, R.layout.fragment_explore);
+        return new ExploreView(this, inflater, container);
     }
 
     @Override
@@ -68,36 +68,36 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
         getModel().setEnableCached(true);
 
         Observable
-        .create(new Observable.OnSubscribe<List<ShowCase>>() {
-            @Override
-            public void call(Subscriber<? super List<ShowCase>> subscriber) {
-                getModel().loadShowCasesWithReactor(subscriber);
-            }
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-                new Action1<List<ShowCase>>() {
+                .create(new Observable.OnSubscribe<List<ShowCase>>() {
                     @Override
-                    public void call(List<ShowCase> result) {
-                        getUIView().showShowCaseList(result);
-                        getModel().setShowCases(result);
+                    public void call(Subscriber<? super List<ShowCase>> subscriber) {
+                        getModel().loadShowCasesWithReactor(subscriber);
                     }
-                },
-                new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        if (getModel().isEnableCached()) {
-                            List<ShowCase> showCases = getModel().getShowCasesFromCache();
-                            if (showCases != null) {
-                                getUIView().showShowCaseList(showCases);
-                                return;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<ShowCase>>() {
+                            @Override
+                            public void call(List<ShowCase> result) {
+                                getUIView().showShowCaseList(result);
+                                getModel().setShowCases(result);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                if (getModel().isEnableCached()) {
+                                    List<ShowCase> showCases = getModel().getShowCasesFromCache();
+                                    if (showCases != null) {
+                                        getUIView().showShowCaseList(showCases);
+                                        return;
+                                    }
+                                }
+                                getUIView().showError(throwable.getMessage());
                             }
                         }
-                        getUIView().showError(throwable.getMessage());
-                    }
-                }
-        );
+                );
     }
 
     private void loadTrendingRepositoriesWithReactor() {

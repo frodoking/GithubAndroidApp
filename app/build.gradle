@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    compile "com.github.frodoking:app-architecture-android:1.1.1-SNAPSHOT"
+    compile "com.github.frodoking:app-architecture-android:1.1.2-SNAPSHOT"
     compile 'com.github.alorma:github-sdk:3.2.5'
     compile project(":icon")
 
