@@ -7,7 +7,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +55,11 @@ public class MainActivity extends FragmentContainerActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
+                if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                } else {
+                    MainActivity.super.onBackPressed();
+                }
             }
         });
         navigationView.setNavigationItemSelectedListener(
@@ -76,10 +79,10 @@ public class MainActivity extends FragmentContainerActivity {
                         toolbar.setTitle(menuItem.getTitle());
                         switch (menuItem.getItemId()) {
                             case R.id.action_icon_api:
-                                FragmentScheduler.nextFragment(MainActivity.this, IconAPiFragment.class, null, true);
+                                FragmentScheduler.replaceFragment(MainActivity.this, IconAPiFragment.class, null);
                                 return true;
                             case R.id.action_explore:
-                                FragmentScheduler.nextFragment(MainActivity.this, ExploreFragment.class, null, true);
+                                FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class, null);
                                 return true;
                             default:
                                 return true;
@@ -103,7 +106,7 @@ public class MainActivity extends FragmentContainerActivity {
                     boolean isEnableShowDrawer = (boolean) o;
                     if (isEnableShowDrawer) {
                         actionBarDrawerToggle.onDrawerSlide(null, 0);
-                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     } else {
                         actionBarDrawerToggle.onDrawerSlide(null, 1);
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -116,7 +119,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     @Override
     public void initBusiness() {
-        FragmentScheduler.nextFragment(this, MainFragment.class, null, true);
+        FragmentScheduler.nextFragment(this, MainFragment.class, null);
     }
 
     @Override
@@ -133,13 +136,17 @@ public class MainActivity extends FragmentContainerActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
+        }else {
+            super.onBackPressed();
         }
-        getMainController().getLocalBroadcastManager().unRegisterGroup("drawer");
-        return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        getMainController().getLocalBroadcastManager().unRegisterGroup("drawer");
+        super.onDestroy();
+    }
 }

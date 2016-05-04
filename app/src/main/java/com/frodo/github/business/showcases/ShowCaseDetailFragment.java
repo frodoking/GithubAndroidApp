@@ -36,18 +36,6 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getUIView().show(true);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getUIView().show(false);
-    }
-
     private void loadShowCasesWithReactor(final String slug) {
         Observable
                 .create(new Observable.OnSubscribe<ShowCase>() {

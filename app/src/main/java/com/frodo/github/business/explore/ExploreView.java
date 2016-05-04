@@ -111,7 +111,7 @@ public class ExploreView extends UIView {
                     public void onClick(View v) {
                         Bundle arguments = new Bundle();
                         arguments.putString("slug", showcase.slug);
-                        FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ShowCaseDetailFragment.class, arguments, false);
+                        FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ShowCaseDetailFragment.class, arguments);
                     }
                 });
 
