@@ -10,11 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.frodo.app.android.core.toolbox.FragmentScheduler;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.broadcast.LocalBroadcastManager;
+import com.frodo.github.business.account.LoginFragment;
+import com.frodo.github.business.account.LoginView;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconAPiFragment;
 
@@ -25,6 +28,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private ImageView headView;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -39,6 +43,7 @@ public class MainActivity extends FragmentContainerActivity {
     public void initView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.id_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.id_nv_menu);
+        headView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.header_iv);
 
         navigationView.setPadding(0, ScreenUtils.getStatusHeight(this), 0, 0);
 
@@ -60,6 +65,13 @@ public class MainActivity extends FragmentContainerActivity {
                 } else {
                     MainActivity.super.onBackPressed();
                 }
+            }
+        });
+        headView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class, null);
             }
         });
         navigationView.setNavigationItemSelectedListener(

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
 

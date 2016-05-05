@@ -5,23 +5,21 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimaryDark"
     android:orientation="vertical"
+    android:gravity="center"
     android:padding="@dimen/margin_large">
 
     <ImageView
         android:id="@+id/header_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/image_size_xlarge"
+        android:layout_height="@dimen/image_size_xlarge"
         android:src="@drawable/octicon_mark_github"/>
 
     <TextView
         android:id="@+id/id_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="frodo"/>
-
-    <TextView
-        android:id="@+id/id_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="http://frodoking.github.io/"/>
+        android:layout_marginTop="@dimen/margin_middle"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@android:color/white"
+        android:text="Frodo"/>
 </LinearLayout>

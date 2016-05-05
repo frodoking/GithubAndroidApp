@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="@dimen/corner_radius_default"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin_middle"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/item_height_default"
+                android:textSize="@dimen/text_size_middle"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:background="@android:color/darker_gray"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/margin_middle"
+                android:paddingRight="@dimen/margin_middle"
+                android:text="Sign in to Github"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_middle">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Username or email"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/item_height_default"
+                    android:textSize="@dimen/text_size_middle"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/margin_middle"
+                    android:textColor="@android:color/black"
+                    android:text="Password"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/item_height_default"
+                    android:textSize="@dimen/text_size_middle"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/item_height_default"
+                    android:textSize="@dimen/text_size_middle"
+                    android:text="Sign in"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

@@ -28,6 +28,8 @@
     <dimen name="text_size_small">8sp</dimen>
     <dimen name="text_size_xsmall">5sp</dimen>
 
+    <dimen name="image_size_xlarge">45dp</dimen>
+    <dimen name="image_size_large">35dp</dimen>
     <dimen name="image_size_default">25dp</dimen>
     <dimen name="image_size_small">20dp</dimen>
     <dimen name="corner_radius_default">3dp</dimen>
