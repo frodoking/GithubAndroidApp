@@ -51,9 +51,9 @@ public class ExploreModel extends AbstractModel {
     }
 
     public void loadShowCasesWithReactor(final Subscriber<? super List<ShowCase>> subscriber) {
-        Request request = new Request("GET", Path.v2_showcases);
+        Request request = new Request("GET", Path.Explore.V2_SHOWCASES);
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-        networkTransport.setAPIUrl("http://trending.codehub-app.com");
+        networkTransport.setAPIUrl(Path.HOST_CODEHUB);
         fetchShowCasesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
 
             @Override
@@ -96,11 +96,11 @@ public class ExploreModel extends AbstractModel {
     }
 
     public void loadRepositoriesWithReactor(final Subscriber<? super List<Repository>> subscriber) {
-        Request request = new Request("GET", Path.v2_trending_repositories);
+        Request request = new Request("GET", Path.Explore.V2_TRENDING_REPOSITORIES);
         request.addQueryParam("since", "weekly");
         request.addQueryParam("language", "");
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-        networkTransport.setAPIUrl("http://trending.codehub-app.com");
+        networkTransport.setAPIUrl(Path.HOST_CODEHUB);
         fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
 
             @Override

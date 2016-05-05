@@ -33,7 +33,6 @@ android {
 
 dependencies {
     compile "com.github.frodoking:app-architecture-android:1.1.4-SNAPSHOT"
-    compile 'com.github.alorma:github-sdk:3.2.5'
     compile project(":icon")
 
     compile 'io.reactivex:rxandroid:1.1.0'
