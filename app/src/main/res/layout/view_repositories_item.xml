@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,13 +11,14 @@
     android:paddingRight="@dimen/margin_middle"
     android:background="@drawable/item_selector">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/owner_head_iv"
         android:layout_width="@dimen/image_size_default"
         android:layout_height="@dimen/image_size_default"
         android:contentDescription="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/octicon_mark_github"/>
+        fresco:fadeDuration="300"
+        fresco:placeholderImage="@drawable/octicon_mark_github"
+        fresco:actualImageScaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/repo_tv"

@@ -1,6 +1,7 @@
 package com.frodo.github.business.explore;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -8,13 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.FragmentScheduler;
@@ -97,14 +96,10 @@ public class ExploreView extends UIView {
         if (showCases != null && !showCases.isEmpty()) {
             for (final ShowCase showcase : showCases) {
                 View itemView = LayoutInflater.from(getRootView().getContext()).inflate(R.layout.view_showcases_viewpager_item, null);
-                ImageView imageView = (ImageView) itemView.findViewById(R.id.img_iv);
+                SimpleDraweeView imageView = (SimpleDraweeView) itemView.findViewById(R.id.img_iv);
                 TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
-                Glide.with(getPresenter().getAndroidContext())
-                        .load(showcase.imageUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .placeholder(R.drawable.octicon_mark_github)
-                        .into(imageView);
+
+                imageView.setImageURI(Uri.parse(showcase.imageUrl));
                 textView.setText(showcase.name);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -151,7 +146,7 @@ public class ExploreView extends UIView {
             if (convertView == null) {
                 convertView = inflateItemView();
                 vh = new ViewHolder();
-                vh.ownerHeadIV = (ImageView) convertView.findViewById(R.id.owner_head_iv);
+                vh.ownerHeadIV = (SimpleDraweeView) convertView.findViewById(R.id.owner_head_iv);
                 vh.repoTV = (TextView) convertView.findViewById(R.id.repo_tv);
                 vh.starCountTV = (TextView) convertView.findViewById(R.id.star_count_tv);
                 convertView.setTag(vh);
@@ -161,11 +156,7 @@ public class ExploreView extends UIView {
 
             final Repository bean = getItem(position);
             if (bean.owner != null && bean.owner.avatarUrl != null) {
-                Glide.with(getPresenter().getAndroidContext())
-                        .load(bean.owner.avatarUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .into(vh.ownerHeadIV);
+                vh.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatarUrl));
             }
 
             vh.repoTV.setText(bean.full_name);
@@ -174,7 +165,7 @@ public class ExploreView extends UIView {
         }
 
         class ViewHolder {
-            ImageView ownerHeadIV;
+            SimpleDraweeView ownerHeadIV;
             TextView repoTV;
             TextView starCountTV;
         }

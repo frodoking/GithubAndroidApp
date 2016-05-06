@@ -53,7 +53,7 @@ public class LoginView extends UIView {
                 } else {
                     passwordWrapper.setErrorEnabled(false);
                 }
-                doLogin();
+                doLogin(username, password);
             }
         });
     }
@@ -66,8 +66,8 @@ public class LoginView extends UIView {
         return !TextUtils.isEmpty(password);
     }
 
-    private void doLogin() {
-
+    private void doLogin(String username, String password) {
+        ((LoginFragment) getPresenter()).loginWithReactor(username, password);
     }
 
     private void hideKeyboard() {
@@ -78,4 +78,7 @@ public class LoginView extends UIView {
         }
     }
 
+    public void showError(String message) {
+
+    }
 }

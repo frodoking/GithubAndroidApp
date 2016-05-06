@@ -1,5 +1,6 @@
 package com.frodo.github;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.frodo.app.android.MicroApplication;
 import com.frodo.app.android.core.config.AndroidConfig;
 import com.frodo.app.android.core.exception.AndroidCrashHandler;
@@ -28,6 +29,7 @@ public class GithubApplicatioin extends MicroApplication {
     @Override
     public void init() {
         super.init();
+        Fresco.initialize(this);
         getMainController().getLogCollector().enableCollect(true);
     }
 

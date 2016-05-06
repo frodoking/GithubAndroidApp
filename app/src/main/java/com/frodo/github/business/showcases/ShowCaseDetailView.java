@@ -1,6 +1,7 @@
 package com.frodo.github.business.showcases;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
@@ -92,11 +92,7 @@ public class ShowCaseDetailView extends UIView {
         public void onBindViewHolder(RepositoriesViewHolder holder, int position) {
             final Repository bean = repositories.get(position);
             if (bean.owner != null && bean.owner.avatarUrl != null) {
-                Glide.with(getPresenter().getAndroidContext())
-                        .load(bean.owner.avatarUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .into(holder.ownerHeadIV);
+                holder.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatarUrl));
             }
 
             holder.repoTV.setText(bean.full_name);
@@ -111,7 +107,7 @@ public class ShowCaseDetailView extends UIView {
         }
 
         class RepositoriesViewHolder extends RecyclerView.ViewHolder {
-            ImageView ownerHeadIV;
+            SimpleDraweeView ownerHeadIV;
             TextView repoTV;
             TextView languageTV;
             TextView starCountTV;
@@ -119,7 +115,7 @@ public class ShowCaseDetailView extends UIView {
 
             public RepositoriesViewHolder(View itemView) {
                 super(itemView);
-                ownerHeadIV = (ImageView) itemView.findViewById(R.id.owner_head_iv);
+                ownerHeadIV = (SimpleDraweeView) itemView.findViewById(R.id.owner_head_iv);
                 repoTV = (TextView) itemView.findViewById(R.id.repo_tv);
                 languageTV = (TextView) itemView.findViewById(R.id.language_tv);
                 starCountTV = (TextView) itemView.findViewById(R.id.star_count_tv);
