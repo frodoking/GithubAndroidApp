@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.controller.IModel;
 import com.frodo.github.bean.User;
+import com.frodo.github.common.CircleProgressDialog;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -37,8 +38,9 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     @Override
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
+        CircleProgressDialog.showLoadingDialog(getAndroidContext());
         if (bundle != null && bundle.containsKey("username")) {
-            loadUserWithReactor(bundle.getString("username"));
+            //loadUserWithReactor(bundle.getString("username"));
         }
     }
 
@@ -47,6 +49,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
                 .create(new Observable.OnSubscribe<User>() {
                     @Override
                     public void call(Subscriber<? super User> subscriber) {
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
                         getModel().loadUserWithReactor(username, subscriber);
                     }
                 })
@@ -56,12 +59,14 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
                         new Action1<User>() {
                             @Override
                             public void call(User user) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 getUIView().showDetail(user);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                CircleProgressDialog.hideLoadingDialog();
                             }
                         }
                 );

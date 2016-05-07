@@ -75,7 +75,7 @@
                     android:id="@+id/login_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/item_height_default"
+                    style="@style/ButtonStyle"
                     android:textSize="@dimen/text_size_middle"
                     android:textAllCaps="false"
                     android:text="Login"/>

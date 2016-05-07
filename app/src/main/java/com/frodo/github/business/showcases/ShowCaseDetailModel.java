@@ -7,14 +7,11 @@ import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
-import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.common.Path;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import rx.Subscriber;
 

@@ -14,7 +14,6 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.github.bean.Authorization;
 import com.frodo.github.bean.CreateAuthorization;
-import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
@@ -72,7 +71,7 @@ public class AccountModel extends AbstractModel {
         headerList.add(new Header("Authorization", basicAuth.trim()));
         headerList.add(new Header("Accept", "application/vnd.github.v3.json"));
 
-        Request<RequestBody> request = new Request<>("POST", Path.Login.authorizations, null, headerList, requestBody);
+        Request<RequestBody> request = new Request<>("POST", Path.Login.AUTHORIZATIONS, null, headerList, requestBody);
 
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
         networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -109,9 +108,9 @@ public class AccountModel extends AbstractModel {
     }
 
     public void loadUserWithReactor(String username, final Subscriber<? super User> subscriber) {
-        Request request = new Request("GET", String.format("%s/%s", Path.Explore.V2_SHOWCASES, username));
+        Request request = new Request("GET", String.format(Path.Users.USER, username));
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-        networkTransport.setAPIUrl("http://trending.codehub-app.com");
+        networkTransport.setAPIUrl(Path.HOST_GITHUB);
         fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
 
             @Override

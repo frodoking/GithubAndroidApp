@@ -93,14 +93,14 @@ public class AutoNextLineLinearlayout extends LinearLayout {
         }
     }
 
-    private class Position {
-        int left, top, right, bottom;
-    }
-
     public int getPosition(int IndexInRow, int childIndex) {
         if (IndexInRow > 0) {
             return getPosition(IndexInRow - 1, childIndex - 1) + getChildAt(childIndex - 1).getMeasuredWidth() + 8;
         }
         return getPaddingLeft();
+    }
+
+    private class Position {
+        int left, top, right, bottom;
     }
 }

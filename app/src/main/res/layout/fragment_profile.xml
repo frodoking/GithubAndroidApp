@@ -17,7 +17,7 @@
             android:padding="@dimen/margin_middle">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/owner_head_iv"
+                android:id="@+id/head_sdv"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_middle"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:textColor="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/username_tv"
@@ -57,7 +57,7 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@android:color/black"
                     android:drawableLeft="@drawable/octicon_organization"
                     android:drawablePadding="@dimen/margin_small"/>
 
@@ -68,7 +68,7 @@
                     android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@android:color/black"
                     android:drawableLeft="@drawable/octicon_location"
                     android:drawablePadding="@dimen/margin_small"/>
 
@@ -79,7 +79,7 @@
                     android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="?attr/colorPrimary"
                     android:drawableLeft="@drawable/octicon_email"
                     android:drawablePadding="@dimen/margin_small"/>
 
@@ -90,7 +90,7 @@
                     android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="?attr/colorPrimary"
                     android:drawableLeft="@drawable/octicon_link"
                     android:drawablePadding="@dimen/margin_small"/>
 
@@ -112,10 +112,12 @@
         <Button
             android:id="@+id/follow_btn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height_default"
+            android:layout_height="wrap_content"
+            style="@style/ButtonStyle"
             android:layout_marginTop="@dimen/margin_middle"
             android:layout_marginLeft="@dimen/margin_middle"
             android:layout_marginRight="@dimen/margin_middle"
+            android:textAllCaps="false"
             android:text="Follow"/>
 
         <LinearLayout

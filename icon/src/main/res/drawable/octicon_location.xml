@@ -5,6 +5,6 @@
         android:viewportWidth="12"
         android:viewportHeight="16">
     <path
-        android:pathData="@string/octicon_book_path"
+        android:pathData="@string/octicon_location_path"
         android:fillColor="@android:color/black"  />
 </vector>

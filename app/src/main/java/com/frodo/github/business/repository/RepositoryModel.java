@@ -8,7 +8,6 @@ import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.github.bean.Repository;
-import com.frodo.github.bean.ShowCase;
 import com.frodo.github.common.Path;
 
 import org.json.JSONException;

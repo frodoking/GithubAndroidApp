@@ -41,8 +41,8 @@ public final class Path {
     }
 
     public final static class Login {
-        public static final String requestToken = "/login/oauth/access_token";
-        public static final String authorizations = "/authorizations";
+        public static final String OAUTH_ACCESS_TOKEN = "/login/oauth/access_token";
+        public static final String AUTHORIZATIONS = "/authorizations";
     }
 
     public final static class Notifications {
@@ -54,8 +54,8 @@ public final class Path {
     }
 
     public static class PullRequests {
-        public static final String pulls = "/repos/{owner}/{name}/pulls";
-        public static final String pull = "/repos/{owner}/{name}/pulls/{number}";
+        public static final String REPOS_OWNER_NAME_PULLS = "/repos/{owner}/{name}/pulls";
+        public static final String REPOS_OWNER_NAME_PULLS_NUMBER = "/repos/{owner}/{name}/pulls/{number}";
     }
 
     public final static class Repo {
@@ -71,6 +71,10 @@ public final class Path {
     }
 
     public final static class Users {
+        /**
+         * "/users/{username}"
+         */
+        public static final String USER = "/users/%s";
 
     }
 

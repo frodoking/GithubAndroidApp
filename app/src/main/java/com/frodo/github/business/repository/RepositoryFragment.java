@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.Repository;
-import com.frodo.github.bean.ShowCase;
 
 import rx.Observable;
 import rx.Subscriber;

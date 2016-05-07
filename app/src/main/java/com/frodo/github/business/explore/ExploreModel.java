@@ -46,8 +46,11 @@ public class ExploreModel extends AbstractModel {
         return showCases;
     }
 
-    public void setEnableCached(boolean enableCached) {
-        this.enableCached = enableCached;
+    public void setShowCases(List<ShowCase> showCases) {
+        this.showCases = showCases;
+        if (enableCached) {
+            showCaseListCache.put(fetchShowCasesNetworkDataTask.key(), showCases);
+        }
     }
 
     public void loadShowCasesWithReactor(final Subscriber<? super List<ShowCase>> subscriber) {
@@ -142,15 +145,12 @@ public class ExploreModel extends AbstractModel {
         getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
     }
 
-    public void setShowCases(List<ShowCase> showCases) {
-        this.showCases = showCases;
-        if (enableCached) {
-            showCaseListCache.put(fetchShowCasesNetworkDataTask.key(), showCases);
-        }
-    }
-
     public boolean isEnableCached() {
         return enableCached;
+    }
+
+    public void setEnableCached(boolean enableCached) {
+        this.enableCached = enableCached;
     }
 
     public List<ShowCase> getShowCasesFromCache() {
