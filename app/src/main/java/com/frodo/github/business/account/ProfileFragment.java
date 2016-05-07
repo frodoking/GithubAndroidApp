@@ -1,6 +1,7 @@
 package com.frodo.github.business.account;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,16 +16,16 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by frodo on 2016/5/5.
+ * Created by frodo on 2016/5/7.
  */
-public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
+public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     @Override
-    public LoginView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new LoginView(this, inflater, container);
+    public ProfileView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
+        return new ProfileView(this, inflater, container);
     }
 
     @Override
-    public AccountModel createModel() {
+    protected AccountModel createModel() {
         IModel model = getMainController().getModelFactory().getModelBy(AccountModel.class.getCanonicalName());
         if (model == null) {
             return new AccountModel(getMainController());
@@ -33,12 +34,20 @@ public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
         }
     }
 
-    public void loginWithReactor(final String username, final String password) {
+    @Override
+    protected void onFirstTimeLaunched() {
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("username")) {
+            loadUserWithReactor(bundle.getString("username"));
+        }
+    }
+
+    public void loadUserWithReactor(final String username) {
         Observable
                 .create(new Observable.OnSubscribe<User>() {
                     @Override
                     public void call(Subscriber<? super User> subscriber) {
-                        getModel().login(username, password, subscriber);
+                        getModel().loadUserWithReactor(username, subscriber);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -46,7 +55,8 @@ public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
                 .subscribe(
                         new Action1<User>() {
                             @Override
-                            public void call(User result) {
+                            public void call(User user) {
+                                getUIView().showDetail(user);
                             }
                         },
                         new Action1<Throwable>() {

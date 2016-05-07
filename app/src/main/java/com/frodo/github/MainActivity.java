@@ -18,6 +18,8 @@ import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.business.account.LoginFragment;
 import com.frodo.github.business.account.LoginView;
+import com.frodo.github.business.account.ProfileFragment;
+import com.frodo.github.business.account.ProfileView;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconAPiFragment;
 
@@ -71,7 +73,7 @@ public class MainActivity extends FragmentContainerActivity {
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class, null);
+                FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, null);
             }
         });
         navigationView.setNavigationItemSelectedListener(

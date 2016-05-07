@@ -3,6 +3,7 @@ package com.frodo.github.business.account;
 import android.util.Base64;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
@@ -13,6 +14,7 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.github.bean.Authorization;
 import com.frodo.github.bean.CreateAuthorization;
+import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
@@ -32,6 +34,7 @@ import rx.Subscriber;
  */
 public class AccountModel extends AbstractModel {
     private AndroidFetchNetworkDataTask createAuthorizationNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
 
     public AccountModel(MainController controller) {
         super(controller);
@@ -41,11 +44,16 @@ public class AccountModel extends AbstractModel {
     public void initBusiness() {
     }
 
+    @Override
+    public String name() {
+        return getClass().getCanonicalName();
+    }
+
     public User login(String username, String password, Subscriber<? super User> subscriber) {
         CreateAuthorization createAuthorization = new CreateAuthorization();
         createAuthorization.scopes = new String[]{Scope.REPO};
         createAuthorization.note = "GithubAndroidClient";
-        createAuthorization(username,password,createAuthorization);
+        createAuthorization(username, password, createAuthorization);
         return null;
     }
 
@@ -98,5 +106,50 @@ public class AccountModel extends AbstractModel {
             }
         });
         getMainController().getBackgroundExecutor().execute(createAuthorizationNetworkDataTask);
+    }
+
+    public void loadUserWithReactor(String username, final Subscriber<? super User> subscriber) {
+        Request request = new Request("GET", String.format("%s/%s", Path.Explore.V2_SHOWCASES, username));
+        final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+        networkTransport.setAPIUrl("http://trending.codehub-app.com");
+        fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                subscriber.onStart();
+            }
+
+            @Override
+            public void onCompleted() {
+                subscriber.onCompleted();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                subscriber.onError(e);
+            }
+
+            @Override
+            public void onNext(String s) {
+                final String resultStr = s;
+                try {
+                    new JSONObject(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                    return;
+                }
+
+                if (resultStr != null) {
+                    User user = JsonConverter.convert(resultStr, new TypeReference<User>() {
+                    });
+                    subscriber.onNext(user);
+                } else {
+                    subscriber.onNext(null);
+                }
+            }
+        });
+        getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
     }
 }

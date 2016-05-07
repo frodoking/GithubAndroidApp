@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_middle">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/owner_head_iv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@null"
+                fresco:fadeDuration="300"
+                fresco:placeholderImage="@drawable/octicon_mark_github"
+                fresco:actualImageScaleType="fitXY"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fullname_tv"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/username_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"/>
+
+                <TextView
+                    android:id="@+id/company_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"
+                    android:drawableLeft="@drawable/octicon_organization"
+                    android:drawablePadding="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/location_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"
+                    android:drawableLeft="@drawable/octicon_location"
+                    android:drawablePadding="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/email_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"
+                    android:drawableLeft="@drawable/octicon_email"
+                    android:drawablePadding="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/blog_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"
+                    android:drawableLeft="@drawable/octicon_link"
+                    android:drawablePadding="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/since_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/darker_gray"
+                    android:drawableLeft="@drawable/octicon_clock"
+                    android:drawablePadding="@dimen/margin_small"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/LineStyle"/>
+
+        <Button
+            android:id="@+id/follow_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_default"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
+            android:text="Follow"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_middle">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/followers_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Followers"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/starred_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Starred"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/following_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xsmall"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Following"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/LineStyle"/>
+
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardCornerRadius="@dimen/corner_radius_default"
+            android:layout_margin="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:visibility="invisible">
+
+            <com.frodo.github.view.MaxHeightListView
+                android:id="@+id/popular_repositories_lv"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:clipToPadding="false"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardCornerRadius="@dimen/corner_radius_default"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
+            android:layout_marginBottom="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:visibility="invisible">
+
+            <com.frodo.github.view.MaxHeightListView
+                android:id="@+id/contributed_to_repositories_lv"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:clipToPadding="false"/>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

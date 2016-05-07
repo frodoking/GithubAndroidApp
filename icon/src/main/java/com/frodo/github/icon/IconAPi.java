@@ -36,6 +36,10 @@ public class IconAPi {
             R.drawable.octicon_megaphone,
             R.drawable.octicon_hubot,
             R.drawable.octicon_flame,
+            R.drawable.octicon_location,
+            R.drawable.octicon_email,
+            R.drawable.octicon_link,
+            R.drawable.octicon_clock,
     };
 
     private static final String[] iconTexts = {
@@ -58,6 +62,10 @@ public class IconAPi {
             "megaphone",
             "hubot",
             "flame",
+            "location",
+            "email",
+            "link",
+            "clock",
     };
 
     public int getLayoutId(){

@@ -4,6 +4,10 @@
 
     <string name="app_name">Github</string>
     <string name="menu_explore">Explore</string>
+    <string name="menu_code">Code</string>
+    <string name="menu_issues">Issues</string>
+    <string name="menu_pull_requests">Pull Requests</string>
+    <string name="menu_pulse">Pulse</string>
 
 
 </resources>
