@@ -32,7 +32,7 @@ public class ShowCaseDetailModel extends AbstractModel {
     }
 
     public void loadShowCaseDetailWithReactor(String slug, final Subscriber<? super ShowCase> subscriber) {
-        Request request = new Request("GET", String.format("%s/%s", Path.Explore.V2_SHOWCASES, slug));
+        Request request = new Request("GET", String.format("%s/%s", Path.Explore.SHOWCASES, slug));
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
         networkTransport.setAPIUrl("http://trending.codehub-app.com");
         fetchShowCaseDetailNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {

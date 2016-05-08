@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.view.CircleProgressDialog;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -32,6 +33,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("slug")) {
+            CircleProgressDialog.showLoadingDialog(getAndroidContext());
             loadShowCasesWithReactor(bundle.getString("slug"));
         }
     }
@@ -50,12 +52,14 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                         new Action1<ShowCase>() {
                             @Override
                             public void call(ShowCase result) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 getUIView().showShowCaseDetail(result);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 getUIView().showError(throwable.getMessage());
                             }
                         }

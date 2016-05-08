@@ -8,8 +8,8 @@ public final class Path {
     public static final String HOST_CODEHUB = "http://trending.codehub-app.com";
 
     public final static class Explore {
-        public static final String V2_SHOWCASES = "/v2/showcases";
-        public static final String V2_TRENDING_REPOSITORIES = "/v2/trending";
+        public static final String SHOWCASES = "/v2/showcases";
+        public static final String TRENDING = "/v2/trending";
     }
 
     public final static class Commits {

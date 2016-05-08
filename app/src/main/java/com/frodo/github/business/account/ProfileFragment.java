@@ -3,10 +3,14 @@ package com.frodo.github.business.account;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.controller.IModel;
+import com.frodo.github.R;
 import com.frodo.github.bean.User;
 import com.frodo.github.view.CircleProgressDialog;
 
@@ -20,6 +24,13 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/5/7.
  */
 public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public ProfileView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new ProfileView(this, inflater, container);
@@ -42,6 +53,17 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
         if (bundle != null && bundle.containsKey("username")) {
             loadUserWithReactor(bundle.getString("username"));
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_repo, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public void loadUserWithReactor(final String username) {

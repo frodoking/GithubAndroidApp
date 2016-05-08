@@ -30,7 +30,7 @@ public class RepositoryModel extends AbstractModel {
     }
 
     public void loadRepositoryDetailWithReactor(String slug, final Subscriber<? super Repository> subscriber) {
-        Request request = new Request("GET", String.format("%s/%s", Path.Explore.V2_SHOWCASES, slug));
+        Request request = new Request("GET", String.format("%s/%s", Path.Explore.SHOWCASES, slug));
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
         networkTransport.setAPIUrl(Path.HOST_GITHUB);
         fetchRepositoryNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {

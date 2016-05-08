@@ -109,6 +109,7 @@ public class CircleProgressDialog extends Dialog {
 
     @Override
     public void dismiss() {
+        super.dismiss();
         DraweeController draweeController = draweeView.getController();
         if (draweeController != null) {
             Animatable animatable = draweeController.getAnimatable();
@@ -116,6 +117,5 @@ public class CircleProgressDialog extends Dialog {
                 draweeView.getController().getAnimatable().stop();
             }
         }
-        super.dismiss();
     }
 }

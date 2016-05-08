@@ -12,8 +12,10 @@ import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.view.CircleProgressDialog;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -26,6 +28,7 @@ import rx.schedulers.Schedulers;
  */
 public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     private static final String KEY_CACHE_SHOWCASES = "showcases_cache";
+    private final CountDownLatch countDownLatch = new CountDownLatch(2);
 
     @Override
     public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -39,6 +42,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
     @Override
     protected void onFirstTimeLaunched() {
+        checkLoading();
         loadShowCasesWithReactor();
         loadTrendingRepositoriesWithReactor();
     }
@@ -79,13 +83,18 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                         new Action1<List<ShowCase>>() {
                             @Override
                             public void call(List<ShowCase> result) {
+                                countDownLatch.countDown();
+                                checkLoading();
                                 getUIView().showShowCaseList(result);
                                 getModel().setShowCases(result);
+
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                countDownLatch.countDown();
+                                checkLoading();
                                 if (getModel().isEnableCached()) {
                                     List<ShowCase> showCases = getModel().getShowCasesFromCache();
                                     if (showCases != null) {
@@ -94,6 +103,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                     }
                                 }
                                 getUIView().showError(throwable.getMessage());
+
                             }
                         }
                 );
@@ -113,17 +123,29 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                         new Action1<List<Repository>>() {
                             @Override
                             public void call(List<Repository> result) {
+                                countDownLatch.countDown();
+                                checkLoading();
                                 getUIView().showTrendingRepositoryList(result);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                countDownLatch.countDown();
+                                checkLoading();
                                 if (getModel().isEnableCached()) {
                                 }
                                 getUIView().showError(throwable.getMessage());
                             }
                         }
                 );
+    }
+
+    private void checkLoading() {
+        if (countDownLatch.getCount() != 0) {
+            CircleProgressDialog.showLoadingDialog(getAndroidContext());
+        } else {
+            CircleProgressDialog.hideLoadingDialog();
+        }
     }
 }

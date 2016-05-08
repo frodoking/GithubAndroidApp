@@ -54,7 +54,7 @@ public class ExploreModel extends AbstractModel {
     }
 
     public void loadShowCasesWithReactor(final Subscriber<? super List<ShowCase>> subscriber) {
-        Request request = new Request("GET", Path.Explore.V2_SHOWCASES);
+        Request request = new Request("GET", Path.Explore.SHOWCASES);
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
         networkTransport.setAPIUrl(Path.HOST_CODEHUB);
         fetchShowCasesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
@@ -99,7 +99,7 @@ public class ExploreModel extends AbstractModel {
     }
 
     public void loadRepositoriesWithReactor(final Subscriber<? super List<Repository>> subscriber) {
-        Request request = new Request("GET", Path.Explore.V2_TRENDING_REPOSITORIES);
+        Request request = new Request("GET", Path.Explore.TRENDING);
         request.addQueryParam("since", "weekly");
         request.addQueryParam("language", "");
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();

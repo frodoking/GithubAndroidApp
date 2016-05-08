@@ -6,16 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
-import com.frodo.app.android.core.toolbox.DensityUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.User;
@@ -89,6 +85,11 @@ public class ProfileView extends UIView {
 
     @Override
     public void registerListener() {
+    }
+
+    @Override
+    public void onShowOrHide(boolean isShown) {
+        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
     }
 
     public void showDetail(User user) {

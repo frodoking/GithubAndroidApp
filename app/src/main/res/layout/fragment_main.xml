@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:gravity="center"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/octicon_mark_github"/>
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/logo_sdv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        fresco:fadeDuration="300"
+        fresco:roundedCornerRadius="@dimen/corner_radius_default"
+        android:layout_margin="@dimen/margin_middle"
+        fresco:placeholderImage="@drawable/octicon_mark_github"
+        fresco:actualImageScaleType="fitCenter"/>
 </LinearLayout>

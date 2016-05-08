@@ -1,9 +1,11 @@
 package com.frodo.github;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 
@@ -17,6 +19,8 @@ public class MainFragment extends StatedFragment {
         return new UIView(this, inflater, container, R.layout.fragment_main) {
             @Override
             public void initView() {
+                SimpleDraweeView sdv = (SimpleDraweeView) getRootView().findViewById(R.id.logo_sdv);
+                sdv.setImageURI(Uri.parse("https://developer.github.com/assets/images/electrocat.png"));
             }
 
             @Override
