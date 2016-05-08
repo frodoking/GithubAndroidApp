@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.controller.IModel;
 import com.frodo.github.bean.User;
-import com.frodo.github.common.CircleProgressDialog;
+import com.frodo.github.view.CircleProgressDialog;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -40,7 +40,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
         Bundle bundle = getArguments();
         CircleProgressDialog.showLoadingDialog(getAndroidContext());
         if (bundle != null && bundle.containsKey("username")) {
-            //loadUserWithReactor(bundle.getString("username"));
+            loadUserWithReactor(bundle.getString("username"));
         }
     }
 

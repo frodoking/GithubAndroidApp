@@ -20,6 +20,7 @@ import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.business.account.ProfileFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconAPiFragment;
+import com.frodo.github.view.CircleProgressDialog;
 
 /**
  * Created by frodo on 2016/4/28. Main Page
