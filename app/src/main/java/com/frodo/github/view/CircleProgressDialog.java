@@ -69,7 +69,7 @@ public class CircleProgressDialog extends Dialog {
         draweeView = new SimpleDraweeView(getContext());
         int size = DensityUtils.dp2px(getContext(), 45);
         ll.addView(draweeView, new LinearLayout.LayoutParams(size, size));
-        Uri uri = Uri.parse("https://assets-cdn.github.com/images/spinners/octocat-spinner-128.gif");
+        Uri uri = Uri.parse("res://" + getContext().getPackageName() + "/" + R.mipmap.octocat_spinner_128);
         ControllerListener<ImageInfo> controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {

@@ -101,6 +101,9 @@ public class ProfileView extends UIView {
         emailTV.setText(user.email);
         blogTV.setText(user.blog);
         sinceTV.setText(user.createdAt.toLocaleString());
+        followersTV.setText(user.followers);
+        starredTV.setText(user.followers);
+        followingTV.setText(user.following);
     }
 
     public void showRepositoryList(ListView listView, Adapter adapter, List<Repository> repositories) {

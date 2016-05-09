@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/4/28.
  */
-public class IconAPi {
+public class IconApi {
 
     private static final Integer[] iconIds = {
             R.drawable.octicon_book,
