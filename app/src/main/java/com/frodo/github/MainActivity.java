@@ -20,6 +20,7 @@ import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.business.account.ProfileFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconApiFragment;
+import com.frodo.github.common.JsoupApiFragment;
 
 /**
  * Created by frodo on 2016/4/28. Main Page
@@ -92,12 +93,14 @@ public class MainActivity extends FragmentContainerActivity {
 
                         toolbar.setTitle(menuItem.getTitle());
                         switch (menuItem.getItemId()) {
-                            case R.id.action_icon_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, IconApiFragment.class, null);
-                                return true;
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class, null);
                                 return true;
+                            case R.id.action_icon_api:
+                                FragmentScheduler.replaceFragment(MainActivity.this, IconApiFragment.class, null);
+                                return true;
+                            case R.id.action_jsoup_api:
+                                FragmentScheduler.replaceFragment(MainActivity.this, JsoupApiFragment.class, null);
                             default:
                                 return true;
                         }

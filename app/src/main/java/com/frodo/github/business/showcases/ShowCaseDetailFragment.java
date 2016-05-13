@@ -2,6 +2,7 @@ package com.frodo.github.business.showcases;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -19,6 +20,8 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/5/3.
  */
 public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, ShowCaseDetailModel> {
+    private String tag="";
+
     @Override
     public ShowCaseDetailView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new ShowCaseDetailView(this, inflater, container);
@@ -34,8 +37,20 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("slug")) {
             CircleProgressDialog.showLoadingDialog(getAndroidContext());
-            loadShowCasesWithReactor(bundle.getString("slug"));
+            tag = bundle.getString("slug");
+            loadShowCasesWithReactor(tag);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(tag());
+    }
+
+    @Override
+    public String tag() {
+        return "Explore/"+tag;
     }
 
     private void loadShowCasesWithReactor(final String slug) {

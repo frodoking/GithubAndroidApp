@@ -3,6 +3,7 @@ package com.frodo.github.bean;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by frodo on 2016/5/1.
@@ -34,4 +35,8 @@ public class User extends Organization {
     public Date createdAt;
     @JsonProperty("updated_at")
     public Date updatedAt;
+
+    public int starred;
+    public List<Repository> popularRepositories;
+    public List<Repository> contributeToRepositories;
 }

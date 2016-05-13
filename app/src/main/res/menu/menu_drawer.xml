@@ -13,5 +13,10 @@
             android:title="@string/icon"
             android:icon="@drawable/octicon_repo"
             android:checkable="true"/>
+        <item
+            android:id="@+id/action_jsoup_api"
+            android:title="@string/jsoup"
+            android:icon="@drawable/octicon_megaphone"
+            android:checkable="true"/>
     </group>
 </menu>

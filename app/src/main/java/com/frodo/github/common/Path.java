@@ -5,6 +5,7 @@ package com.frodo.github.common;
  */
 public final class Path {
     public static final String HOST_GITHUB = "https://api.github.com";
+    public static final String HOST_GITHUB_WEB = "http://github.com";
     public static final String HOST_CODEHUB = "http://trending.codehub-app.com";
 
     public final static class Explore {

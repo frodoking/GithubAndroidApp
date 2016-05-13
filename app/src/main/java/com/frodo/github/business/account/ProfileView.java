@@ -78,7 +78,7 @@ public class ProfileView extends UIView {
         contributedToRepositoriesLV = (ListView) getRootView().findViewById(R.id.contributed_to_repositories_lv);
         View headerView2 = View.inflate(getRootView().getContext(), R.layout.view_header, null);
         ((TextView) headerView2.findViewById(R.id.text_tv)).setText("Repositories contributed to");
-        popularRepositoriesLV.addHeaderView(headerView2);
+        contributedToRepositoriesLV.addHeaderView(headerView2);
         contributedToRepositoryAdapter = new Adapter(getPresenter().getAndroidContext());
         contributedToRepositoriesLV.setAdapter(contributedToRepositoryAdapter);
     }
@@ -101,9 +101,12 @@ public class ProfileView extends UIView {
         emailTV.setText(user.email);
         blogTV.setText(user.blog);
         sinceTV.setText(user.createdAt.toLocaleString());
-        followersTV.setText(user.followers);
-        starredTV.setText(user.followers);
-        followingTV.setText(user.following);
+        followersTV.setText(String.valueOf(user.followers));
+        starredTV.setText(String.valueOf(user.starred));
+        followingTV.setText(String.valueOf(user.following));
+
+        showRepositoryList(popularRepositoriesLV, popularRepositoryAdapter, user.popularRepositories);
+        showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);
     }
 
     public void showRepositoryList(ListView listView, Adapter adapter, List<Repository> repositories) {

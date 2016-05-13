@@ -12,17 +12,20 @@ import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
+import com.frodo.app.framework.task.BackgroundCallTask;
 import com.frodo.github.bean.Authorization;
 import com.frodo.github.bean.CreateAuthorization;
 import com.frodo.github.bean.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
+import com.frodo.github.datasource.WebUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -34,6 +37,10 @@ import rx.Subscriber;
 public class AccountModel extends AbstractModel {
     private AndroidFetchNetworkDataTask createAuthorizationNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
+    private BackgroundCallTask fetchUserFromWebTask;
+
+    private final CountDownLatch countDownLatch = new CountDownLatch(2);
+    private User user;
 
     public AccountModel(MainController controller) {
         super(controller);
@@ -107,7 +114,7 @@ public class AccountModel extends AbstractModel {
         getMainController().getBackgroundExecutor().execute(createAuthorizationNetworkDataTask);
     }
 
-    public void loadUserWithReactor(String username, final Subscriber<? super User> subscriber) {
+    public void loadUserWithReactor(final String username, final Subscriber<? super User> subscriber) {
         Request request = new Request("GET", String.format(Path.Users.USER, username));
         final NetworkTransport networkTransport = getMainController().getNetworkTransport();
         networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -121,11 +128,14 @@ public class AccountModel extends AbstractModel {
 
             @Override
             public void onCompleted() {
-                subscriber.onCompleted();
+                if (countDownLatch.getCount() == 0) {
+                    subscriber.onCompleted();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
+                countDownLatch.countDown();
                 subscriber.onError(e);
             }
 
@@ -140,15 +150,57 @@ public class AccountModel extends AbstractModel {
                     return;
                 }
 
+                countDownLatch.countDown();
                 if (resultStr != null) {
                     User user = JsonConverter.convert(resultStr, new TypeReference<User>() {
                     });
-                    subscriber.onNext(user);
+                    checkUser(user, subscriber);
                 } else {
-                    subscriber.onNext(null);
+                    checkUser(null, subscriber);
                 }
             }
         });
         getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
+
+        fetchUserFromWebTask = new BackgroundCallTask<User>() {
+            @Override
+            public String key() {
+                return "WebUser";
+            }
+
+            @Override
+            public User runAsync() {
+                return WebUser.parse(Path.HOST_GITHUB_WEB, username);
+            }
+
+            @Override
+            public void postExecute(User user) {
+                countDownLatch.countDown();
+                if (user != null) {
+                    checkUser(user, subscriber);
+                }else{
+                    checkUser(null, subscriber);
+                }
+            }
+        };
+
+
+        getMainController().getBackgroundExecutor().execute(fetchUserFromWebTask);
+    }
+
+    private void checkUser(User user, Subscriber<? super User> subscriber) {
+        if (this.user == null) {
+            this.user = user;
+        } else {
+            if (this.user.name != null) {
+                this.user.starred = user.starred;
+                this.user.popularRepositories = user.popularRepositories;
+                this.user.contributeToRepositories = user.contributeToRepositories;
+            }
+        }
+
+        if (countDownLatch.getCount() == 0) {
+            subscriber.onNext(this.user);
+        }
     }
 }

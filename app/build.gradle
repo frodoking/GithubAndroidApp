@@ -34,7 +34,7 @@ android {
 dependencies {
     compile "com.github.frodoking:app-architecture-android:1.1.6-SNAPSHOT"
     compile "com.facebook.fresco:animated-gif:0.10.0"
-    compile project(":icon")
+    compile project(':websource')
 
     compile 'io.reactivex:rxandroid:1.1.0'
 }
