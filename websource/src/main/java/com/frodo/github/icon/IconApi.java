@@ -40,6 +40,21 @@ public class IconApi {
             R.drawable.octicon_email,
             R.drawable.octicon_link,
             R.drawable.octicon_clock,
+
+            R.drawable.octicon_dashboard,
+            R.drawable.octicon_telescope,
+            R.drawable.octicon_sign_out,
+
+            R.drawable.octicon_issue_closed,
+            R.drawable.octicon_bell,
+            R.drawable.octicon_check,
+            R.drawable.octicon_search,
+
+            R.drawable.octicon_x,
+            R.drawable.octicon_repo_push,
+            R.drawable.octicon_bookmark,
+            R.drawable.octicon_git_merge,
+            R.drawable.octicon_gear,
     };
 
     private static final String[] iconTexts = {
@@ -66,6 +81,18 @@ public class IconApi {
             "email",
             "link",
             "clock",
+            "dashboard",
+            "telescope",
+            "sign_out",
+            "issue_closed",
+            "bell",
+            "check",
+            "search",
+            "x",
+            "repo_push",
+            "bookmark",
+            "git_merge",
+            "gear",
     };
 
     public int getLayoutId(){

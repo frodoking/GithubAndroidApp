@@ -137,14 +137,13 @@
                     android:id="@+id/followers_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_middle"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
                     android:text="Followers"/>
@@ -161,14 +160,13 @@
                     android:id="@+id/starred_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_middle"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
                     android:text="Starred"/>
@@ -185,14 +183,13 @@
                     android:id="@+id/following_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_middle"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
                     android:text="Following"/>

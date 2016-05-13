@@ -33,14 +33,7 @@ public class WebUser {
                     for (int i = 0; i < columnElems.size(); i++) {
                         Element element = columnElems.get(i);
                         if (element != null) {
-                            Repository popularRepos = new Repository();
-
-
-                            Elements elementH3 = element.getElementsByTag("h3");
-//                            popularRepos.title = elementH3.get(0).text();
-
                             Elements repoElems = element.select("li[class=public source ]");
-
                             if (repoElems != null) {
                                 List<Repository> repos = new ArrayList<>(repoElems.size());
                                 for (int j = 0; j < repoElems.size(); j++) {

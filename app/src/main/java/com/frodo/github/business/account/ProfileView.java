@@ -139,7 +139,7 @@ public class ProfileView extends UIView {
 
             final Repository bean = getItem(position);
 
-            vh.repoTV.setText(bean.full_name);
+            vh.repoTV.setText(bean.name);
             vh.starCountTV.setText(String.valueOf(bean.stargazers_count));
             return convertView;
         }
