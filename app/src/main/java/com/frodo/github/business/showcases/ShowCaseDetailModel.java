@@ -39,17 +39,10 @@ public class ShowCaseDetailModel extends AbstractModel {
                 fetchShowCaseDetailNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchShowCaseDetailNetworkDataTask);
             }
-        }).flatMap(new Func1<String, Observable<ShowCase>>() {
+        }).map(new Func1<String, ShowCase>() {
             @Override
-            public Observable<ShowCase> call(final String s) {
-                return Observable.create(new Observable.OnSubscribe<ShowCase>() {
-                    @Override
-                    public void call(Subscriber<? super ShowCase> subscriber) {
-                        ShowCase showCase = JsonConverter.convert(s, new TypeReference<ShowCase>() {
-                        });
-                        subscriber.onNext(showCase);
-                        subscriber.onCompleted();
-                    }
+            public ShowCase call(String s) {
+                return JsonConverter.convert(s, new TypeReference<ShowCase>() {
                 });
             }
         });

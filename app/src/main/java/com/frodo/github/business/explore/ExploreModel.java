@@ -62,17 +62,10 @@ public class ExploreModel extends AbstractModel {
                 fetchShowCasesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchShowCasesNetworkDataTask);
             }
-        }).flatMap(new Func1<String, Observable<List<ShowCase>>>() {
+        }).map(new Func1<String, List<ShowCase>>() {
             @Override
-            public Observable<List<ShowCase>> call(final String s) {
-                return Observable.create(new Observable.OnSubscribe<List<ShowCase>>() {
-                    @Override
-                    public void call(Subscriber<? super List<ShowCase>> subscriber) {
-                        List<ShowCase> showCases = JsonConverter.convert(s, new TypeReference<List<ShowCase>>() {
-                        });
-                        subscriber.onNext(showCases);
-                        subscriber.onCompleted();
-                    }
+            public List<ShowCase> call(String s) {
+                return JsonConverter.convert(s, new TypeReference<List<ShowCase>>() {
                 });
             }
         });
@@ -90,17 +83,10 @@ public class ExploreModel extends AbstractModel {
                 fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
             }
-        }).flatMap(new Func1<String, Observable<List<Repository>>>() {
+        }).map(new Func1<String, List<Repository>>() {
             @Override
-            public Observable<List<Repository>> call(final String s) {
-                return Observable.create(new Observable.OnSubscribe<List<Repository>>() {
-                    @Override
-                    public void call(Subscriber<? super List<Repository>> subscriber) {
-                        List<Repository> repositories = JsonConverter.convert(s, new TypeReference<List<Repository>>() {
-                        });
-                        subscriber.onNext(repositories);
-                        subscriber.onCompleted();
-                    }
+            public List<Repository> call(String s) {
+                return JsonConverter.convert(s, new TypeReference<List<Repository>>() {
                 });
             }
         });

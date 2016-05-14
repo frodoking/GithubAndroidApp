@@ -141,17 +141,10 @@ public class AccountModel extends AbstractModel {
                 fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
             }
-        }).flatMap(new Func1<String, Observable<User>>() {
+        }).map(new Func1<String, User>() {
             @Override
-            public Observable<User> call(final String s) {
-                return Observable.create(new Observable.OnSubscribe<User>() {
-                    @Override
-                    public void call(Subscriber<? super User> subscriber) {
-                        User user = JsonConverter.convert(s, new TypeReference<User>() {
-                        });
-                        subscriber.onNext(user);
-                        subscriber.onCompleted();
-                    }
+            public User call(String s) {
+                return JsonConverter.convert(s, new TypeReference<User>() {
                 });
             }
         });
