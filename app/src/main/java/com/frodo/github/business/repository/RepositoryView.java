@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
+import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 
 /**
@@ -13,12 +14,11 @@ import com.frodo.github.bean.Repository;
  */
 public class RepositoryView extends UIView {
     public RepositoryView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, -1);
+        super(presenter, inflater, container, R.layout.fragment_repository);
     }
 
     @Override
     public void initView() {
-
     }
 
     @Override

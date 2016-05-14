@@ -18,6 +18,12 @@
         <item name="android:background">@android:color/darker_gray</item>
     </style>
 
+    <style name="LineVStyle">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
     <style name="TextAppearanceStyle" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/text_size_middle</item>

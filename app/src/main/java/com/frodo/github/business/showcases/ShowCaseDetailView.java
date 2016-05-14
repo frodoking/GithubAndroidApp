@@ -2,6 +2,7 @@ package com.frodo.github.business.showcases;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +14,14 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
+import com.frodo.app.android.core.toolbox.FragmentScheduler;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.VerticalSpaceItemDecoration;
 
 import java.util.ArrayList;
@@ -49,7 +53,7 @@ public class ShowCaseDetailView extends UIView {
     }
 
     @Override
-    public void registerListener() {
+    public void registerListener() { 
     }
 
     @Override
@@ -98,6 +102,15 @@ public class ShowCaseDetailView extends UIView {
             holder.languageTV.setText(TextUtils.isEmpty(bean.language) ? "" : bean.language);
             holder.starCountTV.setText(String.format("%s stars", bean.stargazers_count));
             holder.descriptionTV.setText(bean.description);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString("repo", bean.name);
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                }
+            });
         }
 
         @Override

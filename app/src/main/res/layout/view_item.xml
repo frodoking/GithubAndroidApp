@@ -11,7 +11,7 @@
     android:background="@drawable/item_selector">
 
     <TextView
-        android:id="@+id/repo_tv"
+        android:id="@+id/title_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -22,7 +22,7 @@
         android:textColor="?attr/colorPrimary"/>
 
     <TextView
-        android:id="@+id/star_count_tv"
+        android:id="@+id/subtitle_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"

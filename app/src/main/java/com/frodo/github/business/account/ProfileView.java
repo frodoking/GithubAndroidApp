@@ -2,9 +2,11 @@ package com.frodo.github.business.account;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,9 +14,12 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
+import com.frodo.app.android.core.toolbox.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.User;
+import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 
 import java.util.List;
@@ -85,6 +90,17 @@ public class ProfileView extends UIView {
 
     @Override
     public void registerListener() {
+        popularRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle arguments = new Bundle();
+                Repository repository = popularRepositoryAdapter.getItem(position);
+                if (repository != null) {
+                    arguments.putString("repo", repository.name);
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                }
+            }
+        });
     }
 
     @Override
@@ -121,7 +137,7 @@ public class ProfileView extends UIView {
 
     private class Adapter extends BaseListViewAdapter<Repository> {
         public Adapter(Context context) {
-            super(context, R.layout.view_repositories_item2);
+            super(context, R.layout.view_item);
         }
 
         @Override
@@ -130,8 +146,8 @@ public class ProfileView extends UIView {
             if (convertView == null) {
                 convertView = inflateItemView();
                 vh = new ViewHolder();
-                vh.repoTV = (TextView) convertView.findViewById(R.id.repo_tv);
-                vh.starCountTV = (TextView) convertView.findViewById(R.id.star_count_tv);
+                vh.repoTV = (TextView) convertView.findViewById(R.id.title_tv);
+                vh.starCountTV = (TextView) convertView.findViewById(R.id.subtitle_tv);
                 convertView.setTag(vh);
             } else {
                 vh = (ViewHolder) convertView.getTag();

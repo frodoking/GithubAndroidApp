@@ -21,6 +21,7 @@ import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 
@@ -87,7 +88,12 @@ public class ExploreView extends UIView {
         trendingRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), String.format("View repository %s", position), Toast.LENGTH_SHORT).show();
+                Bundle arguments = new Bundle();
+                Repository repository = repositoryAdapter.getItem(position);
+                if (repository != null) {
+                    arguments.putString("repo", repository.name);
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                }
             }
         });
     }

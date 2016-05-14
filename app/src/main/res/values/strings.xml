@@ -9,5 +9,6 @@
     <string name="menu_pull_requests">Pull Requests</string>
     <string name="menu_pulse">Pulse</string>
 
+    <string name="contribute_description">This application is provided by Frodo(Github:frodoking)</string>
 
 </resources>

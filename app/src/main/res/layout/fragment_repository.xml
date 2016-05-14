@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_middle">
+
+        <TextView
+            android:id="@+id/repo_description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_middle"
+            android:textColor="@android:color/darker_gray"/>
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/branchs_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"
+            app:footerLayout="@layout/view_repository_branch_footer"/>
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/readme_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"
+            app:footerLayout="@layout/view_footer"/>
+
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/pulse_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"
+            app:footerLayout="@layout/view_footer"/>
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/issues_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"
+            app:footerLayout="@layout/view_footer"/>
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/pull_requests_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"
+            app:footerLayout="@layout/view_footer"/>
+
+        <com.frodo.github.view.CardViewGroup
+            android:id="@+id/notifications_cvg"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:headerLayout="@layout/view_item"
+            app:contentLayout="@layout/view_card_container"/>
+    </LinearLayout>
+</ScrollView>

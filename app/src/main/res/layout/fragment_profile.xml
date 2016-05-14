@@ -204,7 +204,7 @@
             android:layout_margin="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:visibility="invisible">
+            android:visibility="gone">
 
             <com.frodo.github.view.MaxHeightListView
                 android:id="@+id/popular_repositories_lv"
