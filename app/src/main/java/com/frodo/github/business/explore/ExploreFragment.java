@@ -14,13 +14,15 @@ import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.view.CircleProgressDialog;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.Map;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -28,7 +30,6 @@ import rx.schedulers.Schedulers;
  */
 public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     private static final String KEY_CACHE_SHOWCASES = "showcases_cache";
-    private final CountDownLatch countDownLatch = new CountDownLatch(2);
 
     @Override
     public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -42,9 +43,8 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
     @Override
     protected void onFirstTimeLaunched() {
-        checkLoading();
-        loadShowCasesWithReactor();
-        loadTrendingRepositoriesWithReactor();
+        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+        loadDataWithReactor();
     }
 
     @Override
@@ -67,34 +67,34 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
         }
     }
 
-    private void loadShowCasesWithReactor() {
-        getModel().setEnableCached(true);
+    private void loadDataWithReactor() {
+        final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
+        final Observable<List<Repository>> repositoryObservable = getModel().loadRepositoriesWithReactor();
 
-        Observable
-                .create(new Observable.OnSubscribe<List<ShowCase>>() {
-                    @Override
-                    public void call(Subscriber<? super List<ShowCase>> subscriber) {
-                        getModel().loadShowCasesWithReactor(subscriber);
-                    }
-                })
+        Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repository>, Map<String, Object>>() {
+            @Override
+            public Map<String, Object> call(List<ShowCase> showCases, List<Repository> repositories) {
+                Map<String, Object> map = new HashMap<>(2);
+                map.put("showCases", showCases);
+                map.put("repositories", repositories);
+                return map;
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        new Action1<List<ShowCase>>() {
+                        new Action1<Map<String, Object>>() {
                             @Override
-                            public void call(List<ShowCase> result) {
-                                countDownLatch.countDown();
-                                checkLoading();
-                                getUIView().showShowCaseList(result);
-                                getModel().setShowCases(result);
-
+                            public void call(Map<String, Object> result) {
+                                List<ShowCase> showCases = (List<ShowCase>) result.get("showCases");
+                                List<Repository> repositories = (List<Repository>) result.get("repositories");
+                                getUIView().showShowCaseList(showCases);
+                                getUIView().showTrendingRepositoryList(repositories);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                countDownLatch.countDown();
-                                checkLoading();
                                 if (getModel().isEnableCached()) {
                                     List<ShowCase> showCases = getModel().getShowCasesFromCache();
                                     if (showCases != null) {
@@ -103,49 +103,14 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                     }
                                 }
                                 getUIView().showError(throwable.getMessage());
-
-                            }
-                        }
-                );
-    }
-
-    private void loadTrendingRepositoriesWithReactor() {
-        Observable
-                .create(new Observable.OnSubscribe<List<Repository>>() {
-                    @Override
-                    public void call(Subscriber<? super List<Repository>> subscriber) {
-                        getModel().loadRepositoriesWithReactor(subscriber);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<Repository>>() {
-                            @Override
-                            public void call(List<Repository> result) {
-                                countDownLatch.countDown();
-                                checkLoading();
-                                getUIView().showTrendingRepositoryList(result);
                             }
                         },
-                        new Action1<Throwable>() {
+                        new Action0() {
                             @Override
-                            public void call(Throwable throwable) {
-                                countDownLatch.countDown();
-                                checkLoading();
-                                if (getModel().isEnableCached()) {
-                                }
-                                getUIView().showError(throwable.getMessage());
+                            public void call() {
+                                CircleProgressDialog.hideLoadingDialog();
                             }
                         }
                 );
-    }
-
-    private void checkLoading() {
-        if (countDownLatch.getCount() != 0) {
-            CircleProgressDialog.showLoadingDialog(getAndroidContext());
-        } else {
-            CircleProgressDialog.hideLoadingDialog();
-        }
     }
 }

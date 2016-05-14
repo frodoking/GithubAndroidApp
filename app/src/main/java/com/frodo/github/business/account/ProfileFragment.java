@@ -14,9 +14,8 @@ import com.frodo.github.R;
 import com.frodo.github.bean.User;
 import com.frodo.github.view.CircleProgressDialog;
 
-import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -49,8 +48,8 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     @Override
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
-        CircleProgressDialog.showLoadingDialog(getAndroidContext());
         if (bundle != null && bundle.containsKey("username")) {
+            CircleProgressDialog.showLoadingDialog(getAndroidContext());
             loadUserWithReactor(bundle.getString("username"));
         }
     }
@@ -67,27 +66,23 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     }
 
     public void loadUserWithReactor(final String username) {
-        Observable
-                .create(new Observable.OnSubscribe<User>() {
-                    @Override
-                    public void call(Subscriber<? super User> subscriber) {
-                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
-                        getModel().loadUserWithReactor(username, subscriber);
-                    }
-                })
+        getModel().loadUserWithReactor(username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Action1<User>() {
                             @Override
                             public void call(User user) {
-                                CircleProgressDialog.hideLoadingDialog();
                                 getUIView().showDetail(user);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                            }
+                        }, new Action0() {
+                            @Override
+                            public void call() {
                                 CircleProgressDialog.hideLoadingDialog();
                             }
                         }

@@ -81,4 +81,6 @@ public class Repository implements Serializable {
     public Organization organization;
     public int network_count;
     public int subscribers_count;
+    public Repository parent;
+    public Repository source;
 }

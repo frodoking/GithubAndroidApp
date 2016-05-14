@@ -53,7 +53,7 @@ public class ShowCaseDetailView extends UIView {
     }
 
     @Override
-    public void registerListener() { 
+    public void registerListener() {
     }
 
     @Override
