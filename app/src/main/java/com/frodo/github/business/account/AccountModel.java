@@ -1,6 +1,8 @@
 package com.frodo.github.business.account;
 
+import android.content.Context;
 import android.util.Base64;
+import android.webkit.WebSettings;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,7 +20,7 @@ import com.frodo.github.bean.CreateAuthorization;
 import com.frodo.github.bean.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
-import com.frodo.github.datasource.WebUser;
+import com.frodo.github.datasource.WebApiProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +41,14 @@ public class AccountModel extends AbstractModel {
     private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
     private BackgroundCallTask fetchUserFromWebTask;
 
+    private WebApiProvider webApiProvider;
     private final CountDownLatch countDownLatch = new CountDownLatch(2);
     private User user;
 
     public AccountModel(MainController controller) {
         super(controller);
+        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext());
+        webApiProvider = new WebApiProvider(Path.HOST_GITHUB_WEB, userAgent);
     }
 
     @Override
@@ -170,7 +175,7 @@ public class AccountModel extends AbstractModel {
 
             @Override
             public User runAsync() {
-                return WebUser.parse(Path.HOST_GITHUB_WEB, username);
+                return webApiProvider.getUser(username);
             }
 
             @Override

@@ -20,7 +20,7 @@ public class JsoupApi {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        WebUser.parse("http://github.com", "frodoking");
+//                        WebUser.parse("http://github.com", "frodoking",);
                     }
                 }).start();
              }
