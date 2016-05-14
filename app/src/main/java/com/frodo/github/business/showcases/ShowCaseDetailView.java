@@ -70,12 +70,6 @@ public class ShowCaseDetailView extends UIView {
         }
     }
 
-    public void showError(String message) {
-        if (isOnShown()) {
-            Toast.makeText(getPresenter().getAndroidContext(), message, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     class Adapter extends RecyclerView.Adapter<Adapter.RepositoriesViewHolder> {
         private LayoutInflater layoutInflater;
         private List<Repository> repositories;

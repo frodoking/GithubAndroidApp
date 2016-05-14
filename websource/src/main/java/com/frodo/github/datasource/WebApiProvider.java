@@ -24,12 +24,11 @@ public class WebApiProvider {
         this.userAgent = userAgent;
     }
 
-    public User getUser(String username) {
+    public User getUser(String username) throws IOException {
         return fetch(host, username, userAgent);
     }
 
-    private static User fetch(String host, String user, String userAgent) {
-        try {
+    private static User fetch(String host, String user, String userAgent) throws IOException {
             User userWebInfo = null;
             Document doc = Jsoup.connect(host + '/' + user).userAgent(userAgent).get();
             Elements popularReposElems = doc.select("div[class=bubble ]");
@@ -69,9 +68,5 @@ public class WebApiProvider {
                 }
             }
             return userWebInfo;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

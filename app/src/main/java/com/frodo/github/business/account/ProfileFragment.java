@@ -49,7 +49,6 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("username")) {
-            CircleProgressDialog.showLoadingDialog(getAndroidContext());
             loadUserWithReactor(bundle.getString("username"));
         }
     }
@@ -68,24 +67,30 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     public void loadUserWithReactor(final String username) {
         getModel().loadUserWithReactor(username)
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<User>() {
-                            @Override
-                            public void call(User user) {
-                                getUIView().showDetail(user);
-                            }
-                        },
+                .subscribe(new Action1<User>() {
+                               @Override
+                               public void call(User user) {
+                                   getUIView().showDetail(user);
+                               }
+                           },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                throwable.printStackTrace();
                             }
                         }, new Action0() {
                             @Override
                             public void call() {
                                 CircleProgressDialog.hideLoadingDialog();
                             }
-                        }
-                );
+                        });
     }
 }

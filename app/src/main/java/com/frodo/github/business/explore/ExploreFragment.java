@@ -43,7 +43,6 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
     @Override
     protected void onFirstTimeLaunched() {
-        CircleProgressDialog.showLoadingDialog(getAndroidContext());
         loadDataWithReactor();
     }
 
@@ -80,6 +79,13 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                 return map;
             }
         })
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -102,7 +108,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                         return;
                                     }
                                 }
-                                getUIView().showError(throwable.getMessage());
+                                throwable.printStackTrace();
                             }
                         },
                         new Action0() {

@@ -25,6 +25,7 @@ import com.frodo.github.datasource.WebApiProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,12 +163,19 @@ public class AccountModel extends AbstractModel {
 
                     @Override
                     public User runAsync() {
-                        return webApiProvider.getUser(username);
+                        try {
+                            return webApiProvider.getUser(username);
+                        } catch (IOException e) {
+                            subscriber.onError(e);
+                            return null;
+                        }
                     }
 
                     @Override
                     public void postExecute(User user) {
-                        subscriber.onNext(user);
+                        if (user!=null){
+                            subscriber.onNext(user);
+                        }
                         subscriber.onCompleted();
                     }
                 };

@@ -35,7 +35,6 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("slug")) {
-            CircleProgressDialog.showLoadingDialog(getAndroidContext());
             tag = bundle.getString("slug");
             loadShowCasesWithReactor(tag);
         }
@@ -54,6 +53,13 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
 
     private void loadShowCasesWithReactor(final String slug) {
         getModel().loadShowCaseDetailWithReactor(slug)
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -66,7 +72,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                getUIView().showError(throwable.getMessage());
+                                throwable.printStackTrace();
                             }
                         }, new Action0() {
                             @Override

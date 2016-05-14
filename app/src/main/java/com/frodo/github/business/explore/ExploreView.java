@@ -135,12 +135,6 @@ public class ExploreView extends UIView {
         }
     }
 
-    public void showError(String message) {
-        if (isOnShown()) {
-            Toast.makeText(getPresenter().getAndroidContext(), message, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private class Adapter extends BaseListViewAdapter<Repository> {
         public Adapter(Context context) {
             super(context, R.layout.view_repositories_item);
