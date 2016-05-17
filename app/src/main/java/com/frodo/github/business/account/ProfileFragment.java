@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.app.framework.controller.IModel;
 import com.frodo.github.R;
 import com.frodo.github.bean.User;
 import com.frodo.github.view.CircleProgressDialog;
@@ -33,16 +32,6 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     @Override
     public ProfileView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new ProfileView(this, inflater, container);
-    }
-
-    @Override
-    protected AccountModel createModel() {
-        IModel model = getMainController().getModelFactory().getModelBy(AccountModel.class.getCanonicalName());
-        if (model == null) {
-            return new AccountModel(getMainController());
-        } else {
-            return (AccountModel) model;
-        }
     }
 
     @Override

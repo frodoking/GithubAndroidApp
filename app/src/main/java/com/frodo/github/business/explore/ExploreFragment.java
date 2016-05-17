@@ -37,11 +37,6 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     }
 
     @Override
-    public ExploreModel createModel() {
-        return new ExploreModel(getMainController());
-    }
-
-    @Override
     protected void onFirstTimeLaunched() {
         loadDataWithReactor();
     }

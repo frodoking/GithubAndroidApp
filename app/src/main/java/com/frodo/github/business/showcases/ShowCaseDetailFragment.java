@@ -27,11 +27,6 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
     }
 
     @Override
-    public ShowCaseDetailModel createModel() {
-        return new ShowCaseDetailModel(getMainController());
-    }
-
-    @Override
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("slug")) {

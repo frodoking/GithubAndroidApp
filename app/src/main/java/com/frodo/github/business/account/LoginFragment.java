@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.app.framework.controller.IModel;
 import com.frodo.github.bean.User;
 
 import rx.Observable;
@@ -21,16 +20,6 @@ public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
     @Override
     public LoginView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new LoginView(this, inflater, container);
-    }
-
-    @Override
-    public AccountModel createModel() {
-        IModel model = getMainController().getModelFactory().getModelBy(AccountModel.class.getCanonicalName());
-        if (model == null) {
-            return new AccountModel(getMainController());
-        } else {
-            return (AccountModel) model;
-        }
     }
 
     public void loginWithReactor(final String username, final String password) {

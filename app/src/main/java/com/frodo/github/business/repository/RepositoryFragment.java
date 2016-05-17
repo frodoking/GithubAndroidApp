@@ -28,11 +28,6 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     @Override
-    protected RepositoryModel createModel() {
-        return new RepositoryModel(getMainController());
-    }
-
-    @Override
     protected void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("repo")) {
