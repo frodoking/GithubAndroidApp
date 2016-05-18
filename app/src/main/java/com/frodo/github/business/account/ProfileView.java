@@ -3,11 +3,13 @@ package com.frodo.github.business.account;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +23,8 @@ import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.User;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.BaseListViewAdapter;
+import com.frodo.github.view.CardViewGroup;
+import com.frodo.github.view.MaxHeightListView;
 
 import java.util.List;
 
@@ -44,7 +48,8 @@ public class ProfileView extends UIView {
     private TextView starredTV;
     private TextView followingTV;
 
-
+    private CardViewGroup popularRepositoriesCVG;
+    private CardViewGroup contributedToRepositoriesCVG;
     private ListView popularRepositoriesLV;
     private Adapter popularRepositoryAdapter;
     private ListView contributedToRepositoriesLV;
@@ -71,19 +76,31 @@ public class ProfileView extends UIView {
         starredTV = (TextView) getRootView().findViewById(R.id.starred_tv);
         followingTV = (TextView) getRootView().findViewById(R.id.following_tv);
 
-        popularRepositoriesLV = (ListView) getRootView().findViewById(R.id.popular_repositories_lv);
-        View headerView = View.inflate(getRootView().getContext(), R.layout.view_header, null);
-        View footerView = View.inflate(getRootView().getContext(), R.layout.view_footer, null);
+        popularRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.popular_repositories_cvg);
+        contributedToRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.contributed_to_repositories_cvg);
+
+        popularRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        popularRepositoriesCVG.setContentView(popularRepositoriesLV);
+
+        LinearLayout headerView = (LinearLayout) popularRepositoriesCVG.getHeaderView();
+        LinearLayout footerView = (LinearLayout) popularRepositoriesCVG.getFooterView();
+        headerView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+
         ((TextView) headerView.findViewById(R.id.text_tv)).setText("Popular repositories");
         ((TextView) footerView.findViewById(R.id.text_tv)).setText("View more repositories");
-        popularRepositoriesLV.addHeaderView(headerView);
+
         popularRepositoryAdapter = new Adapter(getPresenter().getAndroidContext());
         popularRepositoriesLV.setAdapter(popularRepositoryAdapter);
 
-        contributedToRepositoriesLV = (ListView) getRootView().findViewById(R.id.contributed_to_repositories_lv);
-        View headerView2 = View.inflate(getRootView().getContext(), R.layout.view_header, null);
+
+        contributedToRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        contributedToRepositoriesCVG.setContentView(contributedToRepositoriesLV);
+
+        LinearLayout headerView2 = (LinearLayout) contributedToRepositoriesCVG.getHeaderView();
+        headerView2.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+
         ((TextView) headerView2.findViewById(R.id.text_tv)).setText("Repositories contributed to");
-        contributedToRepositoriesLV.addHeaderView(headerView2);
+
         contributedToRepositoryAdapter = new Adapter(getPresenter().getAndroidContext());
         contributedToRepositoriesLV.setAdapter(contributedToRepositoryAdapter);
     }
@@ -129,9 +146,9 @@ public class ProfileView extends UIView {
         if (repositories != null && !repositories.isEmpty()) {
             adapter.refreshObjects(repositories);
             adapter.notifyDataSetChanged();
-            ((View) listView.getParent()).setVisibility(View.VISIBLE);
+            ((View) listView.getParent().getParent()).setVisibility(View.VISIBLE);
         } else {
-            ((View) listView.getParent()).setVisibility(View.INVISIBLE);
+            ((View) listView.getParent().getParent()).setVisibility(View.INVISIBLE);
         }
     }
 

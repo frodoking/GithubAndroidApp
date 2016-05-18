@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/header_iv"
-        android:layout_width="@dimen/image_size_xlarge"
-        android:layout_height="@dimen/image_size_xlarge"
+        android:layout_width="@dimen/image_size_xxlarge"
+        android:layout_height="@dimen/image_size_xxlarge"
         android:src="@drawable/octicon_mark_github"/>
 
     <TextView
@@ -22,4 +22,13 @@
         android:textSize="@dimen/text_size_large"
         android:textColor="@android:color/white"
         android:text="Frodo"/>
+
+    <TextView
+        android:id="@+id/id_repo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textSize="@dimen/text_size_middle"
+        android:textColor="@android:color/white"
+        android:text="https://github.com/frodoking"/>
 </LinearLayout>

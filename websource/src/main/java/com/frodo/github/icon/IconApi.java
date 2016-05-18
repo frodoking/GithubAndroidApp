@@ -55,6 +55,7 @@ public class IconApi {
             R.drawable.octicon_bookmark,
             R.drawable.octicon_git_merge,
             R.drawable.octicon_gear,
+            R.drawable.octicon_radio_tower,
     };
 
     private static final String[] iconTexts = {
@@ -93,6 +94,7 @@ public class IconApi {
             "bookmark",
             "git_merge",
             "gear",
+            "radio tower",
     };
 
     public int getLayoutId(){

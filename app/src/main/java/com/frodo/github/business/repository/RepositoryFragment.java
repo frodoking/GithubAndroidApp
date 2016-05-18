@@ -4,10 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.toolbox.TextUtils;
+import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
 
 import rx.Observable;
@@ -25,6 +29,17 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     @Override
     public RepositoryView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new RepositoryView(this, inflater, container);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_repo, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

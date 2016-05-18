@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+
+    <group
+        android:id="@+id/group_base"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_notifications"
+            android:title="@string/menu_notifications"
+            android:icon="@drawable/octicon_bell"
+            android:checkable="true"/>
         <item
             android:id="@+id/action_explore"
             android:title="@string/menu_explore"
             android:icon="@drawable/octicon_telescope"
             android:checkable="true"/>
+        <item
+            android:id="@+id/action_sign_out"
+            android:title="@string/menu_sign_out"
+            android:icon="@drawable/octicon_sign_out"
+            android:checkable="true"/>
     </group>
-    <group android:checkableBehavior="single">
+
+    <group
+        android:id="@+id/group_info"
+        android:checkableBehavior="single"
+        android:title="@string/menu_group_info">
+        <item
+            android:id="@+id/action_news"
+            android:title="@string/menu_issues"
+            android:icon="@drawable/octicon_radio_tower"
+            android:checkable="true"/>
+        <item
+            android:id="@+id/action_events"
+            android:title="@string/menu_events"
+            android:icon="@drawable/octicon_issue_opened"
+            android:checkable="true"/>
+    </group>
+
+    <group
+        android:id="@+id/group_api"
+        android:checkableBehavior="single"
+        android:title="@string/menu_group_api">
         <item
             android:id="@+id/action_icon_api"
             android:title="@string/icon"
-            android:icon="@drawable/octicon_repo"
+            android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
         <item
             android:id="@+id/action_jsoup_api"
             android:title="@string/jsoup"
-            android:icon="@drawable/octicon_megaphone"
+            android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
     </group>
 </menu>

@@ -3,11 +3,17 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="app_name">Github</string>
+    <string name="menu_notifications">Notifications</string>
     <string name="menu_explore">Explore</string>
+    <string name="menu_sign_out">Sign out</string>
     <string name="menu_code">Code</string>
     <string name="menu_issues">Issues</string>
+    <string name="menu_events">Events</string>
     <string name="menu_pull_requests">Pull Requests</string>
     <string name="menu_pulse">Pulse</string>
+
+    <string name="menu_group_info">info</string>
+    <string name="menu_group_api">api</string>
 
     <string name="contribute_description">This application is provided by Frodo(Github:frodoking)</string>
 

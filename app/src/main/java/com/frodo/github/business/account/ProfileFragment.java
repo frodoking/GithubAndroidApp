@@ -42,17 +42,6 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_repo, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
     public void loadUserWithReactor(final String username) {
         getModel().loadUserWithReactor(username)
                 .subscribeOn(Schedulers.io())

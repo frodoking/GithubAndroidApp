@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -15,6 +16,7 @@ import com.frodo.github.R;
  */
 public class CardViewGroup extends CardView {
 
+    private LayoutInflater inflater;
     private LinearLayout rootViewGroup;
     private View headerLayout;
     private View contentLayout;
@@ -35,23 +37,26 @@ public class CardViewGroup extends CardView {
         initialize(context, attrs, defStyleAttr);
     }
 
-
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
+        inflater = LayoutInflater.from(context);
+
         setRadius(ResourceManager.getDimensionPixelSize(R.dimen.corner_radius_default));
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CardViewGroup);
         rootViewGroup = new LinearLayout(context);
         rootViewGroup.setOrientation(LinearLayout.VERTICAL);
         addView(rootViewGroup);
         if (a.hasValue(R.styleable.CardViewGroup_headerLayout)) {
-            headerLayout = View.inflate(context, a.getResourceId(R.styleable.CardViewGroup_headerLayout, 0), rootViewGroup);
+            headerLayout = inflater.inflate(a.getResourceId(R.styleable.CardViewGroup_headerLayout, 0), null, false);
+            rootViewGroup.addView(headerLayout);
             rootViewGroup.addView(ViewProvider.getLine(context, rootViewGroup.getOrientation()));
         }
         if (a.hasValue(R.styleable.CardViewGroup_contentLayout)) {
-            contentLayout = View.inflate(context, a.getResourceId(R.styleable.CardViewGroup_contentLayout, 0), rootViewGroup);
+            contentLayout = inflater.inflate(a.getResourceId(R.styleable.CardViewGroup_contentLayout, 0), null, false);
+            rootViewGroup.addView(contentLayout);
         }
         if (a.hasValue(R.styleable.CardViewGroup_footerLayout)) {
             rootViewGroup.addView(ViewProvider.getLine(context, rootViewGroup.getOrientation()));
-            footerLayout = View.inflate(context, a.getResourceId(R.styleable.CardViewGroup_footerLayout, 0), rootViewGroup);
+            footerLayout = inflater.inflate(a.getResourceId(R.styleable.CardViewGroup_footerLayout, 0), null, false);
         }
 
         a.recycle();
@@ -88,14 +93,16 @@ public class CardViewGroup extends CardView {
     }
 
     private void reFillView() {
-        if (headerLayout!=null){
+        if (headerLayout != null) {
             rootViewGroup.addView(headerLayout);
             rootViewGroup.addView(ViewProvider.getLine(getContext(), rootViewGroup.getOrientation()));
         }
 
-        rootViewGroup.addView(contentLayout);
+        if (contentLayout != null) {
+            rootViewGroup.addView(contentLayout);
+        }
 
-        if (footerLayout!=null){
+        if (footerLayout != null) {
             rootViewGroup.addView(ViewProvider.getLine(getContext(), rootViewGroup.getOrientation()));
             rootViewGroup.addView(footerLayout);
         }

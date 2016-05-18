@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
@@ -24,6 +23,8 @@ import com.frodo.github.bean.ShowCase;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
+import com.frodo.github.view.CardViewGroup;
+import com.frodo.github.view.MaxHeightListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,9 @@ public class ExploreView extends UIView {
     private PagerAdapter pagerAdapter;
     private List<View> pager = new ArrayList<>();
 
+    private CardViewGroup trendingRepositoriesCVG;
     private ListView trendingRepositoriesLV;
     private Adapter repositoryAdapter;
-    private View trendingRepositoriesHeaderView;
-    private View trendingRepositoriesFooterView;
 
     public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_explore);
@@ -73,12 +73,11 @@ public class ExploreView extends UIView {
         };
         viewPager.setAdapter(pagerAdapter);
 
-        trendingRepositoriesLV = (ListView) getRootView().findViewById(R.id.trending_repositories_lv);
-        trendingRepositoriesHeaderView = View.inflate(getRootView().getContext(), R.layout.view_repository_header, null);
-        trendingRepositoriesFooterView = View.inflate(getRootView().getContext(), R.layout.view_footer, null);
-        trendingRepositoriesLV.addHeaderView(trendingRepositoriesHeaderView);
-        trendingRepositoriesLV.addFooterView(trendingRepositoriesFooterView);
-        ((TextView) trendingRepositoriesFooterView.findViewById(R.id.text_tv)).setText("View more trending repositories");
+        trendingRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.trending_repositories_cvg);
+        trendingRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        trendingRepositoriesCVG.setContentView(trendingRepositoriesLV);
+
+        ((TextView) trendingRepositoriesCVG.getFooterView().findViewById(R.id.text_tv)).setText("View more trending repositories");
         repositoryAdapter = new Adapter(getRootView().getContext());
         trendingRepositoriesLV.setAdapter(repositoryAdapter);
     }
@@ -129,9 +128,9 @@ public class ExploreView extends UIView {
         if (repositories != null && !repositories.isEmpty()) {
             repositoryAdapter.refreshObjects(repositories);
             repositoryAdapter.notifyDataSetChanged();
-            ((View) trendingRepositoriesLV.getParent()).setVisibility(View.VISIBLE);
+            trendingRepositoriesCVG.setVisibility(View.VISIBLE);
         } else {
-            ((View) trendingRepositoriesLV.getParent()).setVisibility(View.INVISIBLE);
+            trendingRepositoriesCVG.setVisibility(View.INVISIBLE);
         }
     }
 
