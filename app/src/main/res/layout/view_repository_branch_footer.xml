@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/repo_view_code_ll"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="@dimen/item_height_default"
-        android:orientation="horizontal"
+        android:background="@drawable/item_selector"
         android:gravity="center">
 
-        <LinearLayout
+        <TextView
             android:id="@+id/repo_view_code_tv"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/item_selector"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_middle"
-                android:textColor="?attr/colorPrimary"
-                android:drawableLeft="@drawable/octicon_file_directory"
-                android:drawablePadding="@dimen/margin_xsmall"
-                android:text="View code"
-                android:gravity="center"/>
-        </LinearLayout>
-
-        <View style="@style/LineVStyle"/>
-
-        <LinearLayout
-            android:id="@+id/repo_jump_to_file_tv"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/item_selector"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_middle"
-                android:textColor="?attr/colorPrimary"
-                android:drawableLeft="@drawable/octicon_search"
-                android:drawablePadding="@dimen/margin_xsmall"
-                android:gravity="center"
-                android:text="Jump to file"/>
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_middle"
+            android:textColor="?attr/colorPrimary"
+            android:drawableLeft="@drawable/octicon_file_directory"
+            android:drawablePadding="@dimen/margin_xsmall"
+            android:text="View code"
+            android:gravity="center"/>
     </LinearLayout>
+
+    <View style="@style/LineVStyle"/>
+
+    <LinearLayout
+        android:id="@+id/repo_jump_to_file_ll"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="@dimen/item_height_default"
+        android:background="@drawable/item_selector"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/repo_jump_to_file_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_middle"
+            android:textColor="?attr/colorPrimary"
+            android:drawableLeft="@drawable/octicon_search"
+            android:drawablePadding="@dimen/margin_xsmall"
+            android:gravity="center"
+            android:text="Jump to file"/>
+    </LinearLayout>
+</LinearLayout>

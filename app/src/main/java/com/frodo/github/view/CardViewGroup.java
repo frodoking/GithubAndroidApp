@@ -57,6 +57,7 @@ public class CardViewGroup extends CardView {
         if (a.hasValue(R.styleable.CardViewGroup_footerLayout)) {
             rootViewGroup.addView(ViewProvider.getLine(context, rootViewGroup.getOrientation()));
             footerLayout = inflater.inflate(a.getResourceId(R.styleable.CardViewGroup_footerLayout, 0), null, false);
+            rootViewGroup.addView(footerLayout);
         }
 
         a.recycle();

@@ -8,12 +8,15 @@ import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.github.bean.Repository;
+import com.frodo.github.bean.User;
 import com.frodo.github.common.Path;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by frodo on 2016/5/7.
@@ -29,48 +32,22 @@ public class RepositoryModel extends AbstractModel {
     public void initBusiness() {
     }
 
-    public void loadRepositoryDetailWithReactor(String slug, final Subscriber<? super Repository> subscriber) {
-        Request request = new Request("GET", String.format("%s/%s", Path.Explore.SHOWCASES, slug));
-        final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-        networkTransport.setAPIUrl(Path.HOST_GITHUB);
-        fetchRepositoryNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
-
+    public Observable<Repository> loadRepositoryDetailWithReactor(final String slug) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void onStart() {
-                super.onStart();
-                subscriber.onStart();
+            public void call(final Subscriber<? super String> subscriber) {
+                Request request = new Request("GET", String.format(Path.Repos.REPOS_FULLNAME, slug));
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchRepositoryNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchRepositoryNetworkDataTask);
             }
-
+        }).map(new Func1<String, Repository>() {
             @Override
-            public void onCompleted() {
-                subscriber.onCompleted();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                subscriber.onError(e);
-            }
-
-            @Override
-            public void onNext(String s) {
-                final String resultStr = s;
-                try {
-                    new JSONObject(resultStr);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                    return;
-                }
-
-                if (resultStr != null) {
-                    Repository repository = JsonConverter.convert(resultStr, new TypeReference<Repository>() {
-                    });
-                    subscriber.onNext(repository);
-                } else {
-                    subscriber.onNext(null);
-                }
+            public Repository call(String s) {
+                return JsonConverter.convert(s, new TypeReference<Repository>() {
+                });
             }
         });
-        getMainController().getBackgroundExecutor().execute(fetchRepositoryNetworkDataTask);
     }
 }

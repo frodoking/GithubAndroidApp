@@ -8,19 +8,248 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_middle">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/repo_description_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_middle"
+            android:layout_margin="@dimen/margin_middle"
             android:textColor="@android:color/darker_gray"/>
+
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardCornerRadius="@dimen/corner_radius_default"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_middle">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/private_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/item_height_small"
+                            android:textSize="@dimen/text_size_xxsmall"
+                            android:textColor="@android:color/darker_gray"
+                            android:drawableLeft="@drawable/octicon_eye"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="Public"/>
+
+                        <TextView
+                            android:id="@+id/issues_count_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/item_height_small"
+                            android:textSize="@dimen/text_size_xxsmall"
+                            android:textColor="@android:color/darker_gray"
+                            android:drawableLeft="@drawable/octicon_issue_opened"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="58 Issues"/>
+
+                        <TextView
+                            android:id="@+id/date_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/item_height_small"
+                            android:textSize="@dimen/text_size_xxsmall"
+                            android:textColor="@android:color/darker_gray"
+                            android:drawableLeft="@drawable/octicon_issue_opened"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="07/23/13"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/language_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/item_height_small"
+                            android:textSize="@dimen/text_size_xxsmall"
+                            android:textColor="@android:color/darker_gray"
+                            android:drawableLeft="@drawable/octicon_eye"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="C#"/>
+
+                        <TextView
+                            android:id="@+id/size_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/item_height_small"
+                            android:textSize="@dimen/text_size_xxsmall"
+                            android:textColor="@android:color/darker_gray"
+                            android:drawableLeft="@drawable/octicon_issue_opened"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="71.68MB"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_small"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/item_selector">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_xxsmall"
+                        android:textColor="@android:color/darker_gray"
+                        android:drawableLeft="@drawable/octicon_organization"
+                        android:drawablePadding="@dimen/margin_small"
+                        android:gravity="center_vertical"
+                        android:text="Owner"/>
+                    <TextView
+                        android:id="@+id/owner_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_xxsmall"
+                        android:textColor="@android:color/darker_gray"
+                        android:drawableRight="@drawable/octicon_star"
+                        android:drawablePadding="@dimen/margin_small"
+                        android:gravity="center_vertical"
+                        android:text="App-Architecture"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_middle"
+            android:paddingLeft="@dimen/margin_middle"
+            android:paddingRight="@dimen/margin_middle">
+
+            <Button
+                android:id="@+id/star_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/ButtonStyle"
+                android:drawableLeft="@drawable/octicon_star"
+                android:textAllCaps="false"
+                android:text="Star"/>
+
+            <Button
+                android:id="@+id/watch_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/ButtonStyle"
+                android:drawableLeft="@drawable/octicon_eye"
+                android:layout_marginLeft="@dimen/margin_xsmall"
+                android:textAllCaps="false"
+                android:text="Watch"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_middle">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stargazers_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Stargazers"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/watchers_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Watchers"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/forks_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xxsmall"
+                    android:textColor="@android:color/darker_gray"
+                    android:text="Forks"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/LineStyle"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/branchs_cvg"
             android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
@@ -30,6 +259,8 @@
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/readme_cvg"
             android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
@@ -40,6 +271,8 @@
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/pulse_cvg"
             android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
@@ -49,6 +282,8 @@
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/issues_cvg"
             android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
@@ -58,6 +293,8 @@
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/pull_requests_cvg"
             android:layout_marginTop="@dimen/margin_middle"
+            android:layout_marginLeft="@dimen/margin_middle"
+            android:layout_marginRight="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
@@ -66,7 +303,7 @@
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/notifications_cvg"
-            android:layout_marginTop="@dimen/margin_middle"
+            android:layout_margin="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"

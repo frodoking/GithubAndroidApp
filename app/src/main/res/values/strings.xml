@@ -9,6 +9,9 @@
     <string name="menu_code">Code</string>
     <string name="menu_issues">Issues</string>
     <string name="menu_events">Events</string>
+    <string name="menu_organizations">Organizations</string>
+    <string name="menu_repositories">Repositories</string>
+    <string name="menu_gists">Gists</string>
     <string name="menu_pull_requests">Pull Requests</string>
     <string name="menu_pulse">Pulse</string>
 

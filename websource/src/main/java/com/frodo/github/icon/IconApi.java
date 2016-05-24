@@ -56,6 +56,12 @@ public class IconApi {
             R.drawable.octicon_git_merge,
             R.drawable.octicon_gear,
             R.drawable.octicon_radio_tower,
+
+            R.drawable.octicon_git_commit,
+            R.drawable.octicon_comment_discussion,
+
+            R.drawable.octicon_chevron_up,
+            R.drawable.octicon_chevron_down,
     };
 
     private static final String[] iconTexts = {
@@ -95,6 +101,10 @@ public class IconApi {
             "git_merge",
             "gear",
             "radio tower",
+            "git commit",
+            "comment discussion",
+            "chevron up",
+            "chevron down",
     };
 
     public int getLayoutId(){

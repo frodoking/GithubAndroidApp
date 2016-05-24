@@ -64,7 +64,7 @@ public final class Path {
     }
 
     public final static class Repos {
-
+        public static final String REPOS_FULLNAME = "/repos/%s";
     }
 
     public final static class Search {

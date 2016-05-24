@@ -13,10 +13,10 @@ import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.Repository;
+import com.frodo.github.view.CircleProgressDialog;
 
-import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -63,28 +63,33 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     private void loadRepositoryWithReactor(final String repo) {
-        Observable
-                .create(new Observable.OnSubscribe<Repository>() {
+        getModel().loadRepositoryDetailWithReactor(repo)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
                     @Override
-                    public void call(Subscriber<? super Repository> subscriber) {
-                        getModel().loadRepositoryDetailWithReactor(repo, subscriber);
+                    public void call() {
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<Repository>() {
-                            @Override
-                            public void call(Repository result) {
-                                getUIView().showDetail(result);
-                            }
-                        },
+                .subscribe(new Action1<Repository>() {
+                               @Override
+                               public void call(Repository repository) {
+                                   getUIView().showDetail(repository);
+                               }
+                           },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                getUIView().showError(throwable.getMessage());
+                                throwable.printStackTrace();
                             }
-                        }
-                );
+                        }, new Action0() {
+                            @Override
+                            public void call() {
+                                CircleProgressDialog.hideLoadingDialog();
+                            }
+                        });
+
     }
 }
