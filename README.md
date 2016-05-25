@@ -18,7 +18,12 @@ app architecture on android platform.
 * Blog：http://frodoking.github.io/
 
 ##App Master Drawing
-<img  src="https://github.com/frodoking/GithubAndroidClient/tree/master/masterDrawing/user-profile-about.png" width="313" height="560">
+<img  src="http://frodoking.github.io/img/github-client/home.png" width="480" height="853">
+<img  src="http://frodoking.github.io/img/github-client/drawer.png" width="480" height="853">
+<img  src="http://frodoking.github.io/img/github-client/explore.png" width="480" height="853">
+<img  src="http://frodoking.github.io/img/github-client/explore-second.png" width="480" height="853">
+<img  src="http://frodoking.github.io/img/github-client/user.png" width="480" height="853">
+<img  src="http://frodoking.github.io/img/github-client/repo.png" width="480" height="853">
 
 
 
