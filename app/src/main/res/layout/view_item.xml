@@ -27,6 +27,5 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"
         android:textColor="@android:color/darker_gray"
-        android:drawableRight="@drawable/octicon_star"
         android:drawablePadding="@dimen/margin_xsmall"/>
 </LinearLayout>
