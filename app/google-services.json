@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "778981007527",
+    "firebase_url": "https://admob-app-id-9157734222.firebaseio.com",
+    "project_id": "admob-app-id-9157734222",
+    "storage_bucket": "admob-app-id-9157734222.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778981007527:android:b6338f31320ace7c",
+        "android_client_info": {
+          "package_name": "com.frodo.github.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778981007527-1do1sk1cb0s43ojgnu0lo006dcgoai91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5eW8nz03TB5CsdI1ZpIs0l0pwLw8Fyso"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
