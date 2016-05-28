@@ -52,4 +52,14 @@
             android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
     </group>
+    <group
+        android:id="@+id/group_other"
+        android:checkableBehavior="single"
+        android:title="@string/menu_group_api">
+        <item
+            android:id="@+id/action_icon_setting"
+            android:title="@string/menu_setting"
+            android:icon="@drawable/octicon_gear"
+            android:checkable="true"/>
+    </group>
 </menu>

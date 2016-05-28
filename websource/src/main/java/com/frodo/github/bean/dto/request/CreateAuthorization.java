@@ -1,8 +1,5 @@
-package com.frodo.github.bean;
+package com.frodo.github.bean.dto.request;
 
-/**
- * Created by frodo on 2016/5/5.
- */
 public class CreateAuthorization {
     /**
      * A list of scopes that this authorization is in.
@@ -36,4 +33,3 @@ public class CreateAuthorization {
      */
     public String fingerprint;
 }
-

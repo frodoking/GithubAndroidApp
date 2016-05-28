@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_events"
+        android:title="@string/menu_events"
+        android:icon="@drawable/octicon_code" />
+    <item
+        android:id="@+id/action_organizations"
+        android:title="@string/menu_organizations"
+        android:icon="@drawable/octicon_organization" />
+    <item
+        android:id="@+id/action_repositories"
+        android:title="@string/menu_repositories"
+        android:icon="@drawable/octicon_repo" />
+    <item
+        android:id="@+id/action_gists"
+        android:title="@string/menu_gists"
+        android:icon="@drawable/octicon_pulse" />
+</menu>

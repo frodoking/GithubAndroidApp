@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
 
 import java.util.HashMap;
@@ -29,7 +25,6 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/4/30.
  */
 public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
-    private static final String KEY_CACHE_SHOWCASES = "showcases_cache";
 
     @Override
     public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -37,37 +32,27 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     }
 
     @Override
-    protected void onFirstTimeLaunched() {
+    public void onFirstTimeLaunched() {
         loadDataWithReactor();
     }
 
     @Override
-    protected void onSaveState(Bundle outState) {
-        List<ShowCase> showCases = getModel().getShowCases();
-        try {
-            outState.putString(KEY_CACHE_SHOWCASES, new ObjectMapper().writeValueAsString(showCases));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    public void onSaveState(Bundle outState) {
     }
 
     @Override
-    protected void onRestoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            String moviesJson = savedInstanceState.getString(KEY_CACHE_SHOWCASES);
-            List<ShowCase> showCases = JsonConverter.convert(moviesJson, new TypeReference<List<ShowCase>>() {
-            });
-            getUIView().showShowCaseList(showCases);
-        }
+    public void onRestoreState(Bundle savedInstanceState) {
+        List<ShowCase> showCases = getModel().getShowCases();
+        getUIView().showShowCaseList(showCases);
     }
 
     private void loadDataWithReactor() {
         final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
-        final Observable<List<Repository>> repositoryObservable = getModel().loadRepositoriesWithReactor();
+        final Observable<List<Repo>> repositoryObservable = getModel().loadRepositoriesWithReactor();
 
-        Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repository>, Map<String, Object>>() {
+        Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repo>, Map<String, Object>>() {
             @Override
-            public Map<String, Object> call(List<ShowCase> showCases, List<Repository> repositories) {
+            public Map<String, Object> call(List<ShowCase> showCases, List<Repo> repositories) {
                 Map<String, Object> map = new HashMap<>(2);
                 map.put("showCases", showCases);
                 map.put("repositories", repositories);
@@ -88,7 +73,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                             @Override
                             public void call(Map<String, Object> result) {
                                 List<ShowCase> showCases = (List<ShowCase>) result.get("showCases");
-                                List<Repository> repositories = (List<Repository>) result.get("repositories");
+                                List<Repo> repositories = (List<Repo>) result.get("repositories");
                                 getUIView().showShowCaseList(showCases);
                                 getUIView().showTrendingRepositoryList(repositories);
                             }

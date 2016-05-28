@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.R;
-import com.frodo.github.bean.User;
+import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.view.CircleProgressDialog;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,6 +22,8 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/5/7.
  */
 public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
+
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,22 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
     }
 
     @Override
-    protected void onFirstTimeLaunched() {
+    public void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("username")) {
             loadUserWithReactor(bundle.getString("username"));
         }
+    }
+
+    @Override
+    public void onSaveState(Bundle outState) {
+        outState.putParcelable("user", user);
+    }
+
+    @Override
+    public void onRestoreState(Bundle savedInstanceState) {
+        user = savedInstanceState.getParcelable("user");
+        getUIView().showDetail(user);
     }
 
     public void loadUserWithReactor(final String username) {
@@ -67,6 +80,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
                 .subscribe(new Action1<User>() {
                                @Override
                                public void call(User user) {
+                                   ProfileFragment.this.user = user;
                                    getUIView().showDetail(user);
                                }
                            },

@@ -20,6 +20,7 @@ import rx.schedulers.Schedulers;
  */
 public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, ShowCaseDetailModel> {
     private String tag = "";
+    private ShowCase showCase;
 
     @Override
     public ShowCaseDetailView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -27,7 +28,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
     }
 
     @Override
-    protected void onFirstTimeLaunched() {
+    public void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("slug")) {
             tag = bundle.getString("slug");
@@ -39,6 +40,17 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+    }
+
+    @Override
+    public void onSaveState(Bundle outState) {
+        outState.putParcelable("showcase", showCase);
+    }
+
+    @Override
+    public void onRestoreState(Bundle savedInstanceState) {
+        showCase = savedInstanceState.getParcelable("showcase");
+        getUIView().showShowCaseDetail(showCase);
     }
 
     @Override
@@ -61,6 +73,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                         new Action1<ShowCase>() {
                             @Override
                             public void call(ShowCase result) {
+                                ShowCaseDetailFragment.this.showCase = result;
                                 getUIView().showShowCaseDetail(result);
                             }
                         },

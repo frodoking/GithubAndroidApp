@@ -13,7 +13,7 @@ import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.DrawableHelper;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
-import com.frodo.github.bean.Repository;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CardViewGroup;
 
 /**
@@ -164,7 +164,7 @@ public class RepositoryView extends UIView {
     public void registerListener() {
     }
 
-    public void showDetail(Repository repository) {
+    public void showDetail(Repo repository) {
         descriptionTV.setText(repository.description);
         issuesCountTV.setText(String.format("%s issues", repository.open_issues_count));
         languageTV.setText(repository.language);

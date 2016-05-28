@@ -15,11 +15,11 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
-import com.frodo.app.android.core.toolbox.FragmentScheduler;
+import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
-import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
@@ -88,7 +88,7 @@ public class ExploreView extends UIView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle arguments = new Bundle();
-                Repository repository = repositoryAdapter.getItem(position);
+                Repo repository = repositoryAdapter.getItem(position);
                 if (repository != null) {
                     arguments.putString("repo", repository.name);
                     FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
@@ -104,7 +104,7 @@ public class ExploreView extends UIView {
                 SimpleDraweeView imageView = (SimpleDraweeView) itemView.findViewById(R.id.img_iv);
                 TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
 
-                imageView.setImageURI(Uri.parse(showcase.imageUrl));
+                imageView.setImageURI(Uri.parse(showcase.image_url));
                 textView.setText(showcase.name);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -124,7 +124,7 @@ public class ExploreView extends UIView {
         }
     }
 
-    public void showTrendingRepositoryList(List<Repository> repositories) {
+    public void showTrendingRepositoryList(List<Repo> repositories) {
         if (repositories != null && !repositories.isEmpty()) {
             repositoryAdapter.refreshObjects(repositories);
             repositoryAdapter.notifyDataSetChanged();
@@ -134,7 +134,7 @@ public class ExploreView extends UIView {
         }
     }
 
-    private class Adapter extends BaseListViewAdapter<Repository> {
+    private class Adapter extends BaseListViewAdapter<Repo> {
         public Adapter(Context context) {
             super(context, R.layout.view_repositories_item);
         }
@@ -153,9 +153,9 @@ public class ExploreView extends UIView {
                 vh = (ViewHolder) convertView.getTag();
             }
 
-            final Repository bean = getItem(position);
-            if (bean.owner != null && bean.owner.avatarUrl != null) {
-                vh.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatarUrl));
+            final Repo bean = getItem(position);
+            if (bean.owner != null && bean.owner.avatar_url != null) {
+                vh.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatar_url));
             }
 
             vh.repoTV.setText(bean.full_name);

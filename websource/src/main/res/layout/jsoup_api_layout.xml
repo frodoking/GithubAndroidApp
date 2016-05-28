@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:scrollbars="vertical">
+
     <Button
         android:id="@+id/popular_repositories_btn"
         android:layout_width="match_parent"

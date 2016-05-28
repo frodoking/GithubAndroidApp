@@ -1,7 +1,8 @@
 package com.frodo.github.datasource;
 
-import com.frodo.github.bean.Repository;
-import com.frodo.github.bean.User;
+
+import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.bean.dto.response.User;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,44 +30,44 @@ public class WebApiProvider {
     }
 
     private static User fetch(String host, String user, String userAgent) throws IOException {
-            User userWebInfo = null;
-            Document doc = Jsoup.connect(host + '/' + user).userAgent(userAgent).get();
-            Elements popularReposElems = doc.select("div[class=bubble ]");
-            String starred = doc.select("div[class=vcard-stat]").get(1).select("strong[class=vcard-stat-count]").text();
-            if (popularReposElems != null) {
-                userWebInfo = new User();
-                if (starred != null) {
-                    userWebInfo.starred = Integer.valueOf(starred);
-                }
-                for (int i = 0; i < popularReposElems.size(); i++) {
-                    Element element = popularReposElems.get(i);
-                    if (element != null) {
-                        Elements repoElems = element.select("a[class=list-item repo-list-item]");
-                        if (repoElems != null) {
-                            List<Repository> repos = new ArrayList<>(repoElems.size());
-                            for (int j = 0; j < repoElems.size(); j++) {
-                                Element elementRepo = repoElems.get(j);
-                                if (elementRepo != null) {
-                                    Repository repo = new Repository();
-                                    repo.archive_url = elementRepo.attr("href");
+        User userWebInfo = null;
+        Document doc = Jsoup.connect(host + '/' + user).userAgent(userAgent).get();
+        Elements popularReposElems = doc.select("div[class=bubble ]");
+        String starred = doc.select("div[class=vcard-stat]").get(1).select("strong[class=vcard-stat-count]").text();
+        if (popularReposElems != null) {
+            userWebInfo = new User();
+            if (starred != null) {
+                userWebInfo.starred = Integer.valueOf(starred);
+            }
+            for (int i = 0; i < popularReposElems.size(); i++) {
+                Element element = popularReposElems.get(i);
+                if (element != null) {
+                    Elements repoElems = element.select("a[class=list-item repo-list-item]");
+                    if (repoElems != null) {
+                        List<Repo> repos = new ArrayList<>(repoElems.size());
+                        for (int j = 0; j < repoElems.size(); j++) {
+                            Element elementRepo = repoElems.get(j);
+                            if (elementRepo != null) {
+                                Repo repo = new Repo();
+                                repo.archive_url = elementRepo.attr("href");
 
-                                    Elements elementRepoString = elementRepo.select("div[class=list-item-title repo-name]");
-                                    repo.name = elementRepoString.get(0).text();
+                                Elements elementRepoString = elementRepo.select("div[class=list-item-title repo-name]");
+                                repo.name = elementRepoString.get(0).text();
 
-                                    Elements elementStars = elementRepo.select("strong[class=meta]");
-                                    repo.stargazers_count = Integer.parseInt(elementStars.get(0).text().replace(",", ""));
-                                    repos.add(repo);
-                                }
+                                Elements elementStars = elementRepo.select("strong[class=meta]");
+                                repo.stargazers_count = Integer.parseInt(elementStars.get(0).text().replace(",", ""));
+                                repos.add(repo);
                             }
-                            if (i == 0) {
-                                userWebInfo.popularRepositories = repos;
-                            } else if (i == 1) {
-                                userWebInfo.contributeToRepositories = repos;
-                            }
+                        }
+                        if (i == 0) {
+                            userWebInfo.popularRepositories = repos;
+                        } else if (i == 1) {
+                            userWebInfo.contributeToRepositories = repos;
                         }
                     }
                 }
             }
-            return userWebInfo;
+        }
+        return userWebInfo;
     }
 }

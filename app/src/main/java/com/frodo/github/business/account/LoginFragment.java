@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.github.bean.User;
+import com.frodo.github.bean.dto.response.User;
 
 import rx.Observable;
 import rx.Subscriber;

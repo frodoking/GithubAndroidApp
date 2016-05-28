@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
-import com.frodo.app.android.core.toolbox.FragmentScheduler;
+import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
-import com.frodo.github.bean.Repository;
-import com.frodo.github.bean.User;
+import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
@@ -111,7 +111,7 @@ public class ProfileView extends UIView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle arguments = new Bundle();
-                Repository repository = popularRepositoryAdapter.getItem(position);
+                Repo repository = popularRepositoryAdapter.getItem(position);
                 if (repository != null) {
                     arguments.putString("repo", repository.name);
                     FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
@@ -126,14 +126,14 @@ public class ProfileView extends UIView {
     }
 
     public void showDetail(User user) {
-        headSDV.setImageURI(Uri.parse(user.avatarUrl));
+        headSDV.setImageURI(Uri.parse(user.avatar_url));
         fullnameTV.setText(user.login);
         usernameTV.setText(user.name);
         companyTV.setText(user.company);
         locationTV.setText(user.location);
         emailTV.setText(user.email);
         blogTV.setText(user.blog);
-        sinceTV.setText(user.createdAt.toLocaleString());
+        sinceTV.setText(user.created_at.toLocaleString());
         followersTV.setText(String.valueOf(user.followers));
         starredTV.setText(String.valueOf(user.starred));
         followingTV.setText(String.valueOf(user.following));
@@ -142,7 +142,7 @@ public class ProfileView extends UIView {
         showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);
     }
 
-    public void showRepositoryList(ListView listView, Adapter adapter, List<Repository> repositories) {
+    public void showRepositoryList(ListView listView, Adapter adapter, List<Repo> repositories) {
         if (repositories != null && !repositories.isEmpty()) {
             adapter.refreshObjects(repositories);
             adapter.notifyDataSetChanged();
@@ -152,7 +152,7 @@ public class ProfileView extends UIView {
         }
     }
 
-    private class Adapter extends BaseListViewAdapter<Repository> {
+    private class Adapter extends BaseListViewAdapter<Repo> {
         public Adapter(Context context) {
             super(context, R.layout.view_item);
         }
@@ -170,7 +170,7 @@ public class ProfileView extends UIView {
                 vh = (ViewHolder) convertView.getTag();
             }
 
-            final Repository bean = getItem(position);
+            final Repo bean = getItem(position);
 
             vh.repoTV.setText(bean.name);
             vh.starCountTV.setText(String.valueOf(bean.stargazers_count));

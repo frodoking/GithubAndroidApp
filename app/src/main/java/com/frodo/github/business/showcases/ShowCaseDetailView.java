@@ -9,23 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
-import com.frodo.app.android.core.toolbox.FragmentScheduler;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
-import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.VerticalSpaceItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,7 +34,7 @@ public class ShowCaseDetailView extends UIView {
     private TextView descriptionTV;
     private RecyclerView repositoriesRV;
     private Adapter repositoryAdapter;
-    private List<Repository> repositoryList = new ArrayList<>();
+    private List<Repo> repositoryList = new ArrayList<>();
 
     public ShowCaseDetailView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_showcase_detail);
@@ -63,18 +61,18 @@ public class ShowCaseDetailView extends UIView {
 
     public void showShowCaseDetail(ShowCase showCase) {
         descriptionTV.setText(showCase.description);
-        if (showCase.repositories != null && showCase.repositories.length > 0) {
+        if (showCase.repositories != null && showCase.repositories.size() > 0) {
             repositoryList.clear();
-            repositoryList.addAll(Arrays.asList(showCase.repositories));
+            repositoryList.addAll(showCase.repositories);
             repositoryAdapter.notifyDataSetChanged();
         }
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.RepositoriesViewHolder> {
         private LayoutInflater layoutInflater;
-        private List<Repository> repositories;
+        private List<Repo> repositories;
 
-        public Adapter(Context context, List<Repository> repositories) {
+        public Adapter(Context context, List<Repo> repositories) {
             this.repositories = repositories;
             this.layoutInflater = LayoutInflater.from(context);
         }
@@ -87,9 +85,9 @@ public class ShowCaseDetailView extends UIView {
 
         @Override
         public void onBindViewHolder(RepositoriesViewHolder holder, int position) {
-            final Repository bean = repositories.get(position);
-            if (bean.owner != null && bean.owner.avatarUrl != null) {
-                holder.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatarUrl));
+            final Repo bean = repositories.get(position);
+            if (bean.owner != null && bean.owner.avatar_url != null) {
+                holder.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatar_url));
             }
 
             holder.repoTV.setText(bean.full_name);

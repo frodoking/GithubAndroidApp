@@ -8,8 +8,8 @@ import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
-import com.frodo.github.bean.Repository;
 import com.frodo.github.bean.ShowCase;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.showcases.ShowCaseListCache;
 import com.frodo.github.common.Path;
 
@@ -71,7 +71,7 @@ public class ExploreModel extends AbstractModel {
         });
     }
 
-    public Observable<List<Repository>> loadRepositoriesWithReactor() {
+    public Observable<List<Repo>> loadRepositoriesWithReactor() {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -83,10 +83,10 @@ public class ExploreModel extends AbstractModel {
                 fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
             }
-        }).map(new Func1<String, List<Repository>>() {
+        }).map(new Func1<String, List<Repo>>() {
             @Override
-            public List<Repository> call(String s) {
-                return JsonConverter.convert(s, new TypeReference<List<Repository>>() {
+            public List<Repo> call(String s) {
+                return JsonConverter.convert(s, new TypeReference<List<Repo>>() {
                 });
             }
         });

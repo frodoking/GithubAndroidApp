@@ -15,9 +15,9 @@ import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.task.BackgroundCallTask;
-import com.frodo.github.bean.Authorization;
-import com.frodo.github.bean.CreateAuthorization;
-import com.frodo.github.bean.User;
+import com.frodo.github.bean.dto.request.CreateAuthorization;
+import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.bean.security.OAuthRequestDTO;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
 import com.frodo.github.datasource.WebApiProvider;
@@ -113,7 +113,7 @@ public class AccountModel extends AbstractModel {
                 }
 
                 if (listString != null) {
-                    Authorization authorization = JsonConverter.convert(listString, Authorization.class);
+                    OAuthRequestDTO authorization = JsonConverter.convert(listString, OAuthRequestDTO.class);
                 }
             }
         });

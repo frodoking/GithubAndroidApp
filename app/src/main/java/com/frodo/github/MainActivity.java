@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.frodo.app.android.core.toolbox.FragmentScheduler;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
+import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.business.account.ProfileFragment;
@@ -61,7 +61,7 @@ public class MainActivity extends FragmentContainerActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                     drawerLayout.openDrawer(GravityCompat.START);
                 } else {
                     MainActivity.super.onBackPressed();
@@ -74,7 +74,7 @@ public class MainActivity extends FragmentContainerActivity {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 Bundle arguments = new Bundle();
                 arguments.putString("username", "frodoking");
-                FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, arguments);
+                FragmentScheduler.replaceFragment(MainActivity.this, ProfileFragment.class, arguments);
             }
         });
         navigationView.setNavigationItemSelectedListener(
@@ -94,13 +94,13 @@ public class MainActivity extends FragmentContainerActivity {
                         toolbar.setTitle(menuItem.getTitle());
                         switch (menuItem.getItemId()) {
                             case R.id.action_explore:
-                                FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class, null);
+                                FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
                                 return true;
                             case R.id.action_icon_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, IconApiFragment.class, null);
+                                FragmentScheduler.replaceFragment(MainActivity.this, IconApiFragment.class);
                                 return true;
                             case R.id.action_jsoup_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, JsoupApiFragment.class, null);
+                                FragmentScheduler.replaceFragment(MainActivity.this, JsoupApiFragment.class);
                             default:
                                 return true;
                         }
@@ -136,7 +136,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     @Override
     public void initBusiness() {
-        FragmentScheduler.nextFragment(this, MainFragment.class, null);
+        FragmentScheduler.replaceFragment(this, MainFragment.class);
     }
 
     @Override

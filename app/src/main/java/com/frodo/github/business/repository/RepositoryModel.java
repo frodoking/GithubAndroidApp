@@ -7,12 +7,8 @@ import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
-import com.frodo.github.bean.Repository;
-import com.frodo.github.bean.User;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.common.Path;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -32,7 +28,7 @@ public class RepositoryModel extends AbstractModel {
     public void initBusiness() {
     }
 
-    public Observable<Repository> loadRepositoryDetailWithReactor(final String slug) {
+    public Observable<Repo> loadRepositoryDetailWithReactor(final String slug) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(final Subscriber<? super String> subscriber) {
@@ -42,10 +38,10 @@ public class RepositoryModel extends AbstractModel {
                 fetchRepositoryNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchRepositoryNetworkDataTask);
             }
-        }).map(new Func1<String, Repository>() {
+        }).map(new Func1<String, Repo>() {
             @Override
-            public Repository call(String s) {
-                return JsonConverter.convert(s, new TypeReference<Repository>() {
+            public Repo call(String s) {
+                return JsonConverter.convert(s, new TypeReference<Repo>() {
                 });
             }
         });

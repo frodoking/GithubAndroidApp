@@ -14,6 +14,7 @@
     <string name="menu_gists">Gists</string>
     <string name="menu_pull_requests">Pull Requests</string>
     <string name="menu_pulse">Pulse</string>
+    <string name="menu_setting">Setting</string>
 
     <string name="menu_group_info">info</string>
     <string name="menu_group_api">api</string>

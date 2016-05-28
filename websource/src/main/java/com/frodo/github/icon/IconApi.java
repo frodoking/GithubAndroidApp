@@ -107,7 +107,7 @@ public class IconApi {
             "chevron down",
     };
 
-    public int getLayoutId(){
+    public int getLayoutId() {
         return R.layout.icon_api_layout;
     }
 

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
-import com.frodo.github.bean.Repository;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,7 +24,8 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/5/7.
  */
 public class RepositoryFragment extends StatedFragment<RepositoryView, RepositoryModel> {
-    private String repo;
+    private String repoName;
+    private Repo repo;
 
     @Override
     public RepositoryView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -43,11 +44,11 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     @Override
-    protected void onFirstTimeLaunched() {
+    public void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("repo")) {
-            repo = bundle.getString("repo");
-            loadRepositoryWithReactor(repo);
+            repoName = bundle.getString("repo");
+            loadRepositoryWithReactor(repoName);
         }
     }
 
@@ -58,8 +59,19 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     @Override
+    public void onSaveState(Bundle outState) {
+        outState.putParcelable("repo", repo);
+    }
+
+    @Override
+    public void onRestoreState(Bundle savedInstanceState) {
+        repo = savedInstanceState.getParcelable("repo");
+        getUIView().showDetail(repo);
+    }
+
+    @Override
     public String tag() {
-        return TextUtils.isEmpty(repo) ? "Repository" : repo;
+        return TextUtils.isEmpty(repoName) ? "Repository" : repoName;
     }
 
     private void loadRepositoryWithReactor(final String repo) {
@@ -73,9 +85,10 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Repository>() {
+                .subscribe(new Action1<Repo>() {
                                @Override
-                               public void call(Repository repository) {
+                               public void call(Repo repository) {
+                                   RepositoryFragment.this.repo = repository;
                                    getUIView().showDetail(repository);
                                }
                            },
