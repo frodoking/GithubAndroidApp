@@ -122,7 +122,7 @@ public class ProfileView extends UIView {
 
     @Override
     public void onShowOrHide(boolean isShown) {
-        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
+//        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
     }
 
     public void showDetail(User user) {

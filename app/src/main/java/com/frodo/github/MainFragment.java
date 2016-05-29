@@ -2,7 +2,6 @@ package com.frodo.github;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,7 +10,6 @@ import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 /**
  * Created by frodo on 2016/4/28.

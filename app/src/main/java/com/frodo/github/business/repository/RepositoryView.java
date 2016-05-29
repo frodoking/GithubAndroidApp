@@ -180,4 +180,9 @@ public class RepositoryView extends UIView {
         branchsTV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
     }
+
+    @Override
+    public void onShowOrHide(boolean isShown) {
+        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
+    }
 }

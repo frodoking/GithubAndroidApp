@@ -41,6 +41,7 @@ public class Repo extends ShaUrl implements Parcelable {
     public String full_name;
     public String ssh_url;
     public String svn_url;
+    public String forks_url;
     public User owner;
     public int stargazers_count;
     public int subscribers_count;
@@ -77,6 +78,7 @@ public class Repo extends ShaUrl implements Parcelable {
         this.clone_url = in.readString();
         this.description = in.readString();
         this.homepage = in.readString();
+        this.forks_url = in.readString();
         this.git_url = in.readString();
         this.language = in.readString();
         this.default_branch = in.readString();
@@ -181,6 +183,7 @@ public class Repo extends ShaUrl implements Parcelable {
         dest.writeParcelable(this.parent, 0);
         dest.writeParcelable(this.source, 0);
         dest.writeString(this.clone_url);
+        dest.writeString(this.forks_url);
         dest.writeString(this.description);
         dest.writeString(this.homepage);
         dest.writeString(this.git_url);

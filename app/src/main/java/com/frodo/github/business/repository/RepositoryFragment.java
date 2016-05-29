@@ -28,6 +28,12 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     private Repo repo;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public RepositoryView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new RepositoryView(this, inflater, container);
     }
