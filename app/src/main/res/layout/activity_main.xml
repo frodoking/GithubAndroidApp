@@ -49,7 +49,7 @@
         android:layout_gravity="left"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_head"
-        app:menu="@menu/menu_drawer"/>
+        app:menu="@menu/menu_drawer_not_signed"/>
 
 </android.support.v4.widget.DrawerLayout>
 

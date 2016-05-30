@@ -2,30 +2,24 @@ package com.frodo.github.business.account;
 
 import android.content.Context;
 import android.util.Base64;
-import android.webkit.WebSettings;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.Header;
+import com.frodo.app.framework.net.NetworkInterceptor;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
-import com.frodo.app.framework.task.BackgroundCallTask;
 import com.frodo.github.bean.dto.request.CreateAuthorization;
+import com.frodo.github.bean.dto.request.RequestTokenDTO;
+import com.frodo.github.bean.dto.response.GithubAuthorization;
+import com.frodo.github.bean.dto.response.Token;
 import com.frodo.github.bean.dto.response.User;
-import com.frodo.github.bean.security.OAuthRequestDTO;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
-import com.frodo.github.datasource.WebApiProvider;
+import com.frodo.github.common.SharePreferenceHelper;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,154 +27,167 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * Created by frodo on 2016/5/5.
  */
 public class AccountModel extends AbstractModel {
-    private AndroidFetchNetworkDataTask createAuthorizationNetworkDataTask;
-    private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
-    private BackgroundCallTask fetchUserFromWebTask;
 
-    private WebApiProvider webApiProvider;
+    public static final String TAG = AccountModel.class.getSimpleName();
+    private UserModel userModel;
+
+    private AndroidFetchNetworkDataTask createAuthorizationNetworkDataTask;
+    private AndroidFetchNetworkDataTask requestTokenNetworkDataTask;
+    private volatile User signInUser;
+    private volatile boolean isSignIn;
 
     public AccountModel(MainController controller) {
         super(controller);
-        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext());
-        webApiProvider = new WebApiProvider(Path.HOST_GITHUB_WEB, userAgent);
     }
 
     @Override
     public void initBusiness() {
+        userModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
+
+        Object userState = SharePreferenceHelper.getPreferences("user", (Context) getMainController().getMicroContext());
+        if (userState != null && userState instanceof User) {
+            signInUser = (User) userState;
+            isSignIn = true;
+
+            final Object loginToken = SharePreferenceHelper.getPreferences(signInUser.login, (Context) getMainController().getMicroContext());
+            if (loginToken != null) {
+                getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
+                    @Override
+                    public Void intercept(Request request) {
+                        request.getHeaders().add(new Header("Authorization", "token " + loginToken));
+                        return super.intercept(request);
+                    }
+                });
+            }
+        } else {
+            signInUser = null;
+            isSignIn = false;
+        }
     }
 
     @Override
     public String name() {
-        return getClass().getCanonicalName();
+        return TAG;
     }
 
-    public User login(String username, String password, Subscriber<? super User> subscriber) {
+    public Observable<User> loginUserWithReactor(final String username, final String password) {
         CreateAuthorization createAuthorization = new CreateAuthorization();
         createAuthorization.scopes = new String[]{Scope.REPO};
         createAuthorization.note = "GithubAndroidClient";
-        createAuthorization(username, password, createAuthorization);
-        return null;
-    }
-
-    public void createAuthorization(String username, String password, CreateAuthorization createAuthorization) {
-        List<Header> headerList = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = "";
-        try {
-            jsonString = objectMapper.writeValueAsString(createAuthorization);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/vnd.github.v3+json"), jsonString);
-        String userCredentials = username + ":" + password;
-        String basicAuth = "Basic " + new String(Base64.encode(userCredentials.getBytes(), Base64.DEFAULT));
-        headerList.add(new Header("Authorization", basicAuth.trim()));
-        headerList.add(new Header("Accept", "application/vnd.github.v3.json"));
-
-        Request<RequestBody> request = new Request<>("POST", Path.Login.AUTHORIZATIONS, null, headerList, requestBody);
-
-        final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-        networkTransport.setAPIUrl(Path.HOST_GITHUB);
-        createAuthorizationNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, new Subscriber<String>() {
-
+        return createAuthorization(username, password, createAuthorization).doOnNext(new Action1<GithubAuthorization>() {
             @Override
-            public void onStart() {
+            public void call(final GithubAuthorization githubAuthorization) {
+                getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
+                    @Override
+                    public Void intercept(Request request) {
+                        request.getHeaders().add(new Header("Authorization", "token " + githubAuthorization.token));
+                        return super.intercept(request);
+                    }
+                });
             }
-
+        }).flatMap(new Func1<GithubAuthorization, Observable<User>>() {
             @Override
-            public void onCompleted() {
+            public Observable<User> call(GithubAuthorization githubAuthorization) {
+                return userModel.loadUserWithReactor0(username);
             }
-
+        }).doOnNext(new Action1<User>() {
             @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onNext(String s) {
-                final String listString = s;
-                try {
-                    new JSONObject(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                if (listString != null) {
-                    OAuthRequestDTO authorization = JsonConverter.convert(listString, OAuthRequestDTO.class);
+            public void call(User user) {
+                if (user != null) {
+                    signInUser = user;
+                    isSignIn = true;
+                } else {
+                    signInUser = null;
+                    isSignIn = false;
                 }
             }
         });
-        getMainController().getBackgroundExecutor().execute(createAuthorizationNetworkDataTask);
     }
 
-    public Observable<User> loadUserWithReactor(final String username) {
-        return Observable.combineLatest(loadUserWithReactor0(username), loadUserFromWebWithReactor(username), new Func2<User, User, User>() {
-            @Override
-            public User call(User user, User webUser) {
-                user.starred = webUser.starred;
-                user.popularRepositories = webUser.popularRepositories;
-                user.contributeToRepositories = webUser.contributeToRepositories;
-                return user;
-            }
-        });
-    }
-
-    private Observable<User> loadUserWithReactor0(final String username) {
+    /**
+     * Non-Web Application Flow
+     * Use Basic Authentication to create an OAuth2 token
+     *
+     * @param username
+     * @param password
+     * @param createAuthorization
+     * @return
+     */
+    public Observable<GithubAuthorization> createAuthorization(final String username, final String password, final CreateAuthorization createAuthorization) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                Request request = new Request("GET", String.format(Path.Users.USER, username));
+                List<Header> headerList = new ArrayList<>();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/vnd.github.v3+json"), JsonConverter.toJson(createAuthorization));
+                String userCredentials = username + ":" + password;
+                String basicAuth = "Basic " + new String(Base64.encode(userCredentials.getBytes(), Base64.DEFAULT));
+                headerList.add(new Header("Authorization", basicAuth.trim()));
+                headerList.add(new Header("Accept", "application/vnd.github.v3.json"));
+
+                Request<RequestBody> request = new Request<>("POST", Path.Login.AUTHORIZATIONS, null, headerList, requestBody);
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
+                createAuthorizationNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                getMainController().getBackgroundExecutor().execute(createAuthorizationNetworkDataTask);
             }
-        }).map(new Func1<String, User>() {
+        }).map(new Func1<String, GithubAuthorization>() {
             @Override
-            public User call(String s) {
-                return JsonConverter.convert(s, new TypeReference<User>() {
-                });
+            public GithubAuthorization call(String s) {
+                return JsonConverter.convert(s, GithubAuthorization.class);
             }
         });
     }
 
-    private Observable<User> loadUserFromWebWithReactor(final String username) {
-        return Observable.create(new Observable.OnSubscribe<User>() {
+    /**
+     * Web Application Flow
+     *
+     * @param code
+     * @param clientId
+     * @param clientSecret
+     * @param redirectUri
+     * @return
+     */
+    public Observable<Token> requestToken(final String code, final String clientId, final String clientSecret, final String redirectUri) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void call(final Subscriber<? super User> subscriber) {
-                fetchUserFromWebTask = new BackgroundCallTask<User>() {
-                    @Override
-                    public String key() {
-                        return "WebUser";
-                    }
+            public void call(Subscriber<? super String> subscriber) {
+                RequestTokenDTO tokenDTO = new RequestTokenDTO();
+                tokenDTO.client_id = clientId;
+                tokenDTO.client_secret = clientSecret;
+                tokenDTO.redirect_uri = redirectUri;
+                tokenDTO.code = code;
 
-                    @Override
-                    public User runAsync() {
-                        try {
-                            return webApiProvider.getUser(username);
-                        } catch (IOException e) {
-                            subscriber.onError(e);
-                            return null;
-                        }
-                    }
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/vnd.github.v3+json"), JsonConverter.toJson(tokenDTO));
+                List<Header> headerList = new ArrayList<>();
+                headerList.add(new Header("Accept", "application/json"));
 
-                    @Override
-                    public void postExecute(User user) {
-                        if (user!=null){
-                            subscriber.onNext(user);
-                        }
-                        subscriber.onCompleted();
-                    }
-                };
-                getMainController().getBackgroundExecutor().execute(fetchUserFromWebTask);
+                Request<RequestBody> request = new Request<>("POST", Path.Login.OAUTH_ACCESS_TOKEN, null, headerList, requestBody);
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                requestTokenNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                getMainController().getBackgroundExecutor().execute(requestTokenNetworkDataTask);
+            }
+        }).map(new Func1<String, Token>() {
+            @Override
+            public Token call(String s) {
+                return JsonConverter.convert(s, Token.class);
             }
         });
+    }
+
+    public boolean isSignIn() {
+        return isSignIn;
+    }
+
+    public User getSignInUser() {
+        return signInUser;
     }
 }

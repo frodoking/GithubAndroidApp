@@ -5,6 +5,7 @@
     <string name="app_name">Github</string>
     <string name="menu_notifications">Notifications</string>
     <string name="menu_explore">Explore</string>
+    <string name="menu_sign_in">Sign in</string>
     <string name="menu_sign_out">Sign out</string>
     <string name="menu_code">Code</string>
     <string name="menu_issues">Issues</string>

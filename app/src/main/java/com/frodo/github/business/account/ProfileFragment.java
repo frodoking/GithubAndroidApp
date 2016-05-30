@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by frodo on 2016/5/7.
  */
-public class ProfileFragment extends StatedFragment<ProfileView, AccountModel> {
+public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
 
     private User user;
 

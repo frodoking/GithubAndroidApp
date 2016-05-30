@@ -3,16 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorPrimaryDark"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="@dimen/margin_large">
 
-    <ImageView
-        android:id="@+id/header_iv"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/head_sdv"
         android:layout_width="@dimen/image_size_xxlarge"
         android:layout_height="@dimen/image_size_xxlarge"
-        android:src="@drawable/octicon_mark_github"/>
+        android:contentDescription="@null"
+        fresco:fadeDuration="300"
+        fresco:placeholderImage="@drawable/octicon_mark_github"
+        fresco:placeholderImageScaleType="fitXY"
+        fresco:failureImageScaleType="fitXY"
+        fresco:actualImageScaleType="fitXY"/>
 
     <TextView
         android:id="@+id/id_username"
@@ -21,7 +27,7 @@
         android:layout_marginTop="@dimen/margin_middle"
         android:textSize="@dimen/text_size_large"
         android:textColor="@android:color/white"
-        android:text="Frodo"/>
+        android:text="Github"/>
 
     <TextView
         android:id="@+id/id_repo"
@@ -30,5 +36,5 @@
         android:layout_marginTop="@dimen/margin_small"
         android:textSize="@dimen/text_size_middle"
         android:textColor="@android:color/white"
-        android:text="https://github.com/frodoking"/>
+        android:text="https://github.com"/>
 </LinearLayout>

@@ -58,6 +58,11 @@ public class LoginView extends UIView {
         });
     }
 
+    @Override
+    public void onShowOrHide(final boolean isShown) {
+        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
+    }
+
     private boolean validateEmail(String email) {
         return !TextUtils.isEmpty(email);
     }

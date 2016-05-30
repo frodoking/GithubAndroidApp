@@ -43,6 +43,7 @@ public class IconApi {
 
             R.drawable.octicon_dashboard,
             R.drawable.octicon_telescope,
+            R.drawable.octicon_sign_in,
             R.drawable.octicon_sign_out,
 
             R.drawable.octicon_issue_closed,
@@ -90,6 +91,7 @@ public class IconApi {
             "clock",
             "dashboard",
             "telescope",
+            "sign_in",
             "sign_out",
             "issue_closed",
             "bell",
