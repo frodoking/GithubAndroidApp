@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="CardViewGroup">
         <attr name="headerLayout"/>
-        <attr name="contentLayout" format="reference" />
-        <attr name="footerLayout" format="reference" />
+        <attr name="contentLayout" format="reference"/>
+        <attr name="footerLayout" format="reference"/>
     </declare-styleable>
 </resources>

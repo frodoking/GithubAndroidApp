@@ -8,13 +8,16 @@ import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
+import com.frodo.app.framework.net.Response;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.showcases.ShowCaseListCache;
 import com.frodo.github.common.Path;
 
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -53,41 +56,59 @@ public class ExploreModel extends AbstractModel {
     }
 
     public Observable<List<ShowCase>> loadShowCasesWithReactor() {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                Request request = new Request("GET", Path.Explore.SHOWCASES);
+            public void call(Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.Explore.SHOWCASES)
+                        .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_CODEHUB);
-                fetchShowCasesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                fetchShowCasesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchShowCasesNetworkDataTask);
             }
-        }).map(new Func1<String, List<ShowCase>>() {
+        }).flatMap(new Func1<Response, Observable<List<ShowCase>>>() {
             @Override
-            public List<ShowCase> call(String s) {
-                return JsonConverter.convert(s, new TypeReference<List<ShowCase>>() {
-                });
+            public Observable<List<ShowCase>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<ShowCase> showCases = JsonConverter.convert(rb.string(), new TypeReference<List<ShowCase>>() {
+                    });
+                    return Observable.just(showCases);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
             }
         });
     }
 
     public Observable<List<Repo>> loadRepositoriesWithReactor() {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                Request request = new Request("GET", Path.Explore.TRENDING);
+            public void call(Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.Explore.TRENDING)
+                        .build();
                 request.addQueryParam("since", "weekly");
                 request.addQueryParam("language", "");
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_CODEHUB);
-                fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
             }
-        }).map(new Func1<String, List<Repo>>() {
+        }).flatMap(new Func1<Response, Observable<List<Repo>>>() {
             @Override
-            public List<Repo> call(String s) {
-                return JsonConverter.convert(s, new TypeReference<List<Repo>>() {
-                });
+            public Observable<List<Repo>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<Repo> repos = JsonConverter.convert(rb.string(), new TypeReference<List<Repo>>() {
+                    });
+                    return Observable.just(repos);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
             }
         });
     }

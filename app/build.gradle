@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    compile "com.github.frodoking:app-architecture-android:1.0"
+    compile "com.github.frodoking:app-architecture-android:1.2.2-SNAPSHOT"
     compile "com.facebook.fresco:animated-gif:0.10.0"
     compile project(':websource')
 

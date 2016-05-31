@@ -3,22 +3,21 @@ package com.frodo.github.business.account;
 import android.content.Context;
 import android.webkit.WebSettings;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
-import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
+import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.task.BackgroundCallTask;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.datasource.WebApiProvider;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -62,20 +61,28 @@ public class UserModel extends AbstractModel {
     }
 
     public Observable<User> loadUserWithReactor0(final String username) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                Request request = new Request("GET", String.format(Path.Users.USER, username), new ArrayList<Header>());
+            public void call(Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(String.format(Path.Users.USER, username))
+                        .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, (Subscriber<String>) subscriber);
+                fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
                 getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
             }
-        }).map(new Func1<String, User>() {
+        }).flatMap(new Func1<Response, Observable<User>>() {
             @Override
-            public User call(String s) {
-                return JsonConverter.convert(s, new TypeReference<User>() {
-                });
+            public Observable<User> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    User user = JsonConverter.convert(rb.string(), User.class);
+                    return Observable.just(user);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
             }
         });
     }

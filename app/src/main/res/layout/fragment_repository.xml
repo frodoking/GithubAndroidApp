@@ -35,7 +35,7 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -113,6 +113,7 @@
                     android:layout_height="@dimen/item_height_small"
                     android:gravity="center_vertical"
                     android:background="@drawable/item_selector">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -123,6 +124,7 @@
                         android:drawablePadding="@dimen/margin_small"
                         android:gravity="center_vertical"
                         android:text="Owner"/>
+
                     <TextView
                         android:id="@+id/owner_tv"
                         android:layout_width="wrap_content"

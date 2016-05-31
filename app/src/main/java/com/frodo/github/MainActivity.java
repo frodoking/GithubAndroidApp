@@ -23,9 +23,16 @@ import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.business.account.LoginFragment;
 import com.frodo.github.business.account.ProfileFragment;
+import com.frodo.github.business.account.UserModel;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.common.IconApiFragment;
 import com.frodo.github.common.JsoupApiFragment;
+import com.frodo.github.view.CircleProgressDialog;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by frodo on 2016/4/28. Main Page
@@ -41,6 +48,7 @@ public class MainActivity extends FragmentContainerActivity {
     private FloatingActionButton fab;
 
     private AccountModel accountModel;
+    private UserModel userModel;
 
     @Override
     public int getLayoutId() {
@@ -80,9 +88,9 @@ public class MainActivity extends FragmentContainerActivity {
             public void onClick(View v) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 if (accountModel.isSignIn()) {
-                    User user = accountModel.getSignInUser();
+                    String login = accountModel.getSignInUser();
                     Bundle arguments = new Bundle();
-                    arguments.putString("username", user.login);
+                    arguments.putString("username", login);
                     FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, arguments);
                 } else {
                     FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
@@ -149,7 +157,7 @@ public class MainActivity extends FragmentContainerActivity {
                     }
                 } else if (o instanceof User) {
                     MainActivity.super.onBackPressed();
-                    updateUserView();
+                    updateUserView((User) o);
                 }
                 return true;
             }
@@ -162,12 +170,43 @@ public class MainActivity extends FragmentContainerActivity {
 
         accountModel = getMainController().getModelFactory()
                 .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
-        updateUserView();
+        userModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
+
+        if (accountModel.isSignIn()) {
+            userModel.loadUserWithReactor(accountModel.getSignInUser()).subscribeOn(Schedulers.io())
+                    .doOnSubscribe(new Action0() {
+                        @Override
+                        public void call() {
+                            CircleProgressDialog.showLoadingDialog(MainActivity.this);
+                        }
+                    })
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<User>() {
+                                   @Override
+                                   public void call(User user) {
+                                       updateUserView(user);
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            }, new Action0() {
+                                @Override
+                                public void call() {
+                                    CircleProgressDialog.hideLoadingDialog();
+                                }
+                            });
+        } else {
+            updateUserView(null);
+        }
     }
 
-    private void updateUserView() {
-        if (accountModel.isSignIn()) {
-            User user = accountModel.getSignInUser();
+    private void updateUserView(User user) {
+        if (user != null) {
             ((SimpleDraweeView) navigationHeadView.findViewById(R.id.head_sdv)).setImageURI(Uri.parse(user.avatar_url));
             ((TextView) navigationHeadView.findViewById(R.id.id_username)).setText(user.login);
             ((TextView) navigationHeadView.findViewById(R.id.id_repo)).setText(user.html_url);

@@ -3,17 +3,17 @@
     <item
         android:id="@+id/action_code"
         android:title="@string/menu_code"
-        android:icon="@drawable/octicon_code" />
+        android:icon="@drawable/octicon_code"/>
     <item
         android:id="@+id/action_issues"
         android:title="@string/menu_issues"
-        android:icon="@drawable/octicon_issue_opened" />
+        android:icon="@drawable/octicon_issue_opened"/>
     <item
         android:id="@+id/action_pull_requests"
         android:title="@string/menu_pull_requests"
-        android:icon="@drawable/octicon_git_pull_request" />
+        android:icon="@drawable/octicon_git_pull_request"/>
     <item
         android:id="@+id/action_pulse"
         android:title="@string/menu_pulse"
-        android:icon="@drawable/octicon_pulse" />
+        android:icon="@drawable/octicon_pulse"/>
 </menu>
