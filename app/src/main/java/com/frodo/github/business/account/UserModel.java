@@ -35,12 +35,12 @@ public class UserModel extends AbstractModel {
 
     public UserModel(MainController controller) {
         super(controller);
+        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext());
+        webApiProvider = new WebApiProvider(Path.HOST_GITHUB_WEB, userAgent);
     }
 
     @Override
     public void initBusiness() {
-        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext());
-        webApiProvider = new WebApiProvider(Path.HOST_GITHUB_WEB, userAgent);
     }
 
     @Override

@@ -117,8 +117,7 @@ public class MainActivity extends FragmentContainerActivity {
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
                                 return true;
                             case R.id.action_sign_out:
-                                navigationView.getMenu().clear();
-                                navigationView.inflateMenu(R.menu.menu_drawer_not_signed);
+                                onLogout();
                                 return true;
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
@@ -206,14 +205,22 @@ public class MainActivity extends FragmentContainerActivity {
     }
 
     private void updateUserView(User user) {
+        SimpleDraweeView headSDV = (SimpleDraweeView) navigationHeadView.findViewById(R.id.head_sdv);
+        TextView loginTV = (TextView) navigationHeadView.findViewById(R.id.id_username);
+        TextView repoTV = (TextView) navigationHeadView.findViewById(R.id.id_repo);
+
         if (user != null) {
-            ((SimpleDraweeView) navigationHeadView.findViewById(R.id.head_sdv)).setImageURI(Uri.parse(user.avatar_url));
-            ((TextView) navigationHeadView.findViewById(R.id.id_username)).setText(user.login);
-            ((TextView) navigationHeadView.findViewById(R.id.id_repo)).setText(user.html_url);
+            headSDV.setImageURI(Uri.parse(user.avatar_url));
+            loginTV.setText(user.login);
+            repoTV.setText(user.html_url);
 
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.menu_drawer_already_signed);
         } else {
+            headSDV.setImageURI(null);
+            loginTV.setText("Github");
+            repoTV.setText("https://github.com");
+
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.menu_drawer_not_signed);
         }
@@ -245,5 +252,35 @@ public class MainActivity extends FragmentContainerActivity {
     protected void onDestroy() {
         getMainController().getLocalBroadcastManager().unRegisterGroup("drawer");
         super.onDestroy();
+    }
+
+    private void onLogout() {
+        accountModel.logoutUserWithReactor()
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        CircleProgressDialog.showLoadingDialog(MainActivity.this);
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Void>() {
+                               @Override
+                               public void call(Void v) {
+                                   updateUserView(null);
+                               }
+                           },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        }, new Action0() {
+                            @Override
+                            public void call() {
+                                CircleProgressDialog.hideLoadingDialog();
+                            }
+                        });
     }
 }

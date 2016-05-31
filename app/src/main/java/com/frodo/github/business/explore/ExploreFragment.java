@@ -2,7 +2,6 @@ package com.frodo.github.business.explore;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,12 +11,15 @@ import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -25,6 +27,8 @@ import rx.schedulers.Schedulers;
  */
 public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
+    private static final String STATE_SHOWCASE = "state_showcase";
+    private static final String STATE_REPOSITORIES = "state_repositories";
     private ArrayList<ShowCase> showCases;
     private ArrayList<Repo> repositories;
 
@@ -41,18 +45,18 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     @Override
     public void onSaveState(Bundle outState) {
         if (this.showCases != null) {
-            outState.putParcelableArrayList("showCases", this.showCases);
+            outState.putParcelableArrayList(STATE_SHOWCASE, this.showCases);
         }
         if (this.repositories != null) {
-            outState.putParcelableArrayList("repositories", this.repositories);
+            outState.putParcelableArrayList(STATE_REPOSITORIES, this.repositories);
         }
     }
 
     @Override
     public void onRestoreState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey("showCases") && savedInstanceState.containsKey("repositories")) {
-            this.showCases = savedInstanceState.getParcelableArrayList("showCases");
-            this.repositories = savedInstanceState.getParcelableArrayList("repositories");
+        if (savedInstanceState.containsKey(STATE_SHOWCASE) && savedInstanceState.containsKey(STATE_REPOSITORIES)) {
+            this.showCases = savedInstanceState.getParcelableArrayList(STATE_SHOWCASE);
+            this.repositories = savedInstanceState.getParcelableArrayList(STATE_REPOSITORIES);
             getUIView().showShowCaseList(showCases);
             getUIView().showTrendingRepositoryList(repositories);
         } else {
@@ -64,22 +68,32 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
         final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
         final Observable<List<Repo>> repositoryObservable = getModel().loadRepositoriesWithReactor();
 
-        Observable.merge(showCaseObservable, repositoryObservable)
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
-                    }
-                })
+        Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repo>, Map<String, Object>>() {
+            @Override
+            public Map<String, Object> call(List<ShowCase> showCases, List<Repo> repositories) {
+                Map<String, Object> map = new HashMap<>(2);
+                map.put(STATE_SHOWCASE, showCases);
+                map.put(STATE_REPOSITORIES, repositories);
+                return map;
+            }
+        }).doOnSubscribe(new Action0() {
+            @Override
+            public void call() {
+                CircleProgressDialog.showLoadingDialog(getAndroidContext());
+            }
+        })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        new Action1<List<? extends Parcelable>>() {
+                        new Action1<Map<String, Object>>() {
                             @Override
-                            public void call(List<? extends Parcelable> parcelables) {
-                                showCases = (ArrayList<ShowCase>) parcelables.get(0);
-                                repositories = (ArrayList<Repo>) parcelables.get(1);
+                            public void call(Map<String, Object> result) {
+                                ArrayList<ShowCase> showCases = (ArrayList<ShowCase>) result.get(STATE_SHOWCASE);
+                                ArrayList<Repo> repositories = (ArrayList<Repo>) result.get(STATE_REPOSITORIES);
+
+                                ExploreFragment.this.showCases = showCases;
+                                ExploreFragment.this.repositories = repositories;
 
                                 getUIView().showShowCaseList(showCases);
                                 getUIView().showTrendingRepositoryList(repositories);
@@ -94,6 +108,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                         getUIView().showShowCaseList(showCases);
                                     }
                                 }
+                                throwable.printStackTrace();
                             }
                         },
                         new Action0() {

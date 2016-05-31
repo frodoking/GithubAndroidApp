@@ -16,8 +16,10 @@ import java.util.List;
  */
 public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
 
-    public ShowCaseListCache(CacheSystem cacheSystem, Type type) {
-        super(cacheSystem, type);
+    public static final String CACHE_KEY = "cache_showcases";
+
+    public ShowCaseListCache(CacheSystem cacheSystem) {
+        super(cacheSystem, Type.DISK);
     }
 
     @Override
@@ -36,10 +38,7 @@ public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
 
     @Override
     public boolean isCached(String key) {
-        if (getType().equals(Type.DISK)) {
-            return getCacheSystem().existCacheInDisk(createAbsoluteKey(key));
-        }
-        return false;
+        return getCacheSystem().existCacheInDisk(createAbsoluteKey(key));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
     private String createAbsoluteKey(String relativeKey) {
         final FileSystem fs = getCacheSystem().getController().getFileSystem();
         final String absoluteKey = fs.getFilePath() + File.separator + getCacheKey(relativeKey) + ".cache.tmp";
-        Logger.fLog().tag("MovieCache").d("Cache path >>>> " + absoluteKey);
+        Logger.fLog().tag("ShowCaseListCache").d("Cache path >>>> " + absoluteKey);
         return absoluteKey;
     }
 

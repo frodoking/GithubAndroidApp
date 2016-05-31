@@ -47,6 +47,9 @@ public class AccountModel extends AbstractModel {
 
     public AccountModel(MainController controller) {
         super(controller);
+        if (userModel == null) {
+            initBusiness();
+        }
     }
 
     @Override
@@ -56,7 +59,7 @@ public class AccountModel extends AbstractModel {
 
         if (getMainController().getCacheSystem().existCacheInInternal("login")) {
             this.login = getMainController().getCacheSystem().findCacheFromInternal("login", String.class);
-            isSignIn = true;
+            this.isSignIn = true;
 
             final Object loginToken = getMainController().getCacheSystem().findCacheFromInternal(login, String.class);
             if (loginToken != null) {
@@ -69,8 +72,8 @@ public class AccountModel extends AbstractModel {
                 });
             }
         } else {
-            login = null;
-            isSignIn = false;
+            this.login = null;
+            this.isSignIn = false;
         }
     }
 
@@ -118,6 +121,23 @@ public class AccountModel extends AbstractModel {
                     login = null;
                     isSignIn = false;
                 }
+            }
+        });
+    }
+
+    public Observable<Void> logoutUserWithReactor() {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(Subscriber<? super Void> subscriber) {
+                try {
+                    getMainController().getCacheSystem().evict(login);
+                    login = null;
+                    isSignIn = false;
+                    subscriber.onNext(null);
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+                subscriber.onCompleted();
             }
         });
     }

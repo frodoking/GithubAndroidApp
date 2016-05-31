@@ -3,7 +3,6 @@ package com.frodo.github.business.explore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
-import com.frodo.app.framework.cache.Cache;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
@@ -28,20 +27,35 @@ import rx.functions.Func1;
 public class ExploreModel extends AbstractModel {
     private boolean enableCached;
     private List<ShowCase> showCases;
-    private AndroidFetchNetworkDataTask fetchShowCasesNetworkDataTask;
-    private ShowCaseListCache showCaseListCache;
 
+    private AndroidFetchNetworkDataTask fetchShowCasesNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchRepositoriesNetworkDataTask;
+
+    private ShowCaseListCache showCaseListCache;
 
     public ExploreModel(MainController controller) {
         super(controller);
-        if (enableCached) {
-            showCaseListCache = new ShowCaseListCache(getMainController().getCacheSystem(), Cache.Type.DISK);
-        }
     }
 
     @Override
     public void initBusiness() {
+    }
+
+    public boolean isEnableCached() {
+        return enableCached;
+    }
+
+    public void setEnableCached(boolean enableCached) {
+        this.enableCached = enableCached;
+        if (enableCached) {
+            showCaseListCache = new ShowCaseListCache(getMainController().getCacheSystem());
+        } else {
+            showCaseListCache = null;
+        }
+    }
+
+    public List<ShowCase> getShowCasesFromCache() {
+        return showCaseListCache.get(ShowCaseListCache.CACHE_KEY);
     }
 
     public List<ShowCase> getShowCases() {
@@ -51,7 +65,7 @@ public class ExploreModel extends AbstractModel {
     public void setShowCases(List<ShowCase> showCases) {
         this.showCases = showCases;
         if (enableCached) {
-            showCaseListCache.put(fetchShowCasesNetworkDataTask.key(), showCases);
+            showCaseListCache.put(ShowCaseListCache.CACHE_KEY, showCases);
         }
     }
 
@@ -75,6 +89,7 @@ public class ExploreModel extends AbstractModel {
                 try {
                     List<ShowCase> showCases = JsonConverter.convert(rb.string(), new TypeReference<List<ShowCase>>() {
                     });
+                    setShowCases(showCases);
                     return Observable.just(showCases);
                 } catch (IOException e) {
                     return Observable.error(e);
@@ -111,17 +126,5 @@ public class ExploreModel extends AbstractModel {
                 }
             }
         });
-    }
-
-    public boolean isEnableCached() {
-        return enableCached;
-    }
-
-    public void setEnableCached(boolean enableCached) {
-        this.enableCached = enableCached;
-    }
-
-    public List<ShowCase> getShowCasesFromCache() {
-        return showCases;
     }
 }
