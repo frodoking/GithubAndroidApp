@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/search_et"
+        style="@style/SearchEditTextStyle"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin_middle"
+        android:hint="Search" />
+
+    <ListView
+        android:id="@+id/result_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

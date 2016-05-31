@@ -1,4 +1,4 @@
-package com.frodo.github.business.account;
+package com.frodo.github.business.user;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,6 +25,7 @@ import rx.schedulers.Schedulers;
 public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
 
     private User user;
+    private AccountModel accountModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
         if (bundle != null && bundle.containsKey("username")) {
             loadUserWithReactor(bundle.getString("username"));
         }
+        accountModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
     }
 
     @Override
@@ -63,7 +67,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
     @Override
     public void onRestoreState(Bundle savedInstanceState) {
         user = savedInstanceState.getParcelable("user");
-        getUIView().showDetail(user);
+        getUIView().showDetail(user, accountModel.isSignIn());
     }
 
     public void loadUserWithReactor(final String username) {
@@ -80,19 +84,16 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
                 .subscribe(new Action1<User>() {
                                @Override
                                public void call(User user) {
+                                   CircleProgressDialog.hideLoadingDialog();
                                    ProfileFragment.this.user = user;
-                                   getUIView().showDetail(user);
+                                   getUIView().showDetail(user, accountModel.isSignIn());
                                }
                            },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }, new Action0() {
-                            @Override
-                            public void call() {
                                 CircleProgressDialog.hideLoadingDialog();
+                                throwable.printStackTrace();
                             }
                         });
     }

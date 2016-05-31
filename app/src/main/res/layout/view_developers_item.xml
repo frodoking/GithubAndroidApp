@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_height_default"
+    android:padding="@dimen/margin_middle"
+    android:background="@drawable/item_selector">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/head_sdv"
+        android:layout_width="@dimen/image_size_default"
+        android:layout_height="@dimen/image_size_default"
+        android:contentDescription="@null"
+        fresco:fadeDuration="300"
+        fresco:placeholderImage="@drawable/octicon_mark_github"
+        fresco:actualImageScaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_middle"
+        android:layout_marginRight="@dimen/margin_middle"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_middle"
+            android:textStyle="bold"
+            android:text="frodoking"
+            android:textColor="?attr/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/info_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="beijing"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/text_size_xxsmall"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/owner_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_xxsmall"
+        android:drawableRight="@drawable/octicon_person"
+        android:textColor="@android:color/darker_gray"/>
+</LinearLayout>

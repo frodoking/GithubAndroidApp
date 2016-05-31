@@ -1,4 +1,4 @@
-package com.frodo.github.business.account;
+package com.frodo.github.business.user;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
+import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
@@ -118,14 +119,21 @@ public class ProfileView extends UIView {
                 }
             }
         });
+
+        followersTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class);
+            }
+        });
     }
 
     @Override
     public void onShowOrHide(boolean isShown) {
-//        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
+        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
     }
 
-    public void showDetail(User user) {
+    public void showDetail(User user, boolean isLoginUser) {
         headSDV.setImageURI(Uri.parse(user.avatar_url));
         fullnameTV.setText(user.login);
         usernameTV.setText(user.name);
@@ -137,6 +145,8 @@ public class ProfileView extends UIView {
         followersTV.setText(String.valueOf(user.followers));
         starredTV.setText(String.valueOf(user.starred));
         followingTV.setText(String.valueOf(user.following));
+
+        followBtn.setVisibility(isLoginUser?View.GONE:View.VISIBLE);
 
         showRepositoryList(popularRepositoriesLV, popularRepositoryAdapter, user.popularRepositories);
         showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);
@@ -165,6 +175,7 @@ public class ProfileView extends UIView {
                 vh = new ViewHolder();
                 vh.repoTV = (TextView) convertView.findViewById(R.id.title_tv);
                 vh.starCountTV = (TextView) convertView.findViewById(R.id.subtitle_tv);
+                vh.starCountTV.setCompoundDrawables(null, null, ResourceManager.getDrawable(R.drawable.octicon_star), null);
                 convertView.setTag(vh);
             } else {
                 vh = (ViewHolder) convertView.getTag();

@@ -76,7 +76,10 @@ public final class Path {
          * "/users/{username}"
          */
         public static final String USER = "/users/%s";
-
+        /**
+         * Followers
+         */
+        public static final String USER_FOLLOWERS = USER + "/followers";
     }
 
     public final static class WebHook {

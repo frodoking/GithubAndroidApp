@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_xxsmall"
                         android:textColor="@android:color/darker_gray"
-                        android:drawableLeft="@drawable/octicon_organization"
+                        android:drawableLeft="@drawable/octicon_person"
                         android:drawablePadding="@dimen/margin_small"
                         android:gravity="center_vertical"
                         android:text="Owner"/>
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_xxsmall"
                         android:textColor="@android:color/darker_gray"
-                        android:drawableRight="@drawable/octicon_star"
+                        android:drawableRight="@drawable/octicon_person"
                         android:drawablePadding="@dimen/margin_small"
                         android:gravity="center_vertical"
                         android:text="App-Architecture"/>

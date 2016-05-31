@@ -63,6 +63,7 @@ public class IconApi {
 
             R.drawable.octicon_chevron_up,
             R.drawable.octicon_chevron_down,
+            R.drawable.octicon_person,
     };
 
     private static final String[] iconTexts = {
@@ -107,6 +108,7 @@ public class IconApi {
             "comment discussion",
             "chevron up",
             "chevron down",
+            "person",
     };
 
     public int getLayoutId() {

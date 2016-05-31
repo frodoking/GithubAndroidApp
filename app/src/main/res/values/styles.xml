@@ -46,4 +46,16 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="SearchEditTextStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/text_size_middle</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:paddingTop">@dimen/margin_xsmall</item>
+        <item name="android:paddingBottom">@dimen/margin_xsmall</item>
+        <item name="android:minHeight">@dimen/item_height_small</item>
+        <item name="android:background">@drawable/search_edittext_bg</item>
+    </style>
+
 </resources>

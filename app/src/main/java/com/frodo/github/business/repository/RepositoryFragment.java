@@ -96,19 +96,15 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                                public void call(Repo repository) {
                                    RepositoryFragment.this.repo = repository;
                                    getUIView().showDetail(repository);
+                                   CircleProgressDialog.hideLoadingDialog();
                                }
                            },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
                                 throwable.printStackTrace();
-                            }
-                        }, new Action0() {
-                            @Override
-                            public void call() {
                                 CircleProgressDialog.hideLoadingDialog();
                             }
                         });
-
     }
 }

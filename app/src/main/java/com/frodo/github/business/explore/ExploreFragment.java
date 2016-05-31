@@ -89,6 +89,8 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                         new Action1<Map<String, Object>>() {
                             @Override
                             public void call(Map<String, Object> result) {
+                                CircleProgressDialog.hideLoadingDialog();
+
                                 ArrayList<ShowCase> showCases = (ArrayList<ShowCase>) result.get(STATE_SHOWCASE);
                                 ArrayList<Repo> repositories = (ArrayList<Repo>) result.get(STATE_REPOSITORIES);
 
@@ -102,6 +104,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 if (getModel().isEnableCached()) {
                                     List<ShowCase> showCases = getModel().getShowCasesFromCache();
                                     if (showCases != null) {
@@ -110,13 +113,6 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                 }
                                 throwable.printStackTrace();
                             }
-                        },
-                        new Action0() {
-                            @Override
-                            public void call() {
-                                CircleProgressDialog.hideLoadingDialog();
-                            }
-                        }
-                );
+                        });
     }
 }

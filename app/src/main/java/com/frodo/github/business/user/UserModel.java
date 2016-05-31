@@ -1,8 +1,9 @@
-package com.frodo.github.business.account;
+package com.frodo.github.business.user;
 
 import android.content.Context;
 import android.webkit.WebSettings;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
@@ -11,11 +12,13 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.task.BackgroundCallTask;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.common.Path;
 import com.frodo.github.datasource.WebApiProvider;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -116,6 +119,34 @@ public class UserModel extends AbstractModel {
                     }
                 };
                 getMainController().getBackgroundExecutor().execute(fetchUserFromWebTask);
+            }
+        });
+    }
+
+    public Observable<List<User>> loadUsers() {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(String.format(Path.Users.USER_FOLLOWERS, "frodoking"))
+                        .build();
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<User>>>() {
+            @Override
+            public Observable<List<User>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<User> users = JsonConverter.convert(rb.string(), new TypeReference<List<User>>() {
+                    });
+                    return Observable.just(users);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
             }
         });
     }

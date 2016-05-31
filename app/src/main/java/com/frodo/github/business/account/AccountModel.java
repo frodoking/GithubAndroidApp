@@ -17,6 +17,7 @@ import com.frodo.github.bean.dto.request.RequestTokenDTO;
 import com.frodo.github.bean.dto.response.GithubAuthorization;
 import com.frodo.github.bean.dto.response.Token;
 import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
 

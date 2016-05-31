@@ -73,6 +73,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                         new Action1<ShowCase>() {
                             @Override
                             public void call(ShowCase result) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 ShowCaseDetailFragment.this.showCase = result;
                                 getUIView().showShowCaseDetail(result);
                             }
@@ -80,14 +81,9 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                CircleProgressDialog.hideLoadingDialog();
                                 throwable.printStackTrace();
                             }
-                        }, new Action0() {
-                            @Override
-                            public void call() {
-                                CircleProgressDialog.hideLoadingDialog();
-                            }
-                        }
-                );
+                        });
     }
 }
