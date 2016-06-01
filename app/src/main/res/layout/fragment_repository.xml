@@ -43,38 +43,26 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/private_tv"
+                        <com.frodo.github.view.OcticonView
+                            android:id="@+id/private_ov"
+                            style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height_small"
-                            android:textSize="@dimen/text_size_xxsmall"
-                            android:textColor="@android:color/darker_gray"
-                            android:drawableLeft="@drawable/octicon_eye"
-                            android:drawablePadding="@dimen/margin_small"
-                            android:gravity="center_vertical"
-                            android:text="Public"/>
+                            app:iiv_icon="oct_lock"/>
 
-                        <TextView
-                            android:id="@+id/issues_count_tv"
+                        <com.frodo.github.view.OcticonView
+                            android:id="@+id/issues_count_ov"
+                            style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height_small"
-                            android:textSize="@dimen/text_size_xxsmall"
-                            android:textColor="@android:color/darker_gray"
-                            android:drawableLeft="@drawable/octicon_issue_opened"
-                            android:drawablePadding="@dimen/margin_small"
-                            android:gravity="center_vertical"
-                            android:text="58 Issues"/>
+                            app:iiv_icon="oct_issue_opened"/>
 
-                        <TextView
-                            android:id="@+id/date_tv"
+                        <com.frodo.github.view.OcticonView
+                            android:id="@+id/date_ov"
+                            style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height_small"
-                            android:textSize="@dimen/text_size_xxsmall"
-                            android:textColor="@android:color/darker_gray"
-                            android:drawableLeft="@drawable/octicon_issue_opened"
-                            android:drawablePadding="@dimen/margin_small"
-                            android:gravity="center_vertical"
-                            android:text="07/23/13"/>
+                            app:iiv_icon="oct_calendar"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -83,59 +71,47 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/language_tv"
+                        <com.frodo.github.view.OcticonView
+                            android:id="@+id/language_ov"
+                            style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height_small"
-                            android:textSize="@dimen/text_size_xxsmall"
-                            android:textColor="@android:color/darker_gray"
-                            android:drawableLeft="@drawable/octicon_eye"
-                            android:drawablePadding="@dimen/margin_small"
-                            android:gravity="center_vertical"
-                            android:text="C#"/>
+                            app:iiv_icon="oct_package"/>
 
-                        <TextView
-                            android:id="@+id/size_tv"
+                        <com.frodo.github.view.OcticonView
+                            android:id="@+id/size_ov"
+                            style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height_small"
-                            android:textSize="@dimen/text_size_xxsmall"
-                            android:textColor="@android:color/darker_gray"
-                            android:drawableLeft="@drawable/octicon_issue_opened"
-                            android:drawablePadding="@dimen/margin_small"
-                            android:gravity="center_vertical"
-                            android:text="71.68MB"/>
+                            app:iiv_icon="oct_tools"/>
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_small"
-                    android:gravity="center_vertical"
                     android:background="@drawable/item_selector">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_xxsmall"
-                        android:textColor="@android:color/darker_gray"
-                        android:drawableLeft="@drawable/octicon_person"
-                        android:drawablePadding="@dimen/margin_small"
-                        android:gravity="center_vertical"
-                        android:text="Owner"/>
-
-                    <TextView
-                        android:id="@+id/owner_tv"
+                    <com.frodo.github.view.OcticonView
+                        style="@style/OcticonViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_xxsmall"
-                        android:textColor="@android:color/darker_gray"
-                        android:drawableRight="@drawable/octicon_person"
-                        android:drawablePadding="@dimen/margin_small"
-                        android:gravity="center_vertical"
-                        android:text="App-Architecture"/>
-                </LinearLayout>
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        app:iiv_icon="oct_person"
+                        android:text="Owner"/>
+
+                    <com.frodo.github.view.OcticonView
+                        android:id="@+id/owner_ov"
+                        style="@style/OcticonViewStyle"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:iiv_icon="oct_chevron_right"
+                        app:iconDirection="end" />
+                </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

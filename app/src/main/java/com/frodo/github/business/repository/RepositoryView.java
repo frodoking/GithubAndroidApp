@@ -15,18 +15,19 @@ import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CardViewGroup;
+import com.frodo.github.view.OcticonView;
 
 /**
  * Created by frodo on 2016/5/7.
  */
 public class RepositoryView extends UIView {
     private TextView descriptionTV;
-    private TextView privateTV;
-    private TextView issuesCountTV;
-    private TextView dateTV;
-    private TextView languageTV;
-    private TextView sizeTV;
-    private TextView ownerTV;
+    private OcticonView privateOV;
+    private OcticonView issuesCountOV;
+    private OcticonView dateOV;
+    private OcticonView languageOV;
+    private OcticonView sizeOV;
+    private OcticonView ownerOV;
 
     private Button starBtn;
     private Button watchBtn;
@@ -52,12 +53,12 @@ public class RepositoryView extends UIView {
     @Override
     public void initView() {
         descriptionTV = (TextView) getRootView().findViewById(R.id.repo_description_tv);
-        privateTV = (TextView) getRootView().findViewById(R.id.private_tv);
-        issuesCountTV = (TextView) getRootView().findViewById(R.id.issues_count_tv);
-        dateTV = (TextView) getRootView().findViewById(R.id.date_tv);
-        languageTV = (TextView) getRootView().findViewById(R.id.language_tv);
-        sizeTV = (TextView) getRootView().findViewById(R.id.size_tv);
-        ownerTV = (TextView) getRootView().findViewById(R.id.owner_tv);
+        privateOV = (OcticonView) getRootView().findViewById(R.id.private_ov);
+        issuesCountOV = (OcticonView) getRootView().findViewById(R.id.issues_count_ov);
+        dateOV = (OcticonView) getRootView().findViewById(R.id.date_ov);
+        languageOV = (OcticonView) getRootView().findViewById(R.id.language_ov);
+        sizeOV = (OcticonView) getRootView().findViewById(R.id.size_ov);
+        ownerOV = (OcticonView) getRootView().findViewById(R.id.owner_ov);
 
         starBtn = (Button) getRootView().findViewById(R.id.star_btn);
         watchBtn = (Button) getRootView().findViewById(R.id.watch_btn);
@@ -166,12 +167,12 @@ public class RepositoryView extends UIView {
 
     public void showDetail(Repo repository) {
         descriptionTV.setText(repository.description);
-        issuesCountTV.setText(String.format("%s issues", repository.open_issues_count));
-        languageTV.setText(repository.language);
-        sizeTV.setText(String.format("%s KB", repository.size));
-        dateTV.setText(repository.created_at.toLocaleString());
-        ownerTV.setText(repository.owner.login);
-        privateTV.setText(repository.isPrivate ? "Private" : "Public");
+        issuesCountOV.setText(String.format("%s issues", repository.open_issues_count));
+        languageOV.setText(repository.language);
+        sizeOV.setText(String.format("%s KB", repository.size));
+        dateOV.setText(repository.created_at.toLocaleString());
+        ownerOV.setText(repository.owner.login);
+        privateOV.setText(repository.isPrivate ? "Private" : "Public");
 
         stargazersTV.setText(String.valueOf(repository.stargazers_count));
         watchersTV.setText(String.valueOf(repository.subscribers_count));

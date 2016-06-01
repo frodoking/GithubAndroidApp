@@ -21,7 +21,7 @@
         android:title="@string/menu_group_api">
         <item
             android:id="@+id/action_icon_api"
-            android:title="@string/icon"
+            android:title="@string/octicons"
             android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
         <item

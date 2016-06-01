@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/4/30.
  */
-public class ShowCase  implements Parcelable {
+public class ShowCase implements Parcelable {
     public static final Creator<ShowCase> CREATOR = new Creator<ShowCase>() {
         public ShowCase createFromParcel(Parcel source) {
             return new ShowCase(source);

@@ -36,14 +36,13 @@
             android:icon="@drawable/octicon_issue_opened"
             android:checkable="true"/>
     </group>
-
     <group
         android:id="@+id/group_api"
         android:checkableBehavior="single"
         android:title="@string/menu_group_api">
         <item
             android:id="@+id/action_icon_api"
-            android:title="@string/icon"
+            android:title="@string/octicons"
             android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
         <item

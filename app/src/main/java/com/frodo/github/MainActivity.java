@@ -22,11 +22,11 @@ import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.business.account.LoginFragment;
+import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
-import com.frodo.github.business.explore.ExploreFragment;
-import com.frodo.github.common.IconApiFragment;
 import com.frodo.github.common.JsoupApiFragment;
+import com.frodo.github.common.OcticonsFragment;
 import com.frodo.github.view.CircleProgressDialog;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -123,7 +123,7 @@ public class MainActivity extends FragmentContainerActivity {
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
                                 return true;
                             case R.id.action_icon_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, IconApiFragment.class);
+                                FragmentScheduler.replaceFragment(MainActivity.this, OcticonsFragment.class);
                                 return true;
                             case R.id.action_jsoup_api:
                                 FragmentScheduler.replaceFragment(MainActivity.this, JsoupApiFragment.class);

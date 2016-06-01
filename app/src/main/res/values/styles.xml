@@ -58,4 +58,12 @@
         <item name="android:background">@drawable/search_edittext_bg</item>
     </style>
 
+    <style name="OcticonViewStyle" parent="TextAppearanceStyle">
+        <item name="android:textSize">@dimen/text_size_xxsmall</item>
+        <item name="android:gravity">center</item>
+        <item name="iconDirection">start</item>
+        <item name="iiv_size">20dp</item>
+        <item name="iiv_padding">3dp</item>
+    </style>
+
 </resources>

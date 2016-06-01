@@ -5,4 +5,8 @@
         <attr name="contentLayout" format="reference"/>
         <attr name="footerLayout" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="OcticonView">
+        <attr name="iconDirection" format="string"/>
+    </declare-styleable>
 </resources>
