@@ -80,6 +80,10 @@ public final class Path {
          * Followers
          */
         public static final String USER_FOLLOWERS = USER + "/followers";
+        /**
+         * Repos
+         */
+        public static final String USER_REPOS = USER + "/repos";
     }
 
     public final static class WebHook {

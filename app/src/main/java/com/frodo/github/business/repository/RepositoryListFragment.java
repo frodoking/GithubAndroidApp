@@ -1,6 +1,6 @@
-package com.frodo.github.business.user;
+package com.frodo.github.business.repository;
 
-import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.SearchListFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.CircleProgressDialog;
@@ -14,27 +14,28 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by frodo on 2016/5/31.
+ * Created by frodo on 2016/6/1.
  */
-public class UserListFragment extends SearchListFragment<UserModel, User> {
+public class RepositoryListFragment extends SearchListFragment<RepositoryModel, Repo> {
 
     @Override
-    protected UserModel createModel() {
-        return getMainController().getModelFactory().getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
+    protected RepositoryModel createModel() {
+        return getMainController().getModelFactory().getOrCreateIfAbsent(RepositoryModel.TAG, RepositoryModel.class, getMainController());
     }
 
     @Override
     public BaseRecyclerViewAdapter uiViewAdapter() {
-        return new DevelopersAdapter(getAndroidContext());
+        return new RepositoriesAdapter(getAndroidContext());
     }
 
     @Override
     public void doSearch(String searchKey) {
+
     }
 
     @Override
     public void onFirstTimeLaunched() {
-        getModel().loadUsers().subscribeOn(Schedulers.io())
+        getModel().loadUsersRepos("frodoking").subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
@@ -43,12 +44,12 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<User>>() {
+                .subscribe(new Action1<List<Repo>>() {
                                @Override
-                               public void call(List<User> users) {
+                               public void call(List<Repo> repos) {
                                    CircleProgressDialog.hideLoadingDialog();
-                                   setStateBeans((ArrayList<User>) users);
-                                   getUIView().showList(users);
+                                   setStateBeans((ArrayList<Repo>) repos);
+                                   getUIView().showList(repos);
                                }
                            },
                         new Action1<Throwable>() {

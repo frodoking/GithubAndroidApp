@@ -21,6 +21,7 @@ import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.repository.RepositoryFragment;
+import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
@@ -93,6 +94,12 @@ public class ExploreView extends UIView {
                     arguments.putString("repo", repository.name);
                     FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
+            }
+        });
+        trendingRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class);
             }
         });
     }

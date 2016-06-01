@@ -23,6 +23,7 @@ import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.repository.RepositoryFragment;
+import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.MaxHeightListView;
@@ -93,7 +94,6 @@ public class ProfileView extends UIView {
         popularRepositoryAdapter = new Adapter(getPresenter().getAndroidContext());
         popularRepositoriesLV.setAdapter(popularRepositoryAdapter);
 
-
         contributedToRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
         contributedToRepositoriesCVG.setContentView(contributedToRepositoriesLV);
 
@@ -119,6 +119,14 @@ public class ProfileView extends UIView {
                 }
             }
         });
+
+        popularRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class);
+            }
+        });
+
 
         followersTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +154,7 @@ public class ProfileView extends UIView {
         starredTV.setText(String.valueOf(user.starred));
         followingTV.setText(String.valueOf(user.following));
 
-        followBtn.setVisibility(isLoginUser?View.GONE:View.VISIBLE);
+        followBtn.setVisibility(isLoginUser ? View.GONE : View.VISIBLE);
 
         showRepositoryList(popularRepositoriesLV, popularRepositoryAdapter, user.popularRepositories);
         showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);

@@ -8,9 +8,11 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -21,6 +23,7 @@ import rx.functions.Func1;
  * Created by frodo on 2016/5/7.
  */
 public class RepositoryModel extends AbstractModel {
+    public static final String TAG = RepositoryModel.class.getSimpleName();
     private AndroidFetchNetworkDataTask fetchRepositoryNetworkDataTask;
 
     public RepositoryModel(MainController controller) {
@@ -29,6 +32,12 @@ public class RepositoryModel extends AbstractModel {
 
     @Override
     public void initBusiness() {
+    }
+
+
+    @Override
+    public String name() {
+        return TAG;
     }
 
     public Observable<Repo> loadRepositoryDetailWithReactor(final String slug) {
@@ -56,5 +65,11 @@ public class RepositoryModel extends AbstractModel {
                 }
             }
         });
+    }
+
+    public Observable<List<Repo>> loadUsersRepos(String username) {
+        UserModel userModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
+        return userModel.loadRepositoriesWithReactor(username);
     }
 }

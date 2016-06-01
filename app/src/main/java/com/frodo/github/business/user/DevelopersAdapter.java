@@ -1,4 +1,4 @@
-package com.frodo.github.business;
+package com.frodo.github.business.user;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,7 +14,6 @@ import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.User;
-import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 
 /**
@@ -30,11 +29,11 @@ public class DevelopersAdapter extends BaseRecyclerViewAdapter<User, DevelopersA
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (getItemViewType(viewType) == HEADER) {
-            View view = inflateItemView();
+            View view = inflateItemView(parent);
             view.setVisibility(View.INVISIBLE);
             return new ViewHolder(view);
         }
-        return new ViewHolder(inflateItemView());
+        return new ViewHolder(inflateItemView(parent));
     }
 
     @Override

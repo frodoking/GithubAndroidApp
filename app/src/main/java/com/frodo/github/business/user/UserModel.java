@@ -32,6 +32,7 @@ import rx.functions.Func2;
 public class UserModel extends AbstractModel {
     public static final String TAG = UserModel.class.getSimpleName();
     private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchReposNetworkDataTask;
     private BackgroundCallTask fetchUserFromWebTask;
 
     private WebApiProvider webApiProvider;
@@ -144,6 +145,34 @@ public class UserModel extends AbstractModel {
                     List<User> users = JsonConverter.convert(rb.string(), new TypeReference<List<User>>() {
                     });
                     return Observable.just(users);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
+    public Observable<List<Repo>> loadRepositoriesWithReactor(final String username) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(String.format(Path.Users.USER_REPOS, username))
+                        .build();
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchReposNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchReposNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<Repo>>>() {
+            @Override
+            public Observable<List<Repo>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<Repo> repos = JsonConverter.convert(rb.string(), new TypeReference<List<Repo>>() {
+                    });
+                    return Observable.just(repos);
                 } catch (IOException e) {
                     return Observable.error(e);
                 }

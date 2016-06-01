@@ -74,7 +74,7 @@ public class ShowCaseDetailView extends UIView {
 
         @Override
         public RepositoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new RepositoriesViewHolder(inflateItemView());
+            return new RepositoriesViewHolder(inflateItemView(parent));
         }
 
         @Override

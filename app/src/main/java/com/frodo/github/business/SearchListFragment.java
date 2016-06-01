@@ -47,7 +47,7 @@ public abstract class SearchListFragment<M extends IModel, Bean extends Parcelab
         this.stateBeans = stateBeans;
     }
 
-    public abstract BaseRecyclerViewAdapter  uiViewAdapter();
+    public abstract BaseRecyclerViewAdapter uiViewAdapter();
 
     public abstract void doSearch(String searchKey);
 }

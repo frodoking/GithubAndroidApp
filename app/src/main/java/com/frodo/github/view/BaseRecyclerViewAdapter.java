@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends RecyclerView.ViewHol
         return items.size();
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this.mContext;
     }
 
@@ -44,11 +45,11 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends RecyclerView.ViewHol
         return items.get(position);
     }
 
-    public View inflateItemView() {
+    public View inflateItemView(ViewGroup parent) {
         if (inflater == null) {
             inflater = LayoutInflater.from(mContext);
         }
-        return inflater.inflate(resource, null);
+        return inflater.inflate(resource, parent, false);
     }
 
     public void addObjects(List<T> list) {
