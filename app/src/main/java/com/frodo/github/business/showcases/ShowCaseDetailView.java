@@ -21,6 +21,7 @@ import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.repository.RepositoryFragment;
+import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.VerticalSpaceItemDecoration;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class ShowCaseDetailView extends UIView {
     private TextView descriptionTV;
     private RecyclerView repositoriesRV;
     private Adapter repositoryAdapter;
-    private List<Repo> repositoryList = new ArrayList<>();
 
     public ShowCaseDetailView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_showcase_detail);
@@ -46,7 +46,7 @@ public class ShowCaseDetailView extends UIView {
         repositoriesRV = (RecyclerView) getRootView().findViewById(R.id.showcase_detail_repositories_rv);
         repositoriesRV.addItemDecoration(new VerticalSpaceItemDecoration(ResourceManager.getDimensionPixelSize(R.dimen.margin_middle)));
         repositoriesRV.setLayoutManager(new LinearLayoutManager(getPresenter().getAndroidContext()));
-        repositoryAdapter = new Adapter(getRootView().getContext(), repositoryList);
+        repositoryAdapter = new Adapter(getRootView().getContext());
         repositoriesRV.setAdapter(repositoryAdapter);
     }
 
@@ -62,30 +62,24 @@ public class ShowCaseDetailView extends UIView {
     public void showShowCaseDetail(ShowCase showCase) {
         descriptionTV.setText(showCase.description);
         if (showCase.repositories != null && showCase.repositories.size() > 0) {
-            repositoryList.clear();
-            repositoryList.addAll(showCase.repositories);
-            repositoryAdapter.notifyDataSetChanged();
+            repositoryAdapter.refreshObjects(showCase.repositories);
         }
     }
 
-    class Adapter extends RecyclerView.Adapter<Adapter.RepositoriesViewHolder> {
-        private LayoutInflater layoutInflater;
-        private List<Repo> repositories;
+    class Adapter extends BaseRecyclerViewAdapter<Repo, Adapter.RepositoriesViewHolder> {
 
-        public Adapter(Context context, List<Repo> repositories) {
-            this.repositories = repositories;
-            this.layoutInflater = LayoutInflater.from(context);
+        public Adapter(Context context) {
+            super(context, R.layout.view_showcase_repositories_item);
         }
-
 
         @Override
         public RepositoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new RepositoriesViewHolder(layoutInflater.inflate(R.layout.view_showcase_repositories_item, parent, false));
+            return new RepositoriesViewHolder(inflateItemView());
         }
 
         @Override
         public void onBindViewHolder(RepositoriesViewHolder holder, int position) {
-            final Repo bean = repositories.get(position);
+            final Repo bean = getItem(position);
             if (bean.owner != null && bean.owner.avatar_url != null) {
                 holder.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatar_url));
             }
@@ -103,11 +97,6 @@ public class ShowCaseDetailView extends UIView {
                     FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
             });
-        }
-
-        @Override
-        public int getItemCount() {
-            return repositories.size();
         }
 
         class RepositoriesViewHolder extends RecyclerView.ViewHolder {

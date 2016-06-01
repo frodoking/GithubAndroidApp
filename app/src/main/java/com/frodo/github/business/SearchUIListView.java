@@ -1,22 +1,22 @@
 package com.frodo.github.business;
 
 import android.animation.ObjectAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
-import com.frodo.github.view.BaseListViewAdapter;
+import com.frodo.github.view.BaseRecyclerViewAdapter;
+import com.frodo.github.view.DividerItemDecoration;
 
 import java.util.List;
 
@@ -26,14 +26,13 @@ import java.util.List;
 public abstract class SearchUIListView<ItemBean> extends UIView {
 
     private EditText searchET;
-    private ListView resultLV;
-    private BaseListViewAdapter adapter;
+    private RecyclerView resultRV;
+    private BaseRecyclerViewAdapter<ItemBean, RecyclerView.ViewHolder> adapter;
 
     private int searchViewHeight;
-    private boolean isSearchViewShown;
 
     private ObjectAnimator mAnimatorSearch;
-    private ObjectAnimator mAnimatorList;
+    private boolean isSearchETShown;
     private float mTouchSlop;
 
     public SearchUIListView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
@@ -43,9 +42,11 @@ public abstract class SearchUIListView<ItemBean> extends UIView {
     @Override
     public void initView() {
         searchET = (EditText) getRootView().findViewById(R.id.search_et);
-        resultLV = (ListView) getRootView().findViewById(R.id.result_lv);
+        resultRV = (RecyclerView) getRootView().findViewById(R.id.result_rv);
+        resultRV.setLayoutManager(new LinearLayoutManager(getPresenter().getAndroidContext()));
+
         adapter = adapter();
-        resultLV.setAdapter(adapter);
+        resultRV.setAdapter(adapter);
 
         final ViewConfiguration configuration = ViewConfiguration.get(getPresenter().getAndroidContext());
         mTouchSlop = configuration.getScaledTouchSlop();
@@ -61,58 +62,49 @@ public abstract class SearchUIListView<ItemBean> extends UIView {
                 return true;
             }
         });
-        resultLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ItemBean itemBean = (ItemBean) adapter.getItem(position);
-                itemClick(itemBean);
-            }
-        });
 
-        resultLV.setOnTouchListener(new View.OnTouchListener() {
+        resultRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            private float y;
+            private int tmpY;
 
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        y = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float tmpY = event.getY();
-                        if (tmpY - y > mTouchSlop) {
-                            showSearchView(true);
-                        } else if (y - tmpY > mTouchSlop) {
-                            showSearchView(false);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (firstVisibleItem == 0) {
+                    if (!isSearchETShown) {
+                        showSearchView(true);
+                    }
+                } else {
+                    if (tmpY > mTouchSlop && isSearchETShown) {
+                        showSearchView(false);
+                        tmpY = 0;
+                    }
+
+                    if (tmpY < -mTouchSlop && !isSearchETShown) {
+                        showSearchView(true);
+                        tmpY = 0;
+                    }
                 }
-                return false;
+
+                if ((isSearchETShown && dy > 0) || (!isSearchETShown && dy < 0)) {
+                    tmpY += dy;
+                }
             }
         });
     }
 
     private void showSearchView(boolean tag) {
+        isSearchETShown = tag;
         int margin = ResourceManager.getDimensionPixelSize(R.dimen.margin_middle);
-        final int translationY = searchViewHeight;
         if (mAnimatorSearch != null && mAnimatorSearch.isRunning()) {
             mAnimatorSearch.cancel();
         }
-        if (mAnimatorList != null && mAnimatorList.isRunning()) {
-            mAnimatorList.cancel();
-        }
-        if (tag) {
-            mAnimatorSearch = ObjectAnimator.ofFloat(searchET, "translationY", searchET.getTranslationY(), 0);
-            mAnimatorList = ObjectAnimator.ofFloat(resultLV, "translationY", resultLV.getTranslationY(), 0);
-        } else {
-            mAnimatorSearch = ObjectAnimator.ofFloat(searchET, "translationY", searchET.getTranslationY(), -(translationY + margin));
-            mAnimatorList = ObjectAnimator.ofFloat(resultLV, "translationY", resultLV.getTranslationY(), -(translationY + margin * 2));
-        }
+
+        final int translationY = tag ? 0 : -(searchViewHeight + margin);
+        mAnimatorSearch = ObjectAnimator.ofFloat(searchET, View.TRANSLATION_Y, searchET.getTranslationY(), translationY);
+        mAnimatorSearch.setDuration(300);
         mAnimatorSearch.start();
-        mAnimatorList.start();
     }
 
     @Override
@@ -124,7 +116,5 @@ public abstract class SearchUIListView<ItemBean> extends UIView {
         adapter.refreshObjects(list);
     }
 
-    public abstract BaseListViewAdapter<ItemBean> adapter();
-
-    public abstract void itemClick(ItemBean itemBean);
+    public abstract BaseRecyclerViewAdapter adapter();
 }

@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/result_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:listDivider="@drawable/divider"/>
 
     <EditText
         android:id="@+id/search_et"
         style="@style/SearchEditTextStyle"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/item_height_small"
         android:layout_width="match_parent"
-        android:layout_margin="@dimen/margin_middle"
+        android:layout_marginLeft="@dimen/margin_middle"
+        android:layout_marginRight="@dimen/margin_middle"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
         android:hint="Search" />
-
-    <ListView
-        android:id="@+id/result_lv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+</FrameLayout>

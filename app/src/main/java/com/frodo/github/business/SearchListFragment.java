@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.controller.IModel;
 import com.frodo.github.view.BaseListViewAdapter;
+import com.frodo.github.view.BaseRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -23,14 +24,10 @@ public abstract class SearchListFragment<M extends IModel, Bean extends Parcelab
     @Override
     public SearchUIListView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new SearchUIListView<Bean>(this, inflater, container) {
-            @Override
-            public BaseListViewAdapter<Bean> adapter() {
-                return uiViewAdapter();
-            }
 
             @Override
-            public void itemClick(Bean bean) {
-                doNext(bean);
+            public BaseRecyclerViewAdapter adapter() {
+                return uiViewAdapter();
             }
         };
     }
@@ -50,10 +47,7 @@ public abstract class SearchListFragment<M extends IModel, Bean extends Parcelab
         this.stateBeans = stateBeans;
     }
 
-    public abstract BaseListViewAdapter<Bean> uiViewAdapter();
+    public abstract BaseRecyclerViewAdapter  uiViewAdapter();
 
     public abstract void doSearch(String searchKey);
-
-    public void doNext(Bean bean) {
-    }
 }

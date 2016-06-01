@@ -3,7 +3,7 @@ package com.frodo.github.business.user;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.DevelopersAdapter;
 import com.frodo.github.business.SearchListFragment;
-import com.frodo.github.view.BaseListViewAdapter;
+import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.CircleProgressDialog;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
     }
 
     @Override
-    public BaseListViewAdapter<User> uiViewAdapter() {
+    public BaseRecyclerViewAdapter uiViewAdapter() {
         return new DevelopersAdapter(getAndroidContext());
     }
 
