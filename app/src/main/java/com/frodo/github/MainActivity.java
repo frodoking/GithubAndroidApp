@@ -1,5 +1,6 @@
 package com.frodo.github;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.FragmentScheduler;
@@ -25,9 +27,10 @@ import com.frodo.github.business.account.LoginFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
-import com.frodo.github.common.JsoupApiFragment;
-import com.frodo.github.common.OcticonsFragment;
+import com.frodo.github.common.ApiFragment;
 import com.frodo.github.view.CircleProgressDialog;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -60,7 +63,8 @@ public class MainActivity extends FragmentContainerActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.id_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.id_nv_menu);
         navigationHeadView = navigationView.getHeaderView(0);
-
+        SimpleDraweeView headSDV = (SimpleDraweeView) navigationHeadView.findViewById(R.id.head_sdv);
+        headSDV.getHierarchy().setPlaceholderImage(new IconicsDrawable(this).icon(Octicons.Icon.oct_mark_github).colorRes(android.R.color.black));
         navigationView.setPadding(0, ScreenUtils.getStatusHeight(this), 0, 0);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,6 +73,7 @@ public class MainActivity extends FragmentContainerActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         actionBarDrawerToggle.syncState();
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setImageDrawable(new IconicsDrawable(this).icon(Octicons.Icon.oct_gist_secret).colorRes(android.R.color.black));
     }
 
     @Override
@@ -115,21 +120,32 @@ public class MainActivity extends FragmentContainerActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.action_sign_in:
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
-                                return true;
+                                break;
                             case R.id.action_sign_out:
                                 onLogout();
-                                return true;
+                                break;
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
-                                return true;
+                                break;
+                            case R.id.action_iconics_test:
+                                Bundle bundle = new Bundle();
+                                bundle.putString("api", "IconicsTest");
+                                replaceFragment(ApiFragment.class, "IconicsTest", bundle);
+                                break;
                             case R.id.action_icon_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, OcticonsFragment.class);
-                                return true;
+                                Bundle bundle2 = new Bundle();
+                                bundle2.putString("api", "StaticOcticons");
+                                replaceFragment(ApiFragment.class, "StaticOcticons", bundle2);
+                                break;
                             case R.id.action_jsoup_api:
-                                FragmentScheduler.replaceFragment(MainActivity.this, JsoupApiFragment.class);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putString("api", "JsoupApi");
+                                replaceFragment(ApiFragment.class, "JsoupApi", bundle1);
+                                break;
                             default:
-                                return true;
+                                break;
                         }
+                        return true;
                     }
                 });
 
@@ -224,6 +240,26 @@ public class MainActivity extends FragmentContainerActivity {
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.menu_drawer_not_signed);
         }
+
+        updateMenu(navigationView.getMenu());
+    }
+
+    private void updateMenu(Menu menu) {
+        updateMenuItem(menu.findItem(R.id.action_notifications), Octicons.Icon.oct_bell);
+        updateMenuItem(menu.findItem(R.id.action_explore), Octicons.Icon.oct_telescope);
+        updateMenuItem(menu.findItem(R.id.action_sign_in), Octicons.Icon.oct_sign_in);
+        updateMenuItem(menu.findItem(R.id.action_sign_out), Octicons.Icon.oct_sign_out);
+        updateMenuItem(menu.findItem(R.id.action_news), Octicons.Icon.oct_radio_tower);
+        updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_issue_opened);
+        updateMenuItem(menu.findItem(R.id.action_iconics_test), Octicons.Icon.oct_repo);
+        updateMenuItem(menu.findItem(R.id.action_icon_api), Octicons.Icon.oct_repo);
+        updateMenuItem(menu.findItem(R.id.action_jsoup_api), Octicons.Icon.oct_repo);
+        updateMenuItem(menu.findItem(R.id.action_icon_setting), Octicons.Icon.oct_gear);
+    }
+
+    private void updateMenuItem(MenuItem menuItem, Octicons.Icon icon) {
+        if (menuItem != null)
+            menuItem.setIcon(new IconicsDrawable(this).icon(icon).colorRes(android.R.color.black));
     }
 
     @Override

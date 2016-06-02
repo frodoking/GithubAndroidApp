@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.frodo.github.StaticFragment;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 
@@ -16,17 +17,14 @@ import java.util.ArrayList;
 /**
  * Created by frodo on 2016/6/1.
  */
-public class StaticOcticonsFragment {
+public class StaticOcticonsFragment extends StaticFragment {
     private ArrayList<String> icons = new ArrayList<>();
     private IconAdapter mAdapter;
     private boolean randomize;
     private String search;
-    private Context context;
-    private String fontName;
 
-    public StaticOcticonsFragment(Context context, String fontName) {
-        this.context = context;
-        this.fontName = fontName;
+    public StaticOcticonsFragment(Context context) {
+        super(context);
     }
 
     public void randomize(boolean randomize) {
@@ -51,7 +49,7 @@ public class StaticOcticonsFragment {
         recyclerView.setAdapter(mAdapter);
 
         for (ITypeface iTypeface : Iconics.getRegisteredFonts(context)) {
-            if (iTypeface.getFontName().equalsIgnoreCase(fontName)) {
+            if (iTypeface.getFontName().equalsIgnoreCase("Octicons")) {
                 if (iTypeface.getIcons() != null) {
                     for (String icon : iTypeface.getIcons()) {
                         icons.add(icon);
@@ -63,6 +61,11 @@ public class StaticOcticonsFragment {
         }
         //filter if a search param was provided
         onSearch(search);
+    }
+
+    @Override
+    public String tag() {
+        return "StaticOcticons";
     }
 
 

@@ -20,7 +20,6 @@
         fresco:roundWithOverlayColor="?attr/colorPrimaryDark"
         fresco:roundingBorderWidth="1dp"
         fresco:roundingBorderColor="?attr/colorAccent"
-        fresco:placeholderImage="@drawable/octicon_mark_github"
         fresco:placeholderImageScaleType="fitXY"
         fresco:failureImageScaleType="fitXY"
         fresco:actualImageScaleType="fitXY"/>

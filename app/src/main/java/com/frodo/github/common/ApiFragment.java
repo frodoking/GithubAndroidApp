@@ -7,28 +7,28 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.ui.fragment.StatedFragment;
-import com.frodo.github.icon.OcticonsFontAwesome;
-import com.frodo.github.icon.StaticOcticonsFragment;
+import com.frodo.github.StaticFragment;
+import com.frodo.github.icon.IconicsTestFragment;
 
 /**
- * Created by frodo on 2016/6/1.
+ * Created by frodo on 2016/5/13.
  */
-public class OcticonsFragment extends StatedFragment {
-
-    private StaticOcticonsFragment staticOcticonsFragment;
+public class ApiFragment extends StatedFragment {
+    String tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        staticOcticonsFragment = new StaticOcticonsFragment(getAndroidContext(), OcticonsFontAwesome.TAG);
+        tag = getArguments().getString("api", "StaticOcticons");
     }
 
     @Override
     public UIView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new UIView(this, inflater, container, staticOcticonsFragment.getLayoutId()) {
+        final StaticFragment staticFragment = StaticFragment.get(context, tag);
+        return new UIView(this, inflater, container, staticFragment.getLayoutId()) {
             @Override
             public void initView() {
-                staticOcticonsFragment.initView(getView());
+                staticFragment.initView(getView());
             }
 
             @Override

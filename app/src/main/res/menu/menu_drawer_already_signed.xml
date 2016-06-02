@@ -7,17 +7,14 @@
         <item
             android:id="@+id/action_notifications"
             android:title="@string/menu_notifications"
-            android:icon="@drawable/octicon_bell"
             android:checkable="true"/>
         <item
             android:id="@+id/action_explore"
             android:title="@string/menu_explore"
-            android:icon="@drawable/octicon_telescope"
             android:checkable="true"/>
         <item
             android:id="@+id/action_sign_out"
             android:title="@string/menu_sign_out"
-            android:icon="@drawable/octicon_sign_out"
             android:checkable="true"/>
     </group>
 
@@ -28,12 +25,10 @@
         <item
             android:id="@+id/action_news"
             android:title="@string/menu_issues"
-            android:icon="@drawable/octicon_radio_tower"
             android:checkable="true"/>
         <item
             android:id="@+id/action_events"
             android:title="@string/menu_events"
-            android:icon="@drawable/octicon_issue_opened"
             android:checkable="true"/>
     </group>
     <group
@@ -41,14 +36,16 @@
         android:checkableBehavior="single"
         android:title="@string/menu_group_api">
         <item
+            android:id="@+id/action_iconics_test"
+            android:title="Iconics"
+            android:checkable="true"/>
+        <item
             android:id="@+id/action_icon_api"
             android:title="@string/octicons"
-            android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
         <item
             android:id="@+id/action_jsoup_api"
             android:title="@string/jsoup"
-            android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
     </group>
     <group
@@ -58,7 +55,6 @@
         <item
             android:id="@+id/action_icon_setting"
             android:title="@string/menu_setting"
-            android:icon="@drawable/octicon_gear"
             android:checkable="true"/>
     </group>
 </menu>

@@ -20,14 +20,25 @@
         android:checkableBehavior="single"
         android:title="@string/menu_group_api">
         <item
+            android:id="@+id/action_iconics_test"
+            android:title="Iconics"
+            android:checkable="true"/>
+        <item
             android:id="@+id/action_icon_api"
             android:title="@string/octicons"
-            android:icon="@drawable/octicon_bookmark"
             android:checkable="true"/>
         <item
             android:id="@+id/action_jsoup_api"
             android:title="@string/jsoup"
-            android:icon="@drawable/octicon_bookmark"
+            android:checkable="true"/>
+    </group>
+    <group
+        android:id="@+id/group_other"
+        android:checkableBehavior="single"
+        android:title="@string/menu_group_api">
+        <item
+            android:id="@+id/action_icon_setting"
+            android:title="@string/menu_setting"
             android:checkable="true"/>
     </group>
 </menu>

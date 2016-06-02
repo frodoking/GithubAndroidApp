@@ -1,13 +1,19 @@
 package com.frodo.github.datasource;
 
+import android.content.Context;
 import android.view.View;
 
+import com.frodo.github.StaticFragment;
 import com.frodo.github.icon.R;
 
 /**
  * Created by frodo on 2016/5/13.
  */
-public class JsoupApi {
+public class JsoupApi extends StaticFragment {
+
+    public JsoupApi(Context context) {
+        super(context);
+    }
 
     public int getLayoutId() {
         return R.layout.jsoup_api_layout;
@@ -25,5 +31,10 @@ public class JsoupApi {
                 }).start();
             }
         });
+    }
+
+    @Override
+    public String tag() {
+        return "JsoupApi";
     }
 }
