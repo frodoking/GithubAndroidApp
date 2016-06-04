@@ -1,6 +1,7 @@
 package com.frodo.github.business.account;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -20,6 +21,17 @@ public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
     @Override
     public LoginView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new LoginView(this, inflater, container);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+    }
+
+    @Override
+    public String tag() {
+        return "Sign in";
     }
 
     public void loginWithReactor(final String username, final String password) {

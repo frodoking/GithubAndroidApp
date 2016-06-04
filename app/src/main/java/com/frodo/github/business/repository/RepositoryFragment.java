@@ -86,6 +86,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
+                        getUIView().showEmptyView();
                         CircleProgressDialog.showLoadingDialog(getAndroidContext());
                     }
                 })
@@ -95,6 +96,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                                @Override
                                public void call(Repo repository) {
                                    RepositoryFragment.this.repo = repository;
+                                   getUIView().hideEmptyView();
                                    getUIView().showDetail(repository);
                                    CircleProgressDialog.hideLoadingDialog();
                                }
@@ -102,8 +104,8 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                throwable.printStackTrace();
                                 CircleProgressDialog.hideLoadingDialog();
+                                getUIView().showErrorView(throwable);
                             }
                         });
     }

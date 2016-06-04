@@ -112,11 +112,11 @@ public class OcticonView extends LinearLayout {
         textView.setText(text);
     }
 
-    public final void setTextColor(int color){
+    public final void setTextColor(int color) {
         textView.setTextColor(color);
     }
 
-    public final void setTextColorRes(int colorRes){
+    public final void setTextColorRes(int colorRes) {
         setTextColor(ResourceManager.getColor(colorRes));
     }
 }

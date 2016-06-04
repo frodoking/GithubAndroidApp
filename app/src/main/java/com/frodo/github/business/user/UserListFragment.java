@@ -1,5 +1,7 @@
 package com.frodo.github.business.user;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.SearchListFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
@@ -24,6 +26,17 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+    }
+
+    @Override
+    public String tag() {
+        return "Developers";
+    }
+
+    @Override
     public BaseRecyclerViewAdapter uiViewAdapter() {
         return new DevelopersAdapter(getAndroidContext());
     }
@@ -38,6 +51,7 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
+                        getUIView().showEmptyView();
                         CircleProgressDialog.showLoadingDialog(getAndroidContext());
                     }
                 })
@@ -48,6 +62,7 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                                public void call(List<User> users) {
                                    CircleProgressDialog.hideLoadingDialog();
                                    setStateBeans((ArrayList<User>) users);
+                                   getUIView().hideEmptyView();
                                    getUIView().showList(users);
                                }
                            },
@@ -55,7 +70,7 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                throwable.printStackTrace();
+                                getUIView().showErrorView(throwable);
                             }
                         });
     }

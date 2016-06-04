@@ -2,6 +2,7 @@ package com.frodo.github.business.explore;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -64,6 +65,17 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+    }
+
+    @Override
+    public String tag() {
+        return "Explore";
+    }
+
     private void loadDataWithReactor() {
         final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
         final Observable<List<Repo>> repositoryObservable = getModel().loadRepositoriesWithReactor();
@@ -79,6 +91,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
         }).doOnSubscribe(new Action0() {
             @Override
             public void call() {
+                getUIView().showEmptyView();
                 CircleProgressDialog.showLoadingDialog(getAndroidContext());
             }
         })
@@ -97,6 +110,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                 ExploreFragment.this.showCases = showCases;
                                 ExploreFragment.this.repositories = repositories;
 
+                                getUIView().hideEmptyView();
                                 getUIView().showShowCaseList(showCases);
                                 getUIView().showTrendingRepositoryList(repositories);
                             }
@@ -111,7 +125,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                         getUIView().showShowCaseList(showCases);
                                     }
                                 }
-                                throwable.printStackTrace();
+                                getUIView().showErrorView(throwable);
                             }
                         });
     }

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
@@ -20,17 +19,15 @@ import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.VerticalSpaceItemDecoration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by frodo on 2016/5/3.
  */
-public class ShowCaseDetailView extends UIView {
+public class ShowCaseDetailView extends AbstractUIView {
 
     private TextView descriptionTV;
     private RecyclerView repositoriesRV;

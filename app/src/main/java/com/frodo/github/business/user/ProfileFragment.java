@@ -2,6 +2,7 @@ package com.frodo.github.business.user;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
+import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
@@ -25,6 +27,7 @@ import rx.schedulers.Schedulers;
 public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
 
     private User user;
+    private String username;
     private AccountModel accountModel;
 
     @Override
@@ -53,7 +56,8 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
     public void onFirstTimeLaunched() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("username")) {
-            loadUserWithReactor(bundle.getString("username"));
+            username = bundle.getString("username");
+            loadUserWithReactor(username);
         }
         accountModel = getMainController().getModelFactory()
                 .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
@@ -70,12 +74,25 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
         getUIView().showDetail(user, accountModel.isSignIn());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        String usernameCurr = username;
+        if (TextUtils.isEmpty(usernameCurr)) {
+            if (user != null) {
+                usernameCurr = user.login;
+            }
+        }
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(usernameCurr);
+    }
+
     public void loadUserWithReactor(final String username) {
         getModel().loadUserWithReactor(username)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
+                        getUIView().showEmptyView();
                         CircleProgressDialog.showLoadingDialog(getAndroidContext());
                     }
                 })
@@ -86,6 +103,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
                                public void call(User user) {
                                    CircleProgressDialog.hideLoadingDialog();
                                    ProfileFragment.this.user = user;
+                                   getUIView().hideEmptyView();
                                    getUIView().showDetail(user, accountModel.isSignIn());
                                }
                            },
@@ -93,7 +111,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                throwable.printStackTrace();
+                                getUIView().showErrorView(throwable);
                             }
                         });
     }

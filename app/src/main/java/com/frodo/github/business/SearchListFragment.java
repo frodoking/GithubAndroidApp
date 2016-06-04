@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.controller.IModel;
-import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -42,6 +41,7 @@ public abstract class SearchListFragment<M extends IModel, Bean extends Parcelab
         stateBeans = savedInstanceState.getParcelableArrayList(STATE_KEY);
         getUIView().showList(stateBeans);
     }
+
 
     public void setStateBeans(ArrayList<Bean> stateBeans) {
         this.stateBeans = stateBeans;

@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.business.repository.RepositoriesForListViewAdapter;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.repository.RepositoryListFragment;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/4/30.
  */
-public class ExploreView extends UIView {
+public class ExploreView extends AbstractUIView {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -86,6 +86,7 @@ public class ExploreView extends UIView {
 
         OcticonView subtitleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.subtitle_ov);
         subtitleOV.setText("this week");
+        subtitleOV.setPaddingDp(0);
 
         ((TextView) trendingRepositoriesCVG.getFooterView().findViewById(R.id.text_tv)).setText("View more trending repositories");
         repositoryAdapter = new RepositoriesForListViewAdapter(getRootView().getContext());

@@ -8,11 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.OcticonView;
 import com.mikepenz.octicons_typeface_library.Octicons;
@@ -20,7 +20,7 @@ import com.mikepenz.octicons_typeface_library.Octicons;
 /**
  * Created by frodo on 2016/5/7.
  */
-public class RepositoryView extends UIView {
+public class RepositoryView extends AbstractUIView {
     private TextView descriptionTV;
     private OcticonView privateOV;
     private OcticonView issuesCountOV;

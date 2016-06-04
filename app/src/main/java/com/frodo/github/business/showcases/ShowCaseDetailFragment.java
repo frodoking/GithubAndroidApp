@@ -63,6 +63,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
+                        getUIView().showEmptyView();
                         CircleProgressDialog.showLoadingDialog(getAndroidContext());
                     }
                 })
@@ -75,6 +76,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                             public void call(ShowCase result) {
                                 CircleProgressDialog.hideLoadingDialog();
                                 ShowCaseDetailFragment.this.showCase = result;
+                                getUIView().hideEmptyView();
                                 getUIView().showShowCaseDetail(result);
                             }
                         },
@@ -82,7 +84,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                throwable.printStackTrace();
+                                getUIView().showErrorView(throwable);
                             }
                         });
     }

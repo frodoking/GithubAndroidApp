@@ -13,12 +13,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.business.repository.RepositoriesForListViewAdapter;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.repository.RepositoryListFragment;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/5/7.
  */
-public class ProfileView extends UIView {
+public class ProfileView extends AbstractUIView {
 
     private FrescoAndIconicsImageView headSDV;
     private TextView fullnameTV;

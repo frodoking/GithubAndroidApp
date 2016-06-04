@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -12,18 +11,16 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.UIView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
-import com.frodo.github.view.DividerItemDecoration;
 
 import java.util.List;
 
 /**
  * Created by frodo on 2016/5/31.
  */
-public abstract class SearchUIListView<ItemBean> extends UIView {
+public abstract class SearchUIListView<ItemBean> extends AbstractUIView {
 
     private EditText searchET;
     private RecyclerView resultRV;
