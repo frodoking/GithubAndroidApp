@@ -28,6 +28,8 @@
     <dimen name="text_size_small">8sp</dimen>
     <dimen name="text_size_xsmall">5sp</dimen>
 
+    <dimen name="icon_size">16dp</dimen>
+
     <dimen name="image_size_xxlarge">85dp</dimen>
     <dimen name="image_size_xlarge">45dp</dimen>
     <dimen name="image_size_large">35dp</dimen>

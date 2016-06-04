@@ -1,5 +1,6 @@
 package com.frodo.github.business;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +57,7 @@ public abstract class AbstractUIView extends UIView {
     }
 
     public void showErrorView(Throwable throwable) {
-        StringBuilder sb = new StringBuilder();
-        for (StackTraceElement ste : throwable.getStackTrace()) {
-            sb.append(ste.toString()).append("\n");
-        }
-        showErrorView(sb.toString());
+        showErrorView(Log.getStackTraceString(throwable));
     }
 
     public void showErrorView(String errorMsg) {

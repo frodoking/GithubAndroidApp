@@ -5,17 +5,27 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
+import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
+import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
+import com.frodo.github.view.MaxHeightListView;
 import com.frodo.github.view.OcticonView;
+import com.mikepenz.iconics.utils.Utils;
 import com.mikepenz.octicons_typeface_library.Octicons;
+
+import java.text.DateFormat;
+import java.util.List;
+
+import us.feras.mdv.MarkdownView;
 
 /**
  * Created by frodo on 2016/5/7.
@@ -41,6 +51,9 @@ public class RepositoryView extends AbstractUIView {
     private TextView branchCommitTV;
 
     private CardViewGroup readmeCVG;
+    private MarkdownView readmeMDV;
+
+
     private CardViewGroup pulseCVG;
     private CardViewGroup issuesCVG;
     private CardViewGroup pullRequestsCVG;
@@ -96,6 +109,12 @@ public class RepositoryView extends AbstractUIView {
     private void initReadmeCardView() {
         readmeCVG = (CardViewGroup) getRootView().findViewById(R.id.readme_cvg);
         initCardView(readmeCVG, Octicons.Icon.oct_book, "README.md", null, null, "View all of README.md");
+
+        LinearLayout ll = (LinearLayout) readmeCVG.getContentView();
+        readmeMDV = new MarkdownView(getPresenter().getAndroidContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                Utils.convertDpToPx(getPresenter().getAndroidContext(), 300));
+        ll.addView(readmeMDV, params);
     }
 
     private void initPulseCardView() {
@@ -122,13 +141,15 @@ public class RepositoryView extends AbstractUIView {
         OcticonView titleOV = (OcticonView) cvg.getHeaderView().findViewById(R.id.title_ov);
         if (titleIcon != null)
             titleOV.getFrescoAndIconicsImageView().setIcon(titleIcon);
-        if (TextUtils.isEmpty(titleText))
+        if (!TextUtils.isEmpty(titleText)) {
             titleOV.setText(titleText);
+            titleOV.setTextColorRes(android.R.color.black);
+        }
 
         OcticonView subtitleOV = (OcticonView) cvg.getHeaderView().findViewById(R.id.subtitle_ov);
         if (subtitleIcon != null)
             subtitleOV.getFrescoAndIconicsImageView().setIcon(subtitleIcon);
-        if (TextUtils.isEmpty(subtitleText))
+        if (!TextUtils.isEmpty(subtitleText))
             subtitleOV.setText(subtitleText);
 
         if (cvg.getFooterView() != null) {
@@ -147,7 +168,9 @@ public class RepositoryView extends AbstractUIView {
         issuesCountOV.setText(String.format("%s issues", repository.open_issues_count));
         languageOV.setText(repository.language);
         sizeOV.setText(String.format("%s KB", repository.size));
-        dateOV.setText(repository.created_at.toLocaleString());
+        if (repository.created_at != null) {
+            dateOV.setText(DateFormat.getDateTimeInstance().format(repository.created_at));
+        }
         ownerOV.setText(repository.owner.login);
         privateOV.setText(repository.isPrivate ? "Private" : "Public");
 
@@ -157,6 +180,21 @@ public class RepositoryView extends AbstractUIView {
 
         branchsOV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
+    }
+
+    public void showReadme(String readmeContents) {
+        readmeMDV.loadMarkdown(readmeContents);
+    }
+
+    public void showIssues(List<Issue> issues) {
+        LinearLayout ll = (LinearLayout) issuesCVG.getContentView();
+        ll.removeAllViews();
+        ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
+        ll.addView(issueListView);
+
+        BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
+        issueListView.setAdapter(adapter);
+        adapter.refreshObjects(issues);
     }
 
     @Override

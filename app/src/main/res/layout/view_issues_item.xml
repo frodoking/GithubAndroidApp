@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_height_default"
+    android:padding="@dimen/margin_middle"
+    android:background="@drawable/item_selector">
+
+    <com.frodo.github.view.FrescoAndIconicsImageView
+        android:id="@+id/state_fiiv"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        app:iiv_icon="oct_issue_opened"
+        app:iiv_color="@android:color/holo_green_light"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/margin_middle"
+        android:layout_marginRight="@dimen/margin_middle"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_middle"
+            android:textStyle="bold"
+            android:includeFontPadding="false"
+            android:textColor="?attr/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/state_info_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_xxsmall"
+            android:textColor="@android:color/darker_gray"/>
+
+        <LinearLayout
+            android:id="@+id/labels_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/number_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_xxsmall"
+        android:textColor="@android:color/darker_gray"/>
+</LinearLayout>

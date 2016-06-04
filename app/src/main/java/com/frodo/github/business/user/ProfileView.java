@@ -107,17 +107,20 @@ public class ProfileView extends AbstractUIView {
 
     @Override
     public void registerListener() {
-        popularRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle arguments = new Bundle();
-                Repo repository = popularRepositoryAdapter.getItem(position);
-                if (repository != null) {
-                    arguments.putString("repo", repository.name);
+                Repo repo = popularRepositoryAdapter.getItem(position);
+                if (repo != null) {
+                    arguments.putString("repo", repo.owner.login + "/" + repo.name);
                     FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
             }
-        });
+        };
+
+        popularRepositoriesLV.setOnItemClickListener(onItemClickListener);
+        contributedToRepositoriesLV.setOnItemClickListener(onItemClickListener);
 
         popularRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +128,6 @@ public class ProfileView extends AbstractUIView {
                 FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class);
             }
         });
-
 
         followersTV.setOnClickListener(new View.OnClickListener() {
             @Override

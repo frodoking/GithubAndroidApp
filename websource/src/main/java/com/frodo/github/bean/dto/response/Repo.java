@@ -34,6 +34,7 @@ public class Repo extends ShaUrl implements Parcelable {
     public String description;
     public String homepage;
     public String git_url;
+    public String contents_url;
     public String language;
     public String default_branch;
     public String mirror_url;
@@ -80,6 +81,7 @@ public class Repo extends ShaUrl implements Parcelable {
         this.homepage = in.readString();
         this.forks_url = in.readString();
         this.git_url = in.readString();
+        this.contents_url = in.readString();
         this.language = in.readString();
         this.default_branch = in.readString();
         this.mirror_url = in.readString();
@@ -119,6 +121,7 @@ public class Repo extends ShaUrl implements Parcelable {
         sb.append(", description='").append(description).append('\'');
         sb.append(", homepage='").append(homepage).append('\'');
         sb.append(", git_url='").append(git_url).append('\'');
+        sb.append(", contents_url='").append(contents_url).append('\'');
         sb.append(", html_url='").append(html_url).append('\'');
         sb.append(", language='").append(language).append('\'');
         sb.append(", default_branch='").append(default_branch).append('\'');
@@ -187,6 +190,7 @@ public class Repo extends ShaUrl implements Parcelable {
         dest.writeString(this.description);
         dest.writeString(this.homepage);
         dest.writeString(this.git_url);
+        dest.writeString(this.contents_url);
         dest.writeString(this.language);
         dest.writeString(this.default_branch);
         dest.writeString(this.mirror_url);

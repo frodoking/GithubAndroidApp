@@ -3,6 +3,7 @@ package com.frodo.github.business.repository;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,8 +13,12 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
+import com.frodo.github.bean.dto.response.GitBlob;
+import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
+
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -99,6 +104,8 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                                    getUIView().hideEmptyView();
                                    getUIView().showDetail(repository);
                                    CircleProgressDialog.hideLoadingDialog();
+
+                                   loadMoreInfoWithReactor(repository);
                                }
                            },
                         new Action1<Throwable>() {
@@ -108,5 +115,46 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                                 getUIView().showErrorView(throwable);
                             }
                         });
+    }
+
+    private void loadMoreInfoWithReactor(Repo repo) {
+        loadReadMeFileWithReactor(repo);
+        loadIssuesWithReactor(repo);
+    }
+
+    private void loadReadMeFileWithReactor(Repo repo) {
+        if (!TextUtils.isEmpty(repo.contents_url)) {
+            getModel().loadFile(repo.owner.login, repo.name, "README.md")
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<GitBlob>() {
+                        @Override
+                        public void call(GitBlob gitBlob) {
+                            if (gitBlob.encoding.equalsIgnoreCase("base64")) {
+                                getUIView().showReadme(new String(Base64.decode(gitBlob.content, Base64.DEFAULT)));
+                            }
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    });
+        }
+    }
+
+    private void loadIssuesWithReactor(Repo repo) {
+        getModel().loadIssuesDetailWithReactor(repo.owner.login, repo.name, 0, 2)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Issue>>() {
+                    @Override
+                    public void call(List<Issue> issues) {
+                        getUIView().showIssues(issues);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }

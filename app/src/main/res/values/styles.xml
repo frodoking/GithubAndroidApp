@@ -63,7 +63,7 @@
         <item name="android:gravity">center</item>
         <item name="iconDirection">start</item>
         <item name="iconPadding">@dimen/margin_small</item>
-        <item name="iconSize">16dp</item>
+        <item name="iconSize">@dimen/icon_size</item>
     </style>
 
 </resources>

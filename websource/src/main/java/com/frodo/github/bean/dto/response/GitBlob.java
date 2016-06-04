@@ -14,8 +14,13 @@ public class GitBlob extends ShaUrl implements Parcelable {
             return new GitBlob[size];
         }
     };
-    public String content;
+    public String name;
+    public String path;
     public int size;
+    public String git_url;
+    public String down_url;
+    public String type_url;
+    public String content;
     public String encoding;
 
     public GitBlob() {
@@ -24,6 +29,9 @@ public class GitBlob extends ShaUrl implements Parcelable {
     protected GitBlob(Parcel in) {
         super(in);
         this.content = in.readString();
+        this.git_url = in.readString();
+        this.down_url = in.readString();
+        this.type_url = in.readString();
         this.size = in.readInt();
         this.encoding = in.readString();
     }
@@ -37,6 +45,9 @@ public class GitBlob extends ShaUrl implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.content);
+        dest.writeString(this.git_url);
+        dest.writeString(this.down_url);
+        dest.writeString(this.type_url);
         dest.writeInt(this.size);
         dest.writeString(this.encoding);
     }

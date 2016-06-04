@@ -1,5 +1,7 @@
 package com.frodo.github.common;
 
+import android.support.v4.util.Pair;
+
 /**
  * Created by frodo on 2016/4/30.
  */
@@ -45,6 +47,8 @@ public final class Path {
 
     public final static class Repositories {
         public static final String REPOS_FULLNAME = "/repos/%s";
+        public static final String REPOS_CONTENTS = "/repos/%s/%s/contents/%s";
+        public static final String REPOS_ISSUES = "/repos/%s/%s/issues";
     }
 
     public final static class Search {
@@ -64,5 +68,13 @@ public final class Path {
          * Repositories
          */
         public static final String USER_REPOS = USER + "/repos";
+    }
+
+    public static String replace(String url, Pair<String, String>... pairs) {
+        for (Pair<String, String> pair : pairs) {
+            url = url.replace(pair.first, pair.second);
+        }
+
+        return url.replaceAll("[+{}]", "");
     }
 }

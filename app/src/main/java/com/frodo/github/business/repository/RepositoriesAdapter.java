@@ -64,7 +64,7 @@ public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, Repositor
                 @Override
                 public void onClick(View v) {
                     Bundle arguments = new Bundle();
-                    arguments.putString("repo", repo.name);
+                    arguments.putString("repo", repo.owner.login + "/" + repo.name);
                     FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getContext(), RepositoryFragment.class, arguments);
                 }
             });

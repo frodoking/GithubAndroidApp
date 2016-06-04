@@ -3,6 +3,8 @@ package com.frodo.github.bean.dto.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 /**
  * Created by Bernat on 23/08/2014.
  */
@@ -13,8 +15,8 @@ public class GithubComment extends ShaUrl implements Parcelable {
     public String body;
     public String body_html;
     public User user;
-    public String created_at;
-    public String updated_at;
+    public Date created_at;
+    public Date updated_at;
 
     public GithubComment() {
     }
@@ -25,8 +27,10 @@ public class GithubComment extends ShaUrl implements Parcelable {
         this.body = in.readString();
         this.body_html = in.readString();
         this.user = in.readParcelable(User.class.getClassLoader());
-        this.created_at = in.readString();
-        this.updated_at = in.readString();
+        long tmpCreated_at = in.readLong();
+        this.created_at = tmpCreated_at == -1 ? null : new Date(tmpCreated_at);
+        long tmpUpdated_at = in.readLong();
+        this.updated_at = tmpUpdated_at == -1 ? null : new Date(tmpUpdated_at);
     }
 
     public String shortMessage() {
@@ -64,7 +68,7 @@ public class GithubComment extends ShaUrl implements Parcelable {
         dest.writeString(this.body);
         dest.writeString(this.body_html);
         dest.writeParcelable(this.user, 0);
-        dest.writeString(this.created_at);
-        dest.writeString(this.updated_at);
+        dest.writeLong(created_at != null ? created_at.getTime() : -1);
+        dest.writeLong(updated_at != null ? updated_at.getTime() : -1);
     }
 }
