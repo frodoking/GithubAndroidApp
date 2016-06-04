@@ -19,15 +19,15 @@
             android:orientation="horizontal"
             android:padding="@dimen/margin_middle">
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <com.frodo.github.view.FrescoAndIconicsImageView
                 android:id="@+id/head_sdv"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 fresco:fadeDuration="300"
-                fresco:placeholderImage="@drawable/octicon_mark_github"
-                fresco:actualImageScaleType="centerInside"/>
+                fresco:actualImageScaleType="centerInside"
+                app:iiv_icon="oct_mark_github"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -53,60 +53,50 @@
                     android:layout_marginLeft="@dimen/margin_small"
                     android:textColor="@android:color/darker_gray"/>
 
-                <TextView
-                    android:id="@+id/company_tv"
+                <com.frodo.github.view.OcticonView
+                    android:id="@+id/organization_ov"
+                    style="@style/OcticonViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:textSize="@dimen/text_size_xxsmall"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/black"
-                    android:drawableLeft="@drawable/octicon_organization"
-                    android:drawablePadding="@dimen/margin_small"/>
+                    app:iiv_icon="oct_organization"/>
 
-                <TextView
-                    android:id="@+id/location_tv"
+                <com.frodo.github.view.OcticonView
+                    android:id="@+id/location_ov"
+                    style="@style/OcticonViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
-                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/black"
-                    android:drawableLeft="@drawable/octicon_location"
-                    android:drawablePadding="@dimen/margin_small"/>
+                    app:iiv_icon="oct_location"/>
 
-                <TextView
-                    android:id="@+id/email_tv"
+                <com.frodo.github.view.OcticonView
+                    android:id="@+id/email_ov"
+                    style="@style/OcticonViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
-                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="?attr/colorPrimary"
-                    android:drawableLeft="@drawable/octicon_email"
-                    android:drawablePadding="@dimen/margin_small"/>
+                    app:iiv_icon="oct_mail"/>
 
-                <TextView
-                    android:id="@+id/blog_tv"
+                <com.frodo.github.view.OcticonView
+                    android:id="@+id/blog_ov"
+                    style="@style/OcticonViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
-                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="?attr/colorPrimary"
-                    android:drawableLeft="@drawable/octicon_link"
-                    android:drawablePadding="@dimen/margin_small"/>
+                    app:iiv_icon="oct_link"/>
 
-                <TextView
-                    android:id="@+id/since_tv"
+                <com.frodo.github.view.OcticonView
+                    android:id="@+id/since_ov"
+                    style="@style/OcticonViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xsmall"
-                    android:textSize="@dimen/text_size_xxsmall"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@android:color/darker_gray"
-                    android:drawableLeft="@drawable/octicon_clock"
-                    android:drawablePadding="@dimen/margin_small"/>
+                    app:iiv_icon="oct_clock"/>
             </LinearLayout>
         </LinearLayout>
 

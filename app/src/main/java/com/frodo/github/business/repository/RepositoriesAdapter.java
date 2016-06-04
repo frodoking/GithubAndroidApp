@@ -6,14 +6,14 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
+import com.frodo.github.view.OcticonView;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 /**
  * Created by frodo on 2016/6/1.
@@ -21,7 +21,7 @@ import com.frodo.github.view.BaseRecyclerViewAdapter;
 public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, RepositoriesAdapter.ViewHolder> {
 
     public RepositoriesAdapter(Context context) {
-        super(context, R.layout.view_repositories_detail_item);
+        super(context, R.layout.view_item);
     }
 
     @Override
@@ -54,33 +54,34 @@ public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, Repositor
         } else {
             final Repo repo = getItem(position - 1);
             if (repo.owner != null && repo.owner.avatar_url != null) {
-                holder.ownerHeadIV.setImageURI(Uri.parse(repo.owner.avatar_url));
+                holder.repoOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(repo.owner.avatar_url));
             }
 
-            holder.repoTV.setText(repo.full_name);
-            holder.starCountTV.setText(String.format("%s stars", repo.stargazers_count));
+            holder.repoOV.setText(repo.owner.login + "/" + repo.name);
+            holder.starCountOV.setText(String.format("%s stars", repo.stargazers_count));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle arguments = new Bundle();
                     arguments.putString("repo", repo.name);
-                    FragmentScheduler.nextFragment((FragmentContainerActivity) getContext(), RepositoryFragment.class, arguments);
+                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getContext(), RepositoryFragment.class, arguments);
                 }
             });
         }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        SimpleDraweeView ownerHeadIV;
-        TextView repoTV;
-        TextView starCountTV;
+        OcticonView repoOV;
+        OcticonView starCountOV;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ownerHeadIV = (SimpleDraweeView) itemView.findViewById(R.id.owner_head_iv);
-            repoTV = (TextView) itemView.findViewById(R.id.repo_tv);
-            starCountTV = (TextView) itemView.findViewById(R.id.star_count_tv);
+            repoOV = (OcticonView) itemView.findViewById(R.id.title_ov);
+            starCountOV = (OcticonView) itemView.findViewById(R.id.subtitle_ov);
+
+            repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
+            starCountOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_star);
         }
     }
 

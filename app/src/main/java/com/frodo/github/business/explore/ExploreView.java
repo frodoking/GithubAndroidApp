@@ -1,6 +1,5 @@
 package com.frodo.github.business.explore;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -20,12 +19,14 @@ import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.repository.RepositoriesForListViewAdapter;
 import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
-import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.MaxHeightListView;
+import com.frodo.github.view.OcticonView;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ExploreView extends UIView {
 
     private CardViewGroup trendingRepositoriesCVG;
     private ListView trendingRepositoriesLV;
-    private Adapter repositoryAdapter;
+    private RepositoriesForListViewAdapter repositoryAdapter;
 
     public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_explore);
@@ -78,8 +79,16 @@ public class ExploreView extends UIView {
         trendingRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
         trendingRepositoriesCVG.setContentView(trendingRepositoriesLV);
 
+        OcticonView titleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.title_ov);
+        titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_flame);
+        titleOV.setText("Trending repositories");
+        titleOV.setTextColorRes(android.R.color.black);
+
+        OcticonView subtitleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.subtitle_ov);
+        subtitleOV.setText("this week");
+
         ((TextView) trendingRepositoriesCVG.getFooterView().findViewById(R.id.text_tv)).setText("View more trending repositories");
-        repositoryAdapter = new Adapter(getRootView().getContext());
+        repositoryAdapter = new RepositoriesForListViewAdapter(getRootView().getContext());
         trendingRepositoriesLV.setAdapter(repositoryAdapter);
     }
 
@@ -91,8 +100,8 @@ public class ExploreView extends UIView {
                 Bundle arguments = new Bundle();
                 Repo repository = repositoryAdapter.getItem(position);
                 if (repository != null) {
-                    arguments.putString("repo", repository.name);
-                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                    arguments.putString("repo", repository.owner.login + "/" + repository.name);
+                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
             }
         });
@@ -138,42 +147,6 @@ public class ExploreView extends UIView {
             trendingRepositoriesCVG.setVisibility(View.VISIBLE);
         } else {
             trendingRepositoriesCVG.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private class Adapter extends BaseListViewAdapter<Repo> {
-        public Adapter(Context context) {
-            super(context, R.layout.view_repositories_item);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final ViewHolder vh;
-            if (convertView == null) {
-                convertView = inflateItemView();
-                vh = new ViewHolder();
-                vh.ownerHeadIV = (SimpleDraweeView) convertView.findViewById(R.id.owner_head_iv);
-                vh.repoTV = (TextView) convertView.findViewById(R.id.repo_tv);
-                vh.starCountTV = (TextView) convertView.findViewById(R.id.star_count_tv);
-                convertView.setTag(vh);
-            } else {
-                vh = (ViewHolder) convertView.getTag();
-            }
-
-            final Repo bean = getItem(position);
-            if (bean.owner != null && bean.owner.avatar_url != null) {
-                vh.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatar_url));
-            }
-
-            vh.repoTV.setText(bean.full_name);
-            vh.starCountTV.setText(String.valueOf(bean.stargazers_count));
-            return convertView;
-        }
-
-        class ViewHolder {
-            SimpleDraweeView ownerHeadIV;
-            TextView repoTV;
-            TextView starCountTV;
         }
     }
 }

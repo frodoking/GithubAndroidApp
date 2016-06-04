@@ -4,18 +4,18 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.UIView;
-import com.frodo.app.android.core.toolbox.DrawableHelper;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.OcticonView;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 /**
  * Created by frodo on 2016/5/7.
@@ -29,15 +29,15 @@ public class RepositoryView extends UIView {
     private OcticonView sizeOV;
     private OcticonView ownerOV;
 
-    private Button starBtn;
-    private Button watchBtn;
+    private OcticonView starOV;
+    private OcticonView watchOV;
 
     private TextView stargazersTV;
     private TextView watchersTV;
     private TextView forksTV;
 
     private CardViewGroup branchsCVG;
-    private TextView branchsTV;
+    private OcticonView branchsOV;
     private TextView branchCommitTV;
 
     private CardViewGroup readmeCVG;
@@ -60,8 +60,8 @@ public class RepositoryView extends UIView {
         sizeOV = (OcticonView) getRootView().findViewById(R.id.size_ov);
         ownerOV = (OcticonView) getRootView().findViewById(R.id.owner_ov);
 
-        starBtn = (Button) getRootView().findViewById(R.id.star_btn);
-        watchBtn = (Button) getRootView().findViewById(R.id.watch_btn);
+        starOV = (OcticonView) getRootView().findViewById(R.id.star_ov);
+        watchOV = (OcticonView) getRootView().findViewById(R.id.watch_ov);
 
         stargazersTV = (TextView) getRootView().findViewById(R.id.stargazers_tv);
         watchersTV = (TextView) getRootView().findViewById(R.id.watchers_tv);
@@ -77,12 +77,8 @@ public class RepositoryView extends UIView {
 
     private void initBranchsCardView() {
         branchsCVG = (CardViewGroup) getRootView().findViewById(R.id.branchs_cvg);
-
-        branchsTV = (TextView) branchsCVG.getHeaderView().findViewById(R.id.title_tv);
-        TextView branchsSubTV = (TextView) branchsCVG.getHeaderView().findViewById(R.id.subtitle_tv);
-        branchsSubTV.setText("");
-        branchsTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_git_branch), null, null, null);
-        branchsSubTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_chevron_down), null, null, null);
+        initCardView(branchsCVG, Octicons.Icon.oct_git_branch, "master", Octicons.Icon.oct_chevron_down, null, null);
+        branchsOV = (OcticonView) branchsCVG.getHeaderView().findViewById(R.id.title_ov);
 
         LinearLayout ll = (LinearLayout) branchsCVG.getContentView();
         branchCommitTV = new TextView(getPresenter().getAndroidContext());
@@ -95,70 +91,51 @@ public class RepositoryView extends UIView {
         ll.addView(branchCommitTV, lp);
 
         branchsCVG = (CardViewGroup) getRootView().findViewById(R.id.branchs_cvg);
-        TextView viewCodeTV = (TextView) branchsCVG.getFooterView().findViewById(R.id.repo_view_code_tv);
-        TextView jumpToFileTV = (TextView) branchsCVG.getFooterView().findViewById(R.id.repo_jump_to_file_tv);
-        viewCodeTV.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                DrawableHelper.withContext(getPresenter().getAndroidContext())
-                        .withColor(R.color.colorPrimary)
-                        .withDrawable(R.drawable.octicon_file_directory).tint().get(), null, null, null);
-        jumpToFileTV.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                DrawableHelper.withContext(getPresenter().getAndroidContext())
-                        .withColor(R.color.colorPrimary)
-                        .withDrawable(R.drawable.octicon_search).tint().get(), null, null, null);
     }
 
     private void initReadmeCardView() {
         readmeCVG = (CardViewGroup) getRootView().findViewById(R.id.readme_cvg);
-
-        TextView titleTV = (TextView) readmeCVG.getHeaderView().findViewById(R.id.title_tv);
-        titleTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_book), null, null, null);
-        titleTV.setText("README.md");
-
-        TextView footTV = (TextView) readmeCVG.getFooterView().findViewById(R.id.text_tv);
-        footTV.setText("View all of README.md");
+        initCardView(readmeCVG, Octicons.Icon.oct_book, "README.md", null, null, "View all of README.md");
     }
 
     private void initPulseCardView() {
         pulseCVG = (CardViewGroup) getRootView().findViewById(R.id.pulse_cvg);
-
-        TextView titleTV = (TextView) pulseCVG.getHeaderView().findViewById(R.id.title_tv);
-        TextView subtitleTVTV = (TextView) pulseCVG.getHeaderView().findViewById(R.id.subtitle_tv);
-        titleTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_pulse), null, null, null);
-        titleTV.setText("Pulse");
-        subtitleTVTV.setText("Past week");
-
-        TextView footTV = (TextView) pulseCVG.getFooterView().findViewById(R.id.text_tv);
-        footTV.setText("View Pulse");
+        initCardView(pulseCVG, Octicons.Icon.oct_pulse, "Pulse", null, "Past week", "View Pulse");
     }
 
     private void initIssuesCardView() {
         issuesCVG = (CardViewGroup) getRootView().findViewById(R.id.issues_cvg);
-
-        TextView titleTV = (TextView) issuesCVG.getHeaderView().findViewById(R.id.title_tv);
-        titleTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_issue_opened), null, null, null);
-        titleTV.setText("Issues");
-
-        TextView footTV = (TextView) issuesCVG.getFooterView().findViewById(R.id.text_tv);
-        footTV.setText("View all issues");
+        initCardView(issuesCVG, Octicons.Icon.oct_issue_opened, "Issues", null, null, "View all issues");
     }
 
     private void initPullRequestsCardView() {
         pullRequestsCVG = (CardViewGroup) getRootView().findViewById(R.id.pull_requests_cvg);
-
-        TextView titleTV = (TextView) pullRequestsCVG.getHeaderView().findViewById(R.id.title_tv);
-        titleTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_git_pull_request), null, null, null);
-        titleTV.setText("Pull Requests");
-
-        TextView footTV = (TextView) pullRequestsCVG.getFooterView().findViewById(R.id.text_tv);
-        footTV.setText("View all pull requests");
+        initCardView(pullRequestsCVG, Octicons.Icon.oct_git_pull_request, "Pull Requests", null, null, "View all pull requests");
     }
 
     private void initNotificationsCardView() {
         notificationsCVG = (CardViewGroup) getRootView().findViewById(R.id.notifications_cvg);
+        initCardView(notificationsCVG, Octicons.Icon.oct_bell, "Notifications", null, null, null);
+    }
 
-        TextView titleTV = (TextView) notificationsCVG.getHeaderView().findViewById(R.id.title_tv);
-        titleTV.setCompoundDrawablesWithIntrinsicBounds(ResourceManager.getDrawable(R.drawable.octicon_bell), null, null, null);
-        titleTV.setText("Notifications");
+    private void initCardView(CardViewGroup cvg, Octicons.Icon titleIcon, String titleText, Octicons.Icon subtitleIcon, String subtitleText, String footText) {
+        OcticonView titleOV = (OcticonView) cvg.getHeaderView().findViewById(R.id.title_ov);
+        if (titleIcon != null)
+            titleOV.getFrescoAndIconicsImageView().setIcon(titleIcon);
+        if (TextUtils.isEmpty(titleText))
+            titleOV.setText(titleText);
+
+        OcticonView subtitleOV = (OcticonView) cvg.getHeaderView().findViewById(R.id.subtitle_ov);
+        if (subtitleIcon != null)
+            subtitleOV.getFrescoAndIconicsImageView().setIcon(subtitleIcon);
+        if (TextUtils.isEmpty(subtitleText))
+            subtitleOV.setText(subtitleText);
+
+        if (cvg.getFooterView() != null) {
+            TextView footTV = (TextView) cvg.getFooterView().findViewById(R.id.text_tv);
+            if (footText != null)
+                footTV.setText(footText);
+        }
     }
 
     @Override
@@ -178,7 +155,7 @@ public class RepositoryView extends UIView {
         watchersTV.setText(String.valueOf(repository.subscribers_count));
         forksTV.setText(String.valueOf(repository.forks_count));
 
-        branchsTV.setText(repository.default_branch);
+        branchsOV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
     }
 

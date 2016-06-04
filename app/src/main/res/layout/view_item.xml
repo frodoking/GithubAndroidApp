@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,22 +11,26 @@
     android:paddingRight="@dimen/margin_middle"
     android:background="@drawable/item_selector">
 
-    <TextView
-        android:id="@+id/title_tv"
+    <com.frodo.github.view.OcticonView
+        android:id="@+id/title_ov"
+        style="@style/OcticonViewStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="@dimen/text_size_middle"
+        android:gravity="start|center_vertical"
         android:textStyle="bold"
-        android:drawableLeft="@drawable/octicon_repo"
-        android:drawablePadding="@dimen/margin_xsmall"
-        android:textColor="?attr/colorPrimary"/>
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_middle"
+        app:iconDirection="start" />
 
-    <TextView
-        android:id="@+id/subtitle_tv"
+
+    <com.frodo.github.view.OcticonView
+        android:id="@+id/subtitle_ov"
+        style="@style/OcticonViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"
         android:textColor="@android:color/darker_gray"
-        android:drawablePadding="@dimen/margin_xsmall"/>
+        app:iconDirection="end" />
+
 </LinearLayout>

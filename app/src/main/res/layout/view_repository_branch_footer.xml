@@ -1,49 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:gravity="center">
 
-    <LinearLayout
-        android:id="@+id/repo_view_code_ll"
+    <com.frodo.github.view.OcticonView
+        android:id="@+id/repo_view_code_ov"
+        style="@style/OcticonViewStyle"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="@dimen/item_height_default"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
         android:background="@drawable/item_selector"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/repo_view_code_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_middle"
-            android:textColor="?attr/colorPrimary"
-            android:drawableLeft="@drawable/octicon_file_directory"
-            android:drawablePadding="@dimen/margin_xsmall"
-            android:text="View code"
-            android:gravity="center"/>
-    </LinearLayout>
+        app:iiv_icon="oct_file_directory"
+        app:iiv_color="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_middle"
+        android:textColor="?attr/colorPrimary"
+        android:text="View code"/>
 
     <View style="@style/LineVStyle"/>
 
-    <LinearLayout
-        android:id="@+id/repo_jump_to_file_ll"
+    <com.frodo.github.view.OcticonView
+        android:id="@+id/repo_jump_to_file_ov"
+        style="@style/OcticonViewStyle"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="@dimen/item_height_default"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
         android:background="@drawable/item_selector"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/repo_jump_to_file_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_middle"
-            android:textColor="?attr/colorPrimary"
-            android:drawableLeft="@drawable/octicon_search"
-            android:drawablePadding="@dimen/margin_xsmall"
-            android:gravity="center"
-            android:text="Jump to file"/>
-    </LinearLayout>
+        app:iiv_icon="oct_search"
+        app:iiv_color="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_middle"
+        android:textColor="?attr/colorPrimary"
+        android:text="Jump to file"/>
 </LinearLayout>

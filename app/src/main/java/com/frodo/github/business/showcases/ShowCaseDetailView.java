@@ -79,22 +79,22 @@ public class ShowCaseDetailView extends UIView {
 
         @Override
         public void onBindViewHolder(RepositoriesViewHolder holder, int position) {
-            final Repo bean = getItem(position);
-            if (bean.owner != null && bean.owner.avatar_url != null) {
-                holder.ownerHeadIV.setImageURI(Uri.parse(bean.owner.avatar_url));
+            final Repo repo = getItem(position);
+            if (repo.owner != null && repo.owner.avatar_url != null) {
+                holder.ownerHeadIV.setImageURI(Uri.parse(repo.owner.avatar_url));
             }
 
-            holder.repoTV.setText(bean.full_name);
-            holder.languageTV.setText(TextUtils.isEmpty(bean.language) ? "" : bean.language);
-            holder.starCountTV.setText(String.format("%s stars", bean.stargazers_count));
-            holder.descriptionTV.setText(bean.description);
+            holder.repoTV.setText(repo.full_name);
+            holder.languageTV.setText(TextUtils.isEmpty(repo.language) ? "" : repo.language);
+            holder.starCountTV.setText(String.format("%s stars", repo.stargazers_count));
+            holder.descriptionTV.setText(repo.description);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle arguments = new Bundle();
-                    arguments.putString("repo", bean.name);
-                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                    arguments.putString("repo", repo.owner.login + "/" + repo.name);
+                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
             });
         }

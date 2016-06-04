@@ -18,6 +18,7 @@ import com.frodo.github.bean.dto.response.GithubAuthorization;
 import com.frodo.github.bean.dto.response.Token;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.user.UserModel;
+import com.frodo.github.common.GithubMediaTypes;
 import com.frodo.github.common.Path;
 import com.frodo.github.common.Scope;
 
@@ -165,7 +166,7 @@ public class AccountModel extends AbstractModel {
 
                 Request request = new Request.Builder<RequestBody>()
                         .method("POST")
-                        .relativeUrl(Path.Login.AUTHORIZATIONS)
+                        .relativeUrl(Path.Authentication.AUTHORIZATIONS)
                         .headers(headerList)
                         .body(requestBody)
                         .build();
@@ -207,13 +208,13 @@ public class AccountModel extends AbstractModel {
                 tokenDTO.redirect_uri = redirectUri;
                 tokenDTO.code = code;
 
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/vnd.github.v3+json"), JsonConverter.toJson(tokenDTO));
+                RequestBody requestBody = RequestBody.create(MediaType.parse(GithubMediaTypes.BasicJson), JsonConverter.toJson(tokenDTO));
                 List<Header> headerList = new ArrayList<>();
                 headerList.add(new Header("Accept", "application/json"));
 
                 Request request = new Request.Builder<RequestBody>()
                         .method("POST")
-                        .relativeUrl(Path.Login.OAUTH_ACCESS_TOKEN)
+                        .relativeUrl(Path.Authentication.OAUTH_ACCESS_TOKEN)
                         .headers(headerList)
                         .body(requestBody)
                         .build();

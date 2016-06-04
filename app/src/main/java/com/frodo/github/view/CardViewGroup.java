@@ -38,6 +38,10 @@ public class CardViewGroup extends CardView {
     }
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
+        if (isInEditMode()) {
+            return;
+        }
+
         inflater = LayoutInflater.from(context);
 
         setRadius(ResourceManager.getDimensionPixelSize(R.dimen.corner_radius_default));

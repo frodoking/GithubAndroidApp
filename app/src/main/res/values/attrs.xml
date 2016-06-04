@@ -8,5 +8,7 @@
 
     <declare-styleable name="OcticonView">
         <attr name="iconDirection" format="string"/>
+        <attr name="iconPadding" format="dimension"/>
+        <attr name="iconSize" format="dimension"/>
     </declare-styleable>
 </resources>

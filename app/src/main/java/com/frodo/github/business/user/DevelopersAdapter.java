@@ -69,7 +69,7 @@ public class DevelopersAdapter extends BaseRecyclerViewAdapter<User, DevelopersA
                 public void onClick(View v) {
                     Bundle arguments = new Bundle();
                     arguments.putString("username", user.login);
-                    FragmentScheduler.nextFragment((FragmentContainerActivity) getContext(), ProfileFragment.class, arguments);
+                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getContext(), ProfileFragment.class, arguments);
                 }
             });
         }

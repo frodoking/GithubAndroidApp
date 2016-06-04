@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorPrimaryDark"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="@dimen/margin_large">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.frodo.github.view.FrescoAndIconicsImageView
         android:id="@+id/head_sdv"
         android:layout_width="@dimen/image_size_xxlarge"
         android:layout_height="@dimen/image_size_xxlarge"
         android:contentDescription="@null"
         android:background="@android:color/white"
-        fresco:fadeDuration="300"
-        fresco:roundAsCircle="true"
-        fresco:roundWithOverlayColor="?attr/colorPrimaryDark"
-        fresco:roundingBorderWidth="1dp"
-        fresco:roundingBorderColor="?attr/colorAccent"
-        fresco:placeholderImageScaleType="fitXY"
-        fresco:failureImageScaleType="fitXY"
-        fresco:actualImageScaleType="fitXY"/>
+        app:fadeDuration="300"
+        app:roundAsCircle="true"
+        app:roundWithOverlayColor="?attr/colorPrimaryDark"
+        app:roundingBorderWidth="1dp"
+        app:roundingBorderColor="?attr/colorAccent"
+        app:placeholderImageScaleType="fitXY"
+        app:failureImageScaleType="fitXY"
+        app:actualImageScaleType="fitXY"
+        app:iiv_icon="oct_mark_github" />
 
     <TextView
         android:id="@+id/id_username"

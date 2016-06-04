@@ -13,15 +13,12 @@ public final class Path {
         public static final String TRENDING = "/v2/trending";
     }
 
-    public final static class Commits {
-
+    public final static class Authentication {
+        public static final String OAUTH_ACCESS_TOKEN = "/login/oauth/access_token";
+        public static final String AUTHORIZATIONS = "/authorizations";
     }
 
-    public final static class Content {
-
-    }
-
-    public final static class Emojis {
+    public final static class Activity {
 
     }
 
@@ -33,24 +30,11 @@ public final class Path {
 
     }
 
-    public final static class GitIgnore {
-
-    }
-
     public final static class Issues {
 
     }
 
-    public final static class Login {
-        public static final String OAUTH_ACCESS_TOKEN = "/login/oauth/access_token";
-        public static final String AUTHORIZATIONS = "/authorizations";
-    }
-
-    public final static class Notifications {
-
-    }
-
-    public final static class Orgs {
+    public final static class Organizations {
 
     }
 
@@ -59,11 +43,7 @@ public final class Path {
         public static final String REPOS_OWNER_NAME_PULLS_NUMBER = "/repos/{owner}/{name}/pulls/{number}";
     }
 
-    public final static class Repo {
-
-    }
-
-    public final static class Repos {
+    public final static class Repositories {
         public static final String REPOS_FULLNAME = "/repos/%s";
     }
 
@@ -81,12 +61,8 @@ public final class Path {
          */
         public static final String USER_FOLLOWERS = USER + "/followers";
         /**
-         * Repos
+         * Repositories
          */
         public static final String USER_REPOS = USER + "/repos";
-    }
-
-    public final static class WebHook {
-
     }
 }

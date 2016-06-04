@@ -1,6 +1,5 @@
 package com.frodo.github;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.FragmentScheduler;
@@ -63,8 +61,6 @@ public class MainActivity extends FragmentContainerActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.id_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.id_nv_menu);
         navigationHeadView = navigationView.getHeaderView(0);
-        SimpleDraweeView headSDV = (SimpleDraweeView) navigationHeadView.findViewById(R.id.head_sdv);
-        headSDV.getHierarchy().setPlaceholderImage(new IconicsDrawable(this).icon(Octicons.Icon.oct_mark_github).colorRes(android.R.color.black));
         navigationView.setPadding(0, ScreenUtils.getStatusHeight(this), 0, 0);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,7 +92,7 @@ public class MainActivity extends FragmentContainerActivity {
                     String login = accountModel.getSignInUser();
                     Bundle arguments = new Bundle();
                     arguments.putString("username", login);
-                    FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, arguments);
+                    FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, ProfileFragment.class, arguments);
                 } else {
                     FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
                 }

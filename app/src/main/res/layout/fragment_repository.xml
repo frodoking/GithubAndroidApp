@@ -47,21 +47,23 @@
                             android:id="@+id/private_ov"
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height_small"
-                            app:iiv_icon="oct_lock"/>
+                            android:layout_height="wrap_content"
+                            app:iiv_icon="oct_mark_github" />
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/issues_count_ov"
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height_small"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_middle"
                             app:iiv_icon="oct_issue_opened"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/date_ov"
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height_small"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_middle"
                             app:iiv_icon="oct_calendar"/>
                     </LinearLayout>
 
@@ -75,14 +77,15 @@
                             android:id="@+id/language_ov"
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height_small"
+                            android:layout_height="wrap_content"
                             app:iiv_icon="oct_package"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/size_ov"
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height_small"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_middle"
                             app:iiv_icon="oct_tools"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -90,7 +93,8 @@
                 <RelativeLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height_small"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_middle"
                     android:background="@drawable/item_selector">
 
                     <com.frodo.github.view.OcticonView
@@ -119,29 +123,31 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_middle"
+            android:layout_marginTop="@dimen/margin_middle"
             android:paddingLeft="@dimen/margin_middle"
             android:paddingRight="@dimen/margin_middle">
 
-            <Button
-                android:id="@+id/star_btn"
+            <com.frodo.github.view.OcticonView
+                android:id="@+id/star_ov"
+                style="@style/OcticonViewStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                style="@style/ButtonStyle"
-                android:drawableLeft="@drawable/octicon_star"
-                android:textAllCaps="false"
+                android:minHeight="@dimen/item_height_small"
+                android:background="@android:color/holo_green_dark"
+                app:iiv_icon="oct_star"
                 android:text="Star"/>
 
-            <Button
-                android:id="@+id/watch_btn"
+            <com.frodo.github.view.OcticonView
+                android:id="@+id/watch_ov"
+                style="@style/OcticonViewStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                style="@style/ButtonStyle"
-                android:drawableLeft="@drawable/octicon_eye"
-                android:layout_marginLeft="@dimen/margin_xsmall"
-                android:textAllCaps="false"
+                android:minHeight="@dimen/item_height_small"
+                android:background="@android:color/holo_green_dark"
+                android:layout_marginLeft="@dimen/margin_middle"
+                app:iiv_icon="oct_eye"
                 android:text="Watch"/>
         </LinearLayout>
 

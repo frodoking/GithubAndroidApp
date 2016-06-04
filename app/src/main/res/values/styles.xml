@@ -62,8 +62,8 @@
         <item name="android:textSize">@dimen/text_size_xxsmall</item>
         <item name="android:gravity">center</item>
         <item name="iconDirection">start</item>
-        <item name="iiv_size">20dp</item>
-        <item name="iiv_padding">3dp</item>
+        <item name="iconPadding">@dimen/margin_small</item>
+        <item name="iconSize">16dp</item>
     </style>
 
 </resources>

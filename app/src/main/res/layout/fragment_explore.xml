@@ -24,7 +24,7 @@
             android:layout_marginTop="@dimen/margin_middle"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            app:headerLayout="@layout/view_repository_header"
+            app:headerLayout="@layout/view_item"
             app:footerLayout="@layout/view_footer"
             android:visibility="gone"/>
     </LinearLayout>

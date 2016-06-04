@@ -46,7 +46,7 @@ public class RepositoryModel extends AbstractModel {
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repos.REPOS_FULLNAME, slug))
+                        .relativeUrl(String.format(Path.Repositories.REPOS_FULLNAME, slug))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);

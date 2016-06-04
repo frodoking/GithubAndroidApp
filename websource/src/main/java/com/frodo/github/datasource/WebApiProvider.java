@@ -52,7 +52,17 @@ public class WebApiProvider {
                                 repo.archive_url = elementRepo.attr("href");
 
                                 Elements elementRepoString = elementRepo.select("div[class=list-item-title repo-name]");
-                                repo.name = elementRepoString.get(0).text();
+                                String repoFullName = elementRepoString.get(0).text();
+
+                                if (repoFullName.contains("/")) {
+                                    String[] strings = repoFullName.split("/");
+                                    User owner = new User();
+                                    owner.login = strings[0];
+                                    repo.owner = owner;
+                                    repo.name = strings[1];
+                                }else {
+                                    repo.name = repoFullName;
+                                }
 
                                 Elements elementStars = elementRepo.select("strong[class=meta]");
                                 repo.stargazers_count = Integer.parseInt(elementStars.get(0).text().replace(",", ""));
