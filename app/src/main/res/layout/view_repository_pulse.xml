@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/pulse_ll"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/margin_middle">
+
+    <include
+        android:id="@+id/pull_requests_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_repository_pulse_item"/>
+
+    <include
+        android:id="@+id/issues_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_middle"
+        layout="@layout/view_repository_pulse_item"/>
+
+</LinearLayout>

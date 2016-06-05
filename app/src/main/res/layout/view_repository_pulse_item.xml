@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_middle"
+        android:text="Issues"/>
+
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ProgressBarHorizontalStyle"
+        android:layout_marginTop="@dimen/margin_middle"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_large"
+        android:layout_marginTop="@dimen/margin_middle"
+        android:gravity="center"
+        android:background="@drawable/shape_default"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/first_ll"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            layout="@layout/view_repository_pulse_item_detail"/>
+
+        <View style="@style/LineVStyle"/>
+
+        <include
+            android:id="@+id/second_ll"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            layout="@layout/view_repository_pulse_item_detail"/>
+
+    </LinearLayout>
+
+</LinearLayout>

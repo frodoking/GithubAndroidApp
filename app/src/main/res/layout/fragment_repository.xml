@@ -48,7 +48,7 @@
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:iiv_icon="oct_mark_github" />
+                            app:iiv_icon="oct_mark_github"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/issues_count_ov"
@@ -114,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:iiv_icon="oct_chevron_right"
-                        app:iconDirection="end" />
+                        app:iconDirection="end"/>
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -291,6 +291,6 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
-            app:contentLayout="@layout/view_card_container"/>
+            app:contentLayout="@layout/view_repository_notifications"/>
     </LinearLayout>
 </ScrollView>

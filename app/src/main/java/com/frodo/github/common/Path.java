@@ -48,7 +48,9 @@ public final class Path {
     public final static class Repositories {
         public static final String REPOS_FULLNAME = "/repos/%s";
         public static final String REPOS_CONTENTS = "/repos/%s/%s/contents/%s";
+        public static final String REPOS_LABELS = "/repos/%s/%s/labels";
         public static final String REPOS_ISSUES = "/repos/%s/%s/issues";
+        public static final String REPOS_PULLS = "/repos/%s/%s/pulls";
     }
 
     public final static class Search {

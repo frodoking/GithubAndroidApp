@@ -17,6 +17,7 @@
     <dimen name="margin_xsmall">3dp</dimen>
     <dimen name="item_height_default">45dp</dimen>
     <dimen name="item_height_small">35dp</dimen>
+    <dimen name="item_height_xsmall">25dp</dimen>
     <dimen name="item_height_large">50dp</dimen>
 
     <dimen name="text_size_xxlarge">36sp</dimen>

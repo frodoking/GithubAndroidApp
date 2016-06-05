@@ -40,12 +40,12 @@
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/darker_gray"/>
 
-        <LinearLayout
+        <com.frodo.github.view.AutoTabLayout
             android:id="@+id/labels_ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
+
     <TextView
         android:id="@+id/number_tv"
         android:layout_width="wrap_content"

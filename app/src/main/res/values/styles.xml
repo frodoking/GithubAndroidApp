@@ -34,6 +34,11 @@
         <item name="android:minHeight">@dimen/item_height_default</item>
     </style>
 
+    <style name="ProgressBarHorizontalStyle" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:minHeight">20dip</item>
+        <item name="android:maxHeight">20dip</item>
+    </style>
+
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>

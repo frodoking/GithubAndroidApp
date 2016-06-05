@@ -1,11 +1,14 @@
 package com.frodo.github.business.repository;
 
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
@@ -13,6 +16,8 @@ import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Issue;
+import com.frodo.github.bean.dto.response.IssueState;
+import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.view.BaseListViewAdapter;
@@ -52,7 +57,6 @@ public class RepositoryView extends AbstractUIView {
 
     private CardViewGroup readmeCVG;
     private MarkdownView readmeMDV;
-
 
     private CardViewGroup pulseCVG;
     private CardViewGroup issuesCVG;
@@ -186,15 +190,142 @@ public class RepositoryView extends AbstractUIView {
         readmeMDV.loadMarkdown(readmeContents);
     }
 
+    public void showPulse(List<Issue> issues, List<PullRequest> pullRequests) {
+        LinearLayout ll = (LinearLayout) pulseCVG.getContentView();
+
+        if ((issues == null || issues.isEmpty()) && (pullRequests == null || pullRequests.isEmpty())) {
+            ll.removeAllViews();
+            TextView textView = new TextView(getPresenter().getAndroidContext());
+            textView.setText("there is no pulse");
+            ll.addView(textView);
+        } else {
+            View issuesView = ll.findViewById(R.id.issues_ll);
+            View pullsView = ll.findViewById(R.id.pull_requests_ll);
+            if (issuesView == null) {
+                ll.removeAllViews();
+                LayoutInflater.from(getPresenter().getAndroidContext()).inflate(R.layout.view_repository_pulse, ll);
+
+                issuesView = ll.findViewById(R.id.issues_ll);
+                pullsView = ll.findViewById(R.id.pull_requests_ll);
+
+                issuesView.setVisibility(View.GONE);
+                pullsView.setVisibility(View.GONE);
+            }
+            float openCount = 0;
+            float closeCount = 0;
+            if (issues != null && !issues.isEmpty()) {
+                for (Issue issue : issues) {
+                    if (issue.state.equals(IssueState.open)) {
+                        openCount++;
+                    } else if (issue.state.equals(IssueState.closed)) {
+                        closeCount++;
+                    }
+                }
+
+                fillPulesItem(issuesView, "Issues",
+                        ResourceManager.getDrawable(R.drawable.progressbar_horizontal_pulse_issues),
+                        closeCount, openCount,
+                        Octicons.Icon.oct_issue_closed, Octicons.Icon.oct_issue_opened,
+                        "Closed issues", "Opened issues");
+                issuesView.setVisibility(View.VISIBLE);
+            }
+
+            float mergedCount = 0;
+            float proposedCount = 0;
+            if (pullRequests != null && !pullRequests.isEmpty()) {
+                for (PullRequest pullRequest : pullRequests) {
+                    if (pullRequest.state.equals(IssueState.open)) {
+                        mergedCount++;
+                    } else if (pullRequest.state.equals(IssueState.closed)) {
+                        proposedCount++;
+                    }
+                }
+                fillPulesItem(pullsView,
+                        "Pull Requests",
+                        ResourceManager.getDrawable(R.drawable.progressbar_horizontal_pulse_pulls),
+                        mergedCount, proposedCount,
+                        Octicons.Icon.oct_git_pull_request, Octicons.Icon.oct_git_branch,
+                        "Merged PRs", "Proposed PRs");
+                pullsView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void fillPulesItem(View itemView, String titleText, Drawable progressDrawable,
+                               float startSize,  float endSize,
+                               Octicons.Icon startIcon, Octicons.Icon endIcon,
+                                String startText, String endText) {
+        ((TextView) itemView.findViewById(R.id.title_tv)).setText(titleText);
+        ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.pb);
+        progressBar.setProgressDrawable(progressDrawable);
+        progressBar.setMax(100);
+        progressBar.setProgress(endSize == 0 ? 100 : (int) ((startSize / endSize) * 100));
+
+        View firstView = itemView.findViewById(R.id.first_ll);
+        OcticonView startVO = (OcticonView) firstView.findViewById(R.id.title_ov);
+        startVO.getFrescoAndIconicsImageView().setIcon(startIcon);
+        startVO.setText(String.valueOf((int) startSize));
+        ((TextView) firstView.findViewById(R.id.text_tv)).setText(startText);
+
+        View secondView = itemView.findViewById(R.id.second_ll);
+        OcticonView endVO = (OcticonView) secondView.findViewById(R.id.title_ov);
+        endVO.getFrescoAndIconicsImageView().setIcon(endIcon);
+        endVO.setText(String.valueOf((int) endSize));
+        ((TextView) secondView.findViewById(R.id.text_tv)).setText(endText);
+    }
+
     public void showIssues(List<Issue> issues) {
         LinearLayout ll = (LinearLayout) issuesCVG.getContentView();
         ll.removeAllViews();
-        ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
-        ll.addView(issueListView);
+        if (issues == null || issues.isEmpty()) {
+            TextView textView = new TextView(getPresenter().getAndroidContext());
+            textView.setText("there is no issues");
+            ll.addView(textView);
+        } else {
+            showPulse(issues, null);
+            List<Issue> tmpList = issues.size() > 5 ? issues.subList(0, 5) : issues;
 
-        BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
-        issueListView.setAdapter(adapter);
-        adapter.refreshObjects(issues);
+            ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
+            ll.addView(issueListView);
+
+            BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
+            issueListView.setAdapter(adapter);
+            adapter.refreshObjects(tmpList);
+
+            issuesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //
+                }
+            });
+        }
+    }
+
+    public void showPullRequests(List<PullRequest> pullRequests) {
+        LinearLayout ll = (LinearLayout) pullRequestsCVG.getContentView();
+        ll.removeAllViews();
+        if (pullRequests == null || pullRequests.isEmpty()) {
+            TextView textView = new TextView(getPresenter().getAndroidContext());
+            textView.setText("there is no pull requests");
+            ll.addView(textView);
+        } else {
+            showPulse(null, pullRequests);
+            List<PullRequest> tmpList = pullRequests.size() > 5 ? pullRequests.subList(0, 5) : pullRequests;
+
+            ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
+            ll.addView(issueListView);
+
+            BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
+            issueListView.setAdapter(adapter);
+            adapter.refreshObjects(tmpList);
+
+            pullRequestsCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //
+                }
+            });
+        }
     }
 
     @Override

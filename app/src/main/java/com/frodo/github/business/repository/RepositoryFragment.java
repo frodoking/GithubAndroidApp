@@ -15,6 +15,7 @@ import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.GitBlob;
 import com.frodo.github.bean.dto.response.Issue;
+import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
 
@@ -120,6 +121,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     private void loadMoreInfoWithReactor(Repo repo) {
         loadReadMeFileWithReactor(repo);
         loadIssuesWithReactor(repo);
+        loadPullRequestsWithReactor(repo);
     }
 
     private void loadReadMeFileWithReactor(Repo repo) {
@@ -143,12 +145,30 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     private void loadIssuesWithReactor(Repo repo) {
-        getModel().loadIssuesDetailWithReactor(repo.owner.login, repo.name, 0, 2)
+        getModel().loadAllIssuesWithReactor(repo.owner.login, repo.name)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Issue>>() {
                     @Override
                     public void call(List<Issue> issues) {
                         getUIView().showIssues(issues);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    private void loadPullRequestsWithReactor(Repo repo) {
+        getModel().loadAllPullsWithReactor(repo.owner.login, repo.name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<PullRequest>>() {
+                    @Override
+                    public void call(List<PullRequest> pullRequests) {
+                        getUIView().showPullRequests(pullRequests);
                     }
                 }, new Action1<Throwable>() {
                     @Override
