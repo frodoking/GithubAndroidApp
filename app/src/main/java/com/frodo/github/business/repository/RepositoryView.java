@@ -63,8 +63,15 @@ public class RepositoryView extends AbstractUIView {
     private CardViewGroup pullRequestsCVG;
     private CardViewGroup notificationsCVG;
 
+    private LinearLayout.LayoutParams emptyLayoutParams;
+
     public RepositoryView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_repository);
+        emptyLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ResourceManager.getDimensionPixelSize(R.dimen.item_height_default));
+        int margin = ResourceManager.getDimensionPixelSize(R.dimen.margin_middle);
+        emptyLayoutParams.leftMargin = margin;
+        emptyLayoutParams.rightMargin = margin;
     }
 
     @Override
@@ -101,11 +108,7 @@ public class RepositoryView extends AbstractUIView {
         branchCommitTV = new TextView(getPresenter().getAndroidContext());
         branchCommitTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         branchCommitTV.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ResourceManager.getDimensionPixelSize(R.dimen.item_height_default));
-        int margin = ResourceManager.getDimensionPixelSize(R.dimen.margin_middle);
-        lp.leftMargin = margin;
-        lp.rightMargin = margin;
-        ll.addView(branchCommitTV, lp);
+        ll.addView(branchCommitTV, emptyLayoutParams);
 
         branchsCVG = (CardViewGroup) getRootView().findViewById(R.id.branchs_cvg);
     }
@@ -168,9 +171,11 @@ public class RepositoryView extends AbstractUIView {
     }
 
     public void showDetail(Repo repository) {
-        descriptionTV.setText(repository.description);
+        if (!TextUtils.isEmpty(repository.description))
+            descriptionTV.setText(repository.description);
         issuesCountOV.setText(String.format("%s issues", repository.open_issues_count));
-        languageOV.setText(repository.language);
+        if (!TextUtils.isEmpty(repository.language))
+            languageOV.setText(repository.language);
         sizeOV.setText(String.format("%s KB", repository.size));
         if (repository.created_at != null) {
             dateOV.setText(DateFormat.getDateTimeInstance().format(repository.created_at));
@@ -182,7 +187,8 @@ public class RepositoryView extends AbstractUIView {
         watchersTV.setText(String.valueOf(repository.subscribers_count));
         forksTV.setText(String.valueOf(repository.forks_count));
 
-        branchsOV.setText(repository.default_branch);
+        if (!TextUtils.isEmpty(repository.default_branch))
+            branchsOV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
     }
 
@@ -196,8 +202,10 @@ public class RepositoryView extends AbstractUIView {
         if ((issues == null || issues.isEmpty()) && (pullRequests == null || pullRequests.isEmpty())) {
             ll.removeAllViews();
             TextView textView = new TextView(getPresenter().getAndroidContext());
-            textView.setText("there is no pulse");
-            ll.addView(textView);
+            textView.setText("There haven’t been any recent conversations.");
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+            ll.addView(textView, emptyLayoutParams);
         } else {
             View issuesView = ll.findViewById(R.id.issues_ll);
             View pullsView = ll.findViewById(R.id.pull_requests_ll);
@@ -252,14 +260,14 @@ public class RepositoryView extends AbstractUIView {
     }
 
     private void fillPulesItem(View itemView, String titleText, Drawable progressDrawable,
-                               float startSize,  float endSize,
+                               float startSize, float endSize,
                                Octicons.Icon startIcon, Octicons.Icon endIcon,
-                                String startText, String endText) {
+                               String startText, String endText) {
         ((TextView) itemView.findViewById(R.id.title_tv)).setText(titleText);
         ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.pb);
         progressBar.setProgressDrawable(progressDrawable);
         progressBar.setMax(100);
-        progressBar.setProgress(endSize == 0 ? 100 : (int) ((startSize / endSize) * 100));
+        progressBar.setProgress(/*endSize == 0 ? 100 : (int) ((startSize / endSize) * 100)*/30);
 
         View firstView = itemView.findViewById(R.id.first_ll);
         OcticonView startVO = (OcticonView) firstView.findViewById(R.id.title_ov);
@@ -279,8 +287,10 @@ public class RepositoryView extends AbstractUIView {
         ll.removeAllViews();
         if (issues == null || issues.isEmpty()) {
             TextView textView = new TextView(getPresenter().getAndroidContext());
-            textView.setText("there is no issues");
-            ll.addView(textView);
+            textView.setText("There are no recent issues.");
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+            ll.addView(textView, emptyLayoutParams);
         } else {
             showPulse(issues, null);
             List<Issue> tmpList = issues.size() > 5 ? issues.subList(0, 5) : issues;
@@ -306,8 +316,10 @@ public class RepositoryView extends AbstractUIView {
         ll.removeAllViews();
         if (pullRequests == null || pullRequests.isEmpty()) {
             TextView textView = new TextView(getPresenter().getAndroidContext());
-            textView.setText("there is no pull requests");
-            ll.addView(textView);
+            textView.setText("There are no recent pull requests.");
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+            ll.addView(textView, emptyLayoutParams);
         } else {
             showPulse(null, pullRequests);
             List<PullRequest> tmpList = pullRequests.size() > 5 ? pullRequests.subList(0, 5) : pullRequests;
@@ -325,6 +337,14 @@ public class RepositoryView extends AbstractUIView {
                     //
                 }
             });
+        }
+    }
+
+    public void showNotifications(boolean isLogin, String type) {
+        if (isLogin) {
+            notificationsCVG.setVisibility(View.VISIBLE);
+        } else {
+            notificationsCVG.setVisibility(View.GONE);
         }
     }
 

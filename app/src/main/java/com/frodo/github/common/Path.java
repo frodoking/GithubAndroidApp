@@ -46,11 +46,11 @@ public final class Path {
     }
 
     public final static class Repositories {
-        public static final String REPOS_FULLNAME = "/repos/%s";
-        public static final String REPOS_CONTENTS = "/repos/%s/%s/contents/%s";
-        public static final String REPOS_LABELS = "/repos/%s/%s/labels";
-        public static final String REPOS_ISSUES = "/repos/%s/%s/issues";
-        public static final String REPOS_PULLS = "/repos/%s/%s/pulls";
+        public static final String REPOS_FULLNAME = "/repos/{owner}/{repo}";
+        public static final String REPOS_CONTENTS = REPOS_FULLNAME + "/contents/{+path}";
+        public static final String REPOS_LABELS = REPOS_FULLNAME + "/labels";
+        public static final String REPOS_ISSUES = REPOS_FULLNAME + "/issues";
+        public static final String REPOS_PULLS = REPOS_FULLNAME + "/pulls";
     }
 
     public final static class Search {
@@ -61,7 +61,7 @@ public final class Path {
         /**
          * "/users/{username}"
          */
-        public static final String USER = "/users/%s";
+        public static final String USER = "/users/{username}";
         /**
          * Followers
          */
@@ -74,9 +74,9 @@ public final class Path {
 
     public static String replace(String url, Pair<String, String>... pairs) {
         for (Pair<String, String> pair : pairs) {
-            url = url.replace(pair.first, pair.second);
+            url = url.replace("{" + pair.first + "}", pair.second);
         }
 
-        return url.replaceAll("[+{}]", "");
+        return url;
     }
 }

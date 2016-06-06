@@ -1,6 +1,7 @@
 package com.frodo.github.business.user;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.webkit.WebSettings;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -70,7 +71,7 @@ public class UserModel extends AbstractModel {
             public void call(Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Users.USER, username))
+                        .relativeUrl(Path.replace(Path.Users.USER, new Pair<>("username", username)))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -130,7 +131,7 @@ public class UserModel extends AbstractModel {
             public void call(Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Users.USER_FOLLOWERS, "frodoking"))
+                        .relativeUrl(Path.replace(Path.Users.USER_FOLLOWERS, new Pair<>("username", "frodoking")))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -158,7 +159,7 @@ public class UserModel extends AbstractModel {
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Users.USER_REPOS, username))
+                        .relativeUrl(Path.replace(Path.Users.USER_REPOS, new Pair<>("username", username)))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);

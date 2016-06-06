@@ -52,7 +52,7 @@ public class IssuesForListViewAdapter extends BaseListViewAdapter<Issue> {
                 labelTV.setText(label.name);
 
                 try {
-                    labelTV.setBackgroundColor(Color.parseColor(label.color));
+                    labelTV.setBackgroundColor(Color.parseColor("#" + label.color));
                     labelTV.setTextColor(ResourceManager.getColor(android.R.color.white));
                 } catch (Exception e) {
                     labelTV.setBackgroundColor(ResourceManager.getColor(android.R.color.darker_gray));

@@ -1,6 +1,7 @@
 package com.frodo.github.business.repository;
 
 
+import android.support.v4.util.Pair;
 import android.util.LruCache;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,6 +12,7 @@ import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
+import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.dto.response.GitBlob;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Label;
@@ -55,13 +57,13 @@ public class RepositoryModel extends AbstractModel {
         return TAG;
     }
 
-    public Observable<Repo> loadRepositoryDetailWithReactor(final String slug) {
+    public Observable<Repo> loadRepositoryDetailWithReactor(final String ownerName, final String repoName) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repositories.REPOS_FULLNAME, slug))
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_FULLNAME, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -94,7 +96,10 @@ public class RepositoryModel extends AbstractModel {
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repositories.REPOS_CONTENTS, ownerName, repoName, fileName))
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_CONTENTS,
+                                new Pair<>("owner", ownerName),
+                                new Pair<>("repo", repoName),
+                                new Pair<>("+path", fileName)))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -129,7 +134,7 @@ public class RepositoryModel extends AbstractModel {
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repositories.REPOS_LABELS, ownerName, repoName))
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_LABELS, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)))
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -151,24 +156,70 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public Observable<List<Issue>> loadAllIssuesWithReactor(final String ownerName, final String repoName) {
-        return loadIssuesWithReactor(ownerName, repoName, -1, -1);
+    public Observable<List<Issue>> loadRecentIssuesWithReactor(final String ownerName, final String repoName) {
+        return loadIssuesWithReactor(ownerName, repoName, null, null, null, "comments", null, null, 0, 5);
     }
 
-    public Observable<List<Issue>> loadIssuesWithReactor(final String ownerName, final String repoName, final int page, final int perPage) {
+    /**
+     * List Issues
+     *
+     * @param ownerName owner login
+     * @param repoName  repo name
+     * @param filter    Indicates which sorts of issues to return. Can be one of:
+     *                  assigned: Issues assigned to you
+     *                  created: Issues created by you
+     *                  mentioned: Issues mentioning you
+     *                  subscribed: Issues you're subscribed to updates for
+     *                  all: All issues the authenticated user can see, regardless of participation or creation
+     *                  Default: assigned
+     * @param state     Indicates the state of the issues to return. Can be either open, closed, or all. Default: open
+     * @param labels    A list of comma separated label names. Example: bug,ui,@high
+     * @param sort      What to sort results by. Can be either created, updated, comments. Default: created
+     * @param direction The direction of the sort. Can be either asc or desc. Default: desc
+     * @param since     Only issues updated at or after this time are returned. This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.
+     * @param page
+     * @param perPage
+     * @return Observable<List<Issue>>
+     */
+    public Observable<List<Issue>> loadIssuesWithReactor(final String ownerName, final String repoName,
+                                                         final String filter,
+                                                         final String state,
+                                                         final String labels,
+                                                         final String sort,
+                                                         final String direction,
+                                                         final String since,
+                                                         final int page, final int perPage) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repositories.REPOS_ISSUES, ownerName, repoName))
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_ISSUES, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)))
                         .build();
-                if (page != -1)
+                if (!TextUtils.isEmpty(filter)) {
+                    request.addQueryParam("filter", filter);
+                }
+                if (!TextUtils.isEmpty(state)) {
+                    request.addQueryParam("state", state);
+                }
+                if (!TextUtils.isEmpty(labels)) {
+                    request.addQueryParam("labels", labels);
+                }
+                if (!TextUtils.isEmpty(sort)) {
+                    request.addQueryParam("sort", sort);
+                }
+                if (!TextUtils.isEmpty(direction)) {
+                    request.addQueryParam("direction", direction);
+                }
+                if (!TextUtils.isEmpty(since)) {
+                    request.addQueryParam("since", since);
+                }
+                if (page != -1) {
                     request.addQueryParam("page", String.valueOf(page));
-                if (perPage != -1)
+                }
+                if (perPage != -1) {
                     request.addQueryParam("per_page", String.valueOf(perPage));
-
-                request.addQueryParam("state", "all");
+                }
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
                 fetchIssuesFileNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
@@ -189,24 +240,60 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public Observable<List<PullRequest>> loadAllPullsWithReactor(final String ownerName, final String repoName) {
-        return loadPullsWithReactor(ownerName, repoName, -1, -1);
+    public Observable<List<PullRequest>> loadRecentPullsWithReactor(final String ownerName, final String repoName) {
+        return loadPullsWithReactor(ownerName, repoName, null, null, null, "popularity", null, 0, 5);
     }
 
-    public Observable<List<PullRequest>> loadPullsWithReactor(final String ownerName, final String repoName, final int page, final int perPage) {
+    /**
+     * List pull requests
+     *
+     * @param ownerName owner login
+     * @param repoName  repo name
+     * @param state     Either open, closed, or all to filter by state. Default: open
+     * @param head      Filter pulls by head user and branch name in the format of user:ref-name. Example: github:new-script-format.
+     * @param base      Filter pulls by base branch name. Example: gh-pages.
+     * @param sort      What to sort results by. Can be either created, updated, popularity (comment count) or long-running (age, filtering by pulls updated in the last month). Default: created
+     * @param direction The direction of the sort. Can be either asc or desc. Default: desc when sort is created or sort is not specified, otherwise asc.
+     * @param page
+     * @param perPage
+     * @return Observable<List<PullRequest>>
+     */
+    public Observable<List<PullRequest>> loadPullsWithReactor(final String ownerName, final String repoName,
+                                                              final String state,
+                                                              final String head,
+                                                              final String base,
+                                                              final String sort,
+                                                              final String direction,
+                                                              final int page, final int perPage) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(String.format(Path.Repositories.REPOS_PULLS, ownerName, repoName))
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_PULLS, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)))
                         .build();
-                if (page != -1)
-                    request.addQueryParam("page", String.valueOf(page));
-                if (perPage != -1)
-                    request.addQueryParam("per_page", String.valueOf(perPage));
 
-                request.addQueryParam("state", "all");
+                if (!TextUtils.isEmpty(state)) {
+                    request.addQueryParam("state", state);
+                }
+                if (!TextUtils.isEmpty(head)) {
+                    request.addQueryParam("head", head);
+                }
+                if (!TextUtils.isEmpty(base)) {
+                    request.addQueryParam("base", base);
+                }
+                if (!TextUtils.isEmpty(sort)) {
+                    request.addQueryParam("sort", sort);
+                }
+                if (!TextUtils.isEmpty(direction)) {
+                    request.addQueryParam("direction", direction);
+                }
+                if (page != -1) {
+                    request.addQueryParam("page", String.valueOf(page));
+                }
+                if (perPage != -1) {
+                    request.addQueryParam("per_page", String.valueOf(perPage));
+                }
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
                 fetchPullsFileNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);

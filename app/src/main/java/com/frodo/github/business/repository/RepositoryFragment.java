@@ -17,6 +17,7 @@ import com.frodo.github.bean.dto.response.GitBlob;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
 
 import java.util.List;
@@ -60,7 +61,10 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("repo")) {
             repoName = bundle.getString("repo");
-            loadRepositoryWithReactor(repoName);
+            if (repoName != null && repoName.contains("/")) {
+                String[] strings = repoName.split("/");
+                loadRepositoryWithReactor(strings[0], strings[1]);
+            }
         }
     }
 
@@ -86,8 +90,8 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
         return TextUtils.isEmpty(repoName) ? "Repository" : repoName;
     }
 
-    private void loadRepositoryWithReactor(final String repo) {
-        getModel().loadRepositoryDetailWithReactor(repo)
+    private void loadRepositoryWithReactor(final String ownerName, final String repoName) {
+        getModel().loadRepositoryDetailWithReactor(ownerName, repoName)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
@@ -102,11 +106,15 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                                @Override
                                public void call(Repo repository) {
                                    RepositoryFragment.this.repo = repository;
-                                   getUIView().hideEmptyView();
-                                   getUIView().showDetail(repository);
-                                   CircleProgressDialog.hideLoadingDialog();
+                                   if (repository != null) {
+                                       getUIView().hideEmptyView();
+                                       getUIView().showDetail(repository);
+                                       loadMoreInfoWithReactor(repository);
+                                   } else {
+                                       getUIView().showEmptyView();
+                                   }
 
-                                   loadMoreInfoWithReactor(repository);
+                                   CircleProgressDialog.hideLoadingDialog();
                                }
                            },
                         new Action1<Throwable>() {
@@ -120,8 +128,11 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
 
     private void loadMoreInfoWithReactor(Repo repo) {
         loadReadMeFileWithReactor(repo);
-        loadIssuesWithReactor(repo);
-        loadPullRequestsWithReactor(repo);
+        loadRecentIssuesWithReactor(repo);
+        loadRecentPullRequestsWithReactor(repo);
+        AccountModel accountModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
+        getUIView().showNotifications(accountModel.isSignIn(), "");
     }
 
     private void loadReadMeFileWithReactor(Repo repo) {
@@ -144,8 +155,8 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
         }
     }
 
-    private void loadIssuesWithReactor(Repo repo) {
-        getModel().loadAllIssuesWithReactor(repo.owner.login, repo.name)
+    private void loadRecentIssuesWithReactor(Repo repo) {
+        getModel().loadRecentIssuesWithReactor(repo.owner.login, repo.name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Issue>>() {
@@ -161,8 +172,8 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 });
     }
 
-    private void loadPullRequestsWithReactor(Repo repo) {
-        getModel().loadAllPullsWithReactor(repo.owner.login, repo.name)
+    private void loadRecentPullRequestsWithReactor(Repo repo) {
+        getModel().loadRecentPullsWithReactor(repo.owner.login, repo.name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<PullRequest>>() {

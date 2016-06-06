@@ -15,7 +15,7 @@
         </shape>
     </item>
     <item
-        android:id="@android:id/progress">
+        android:id="@android:id/secondaryProgress">
         <shape>
             <corners android:radius="@dimen/corner_radius_default"/>
             <solid android:color="@color/colorPrimary"/>
