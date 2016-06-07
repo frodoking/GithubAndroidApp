@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -111,7 +112,7 @@ public class ProfileView extends AbstractUIView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle arguments = new Bundle();
-                Repo repo = popularRepositoryAdapter.getItem(position);
+                Repo repo = (Repo) parent.getAdapter().getItem(position);
                 if (repo != null) {
                     arguments.putString("repo", repo.owner.login + "/" + repo.name);
                     FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);

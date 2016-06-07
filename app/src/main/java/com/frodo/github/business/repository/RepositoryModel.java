@@ -2,7 +2,6 @@ package com.frodo.github.business.repository;
 
 
 import android.support.v4.util.Pair;
-import android.util.LruCache;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
@@ -22,7 +21,11 @@ import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -35,7 +38,6 @@ import rx.functions.Func1;
 public class RepositoryModel extends AbstractModel {
     public static final String TAG = RepositoryModel.class.getSimpleName();
 
-    private LruCache<String, List<Label>> lruLabelsCache = new LruCache<>(5);
     private AndroidFetchNetworkDataTask fetchRepositoryNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchRepositoryFileNetworkDataTask;
 
@@ -120,14 +122,6 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public List<Label> getAllLables(final String ownerName, final String repoName) {
-        return lruLabelsCache.get(ownerName + "/" + repoName);
-    }
-
-    public void putAllLables(final String ownerName, final String repoName, List<Label> labels) {
-        lruLabelsCache.put(ownerName + "/" + repoName, labels);
-    }
-
     public Observable<List<Label>> loadAllLabelsWithReactor(final String ownerName, final String repoName) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
@@ -154,6 +148,17 @@ public class RepositoryModel extends AbstractModel {
                 }
             }
         });
+    }
+
+    /**
+     * https://api.github.com/repos/FreeCodeCamp/FreeCodeCamp/issues?state=open&since=2016-05-30T18:58:10Z
+     */
+    public Observable<List<Issue>> loadClosedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return loadIssuesWithReactor(ownerName, repoName, "all", "closed", null, "comments", null, getPastWeek(), -1, -1);
+    }
+
+    public Observable<List<Issue>> loadOpendIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return loadIssuesWithReactor(ownerName, repoName, "all", "open", null, "comments", null, getPastWeek(), -1, -1);
     }
 
     public Observable<List<Issue>> loadRecentIssuesWithReactor(final String ownerName, final String repoName) {
@@ -240,6 +245,14 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
+    public Observable<List<PullRequest>> loadClosedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return loadPullsWithReactor(ownerName, repoName, "closed", null, null, "popularity", null, -1, -1);
+    }
+
+    public Observable<List<PullRequest>> loadOpenedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return loadPullsWithReactor(ownerName, repoName, "open", null, null, "popularity", null, -1, -1);
+    }
+
     public Observable<List<PullRequest>> loadRecentPullsWithReactor(final String ownerName, final String repoName) {
         return loadPullsWithReactor(ownerName, repoName, null, null, null, "popularity", null, 0, 5);
     }
@@ -312,5 +325,15 @@ public class RepositoryModel extends AbstractModel {
                 }
             }
         });
+    }
+
+    public static String getPastWeek() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(java.util.Calendar.DATE, -7);
+
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        df.setTimeZone(tz);
+        return df.format(cal.getTime());
     }
 }

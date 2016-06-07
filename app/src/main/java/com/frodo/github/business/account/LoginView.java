@@ -39,8 +39,8 @@ public class LoginView extends UIView {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
-                String username = usernameWrapper.getEditText().getText().toString();
-                String password = passwordWrapper.getEditText().getText().toString();
+                String username = usernameWrapper.getEditText().getText().toString().trim();
+                String password = passwordWrapper.getEditText().getText().toString().trim();
                 if (!validateEmail(username)) {
                     usernameWrapper.setError("Not a valid email address!");
                     return;

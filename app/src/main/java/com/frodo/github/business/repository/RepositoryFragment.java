@@ -20,11 +20,15 @@ import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 
 /**
@@ -128,6 +132,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
 
     private void loadMoreInfoWithReactor(Repo repo) {
         loadReadMeFileWithReactor(repo);
+        loadPulseInPastWeekWithReactor(repo);
         loadRecentIssuesWithReactor(repo);
         loadRecentPullRequestsWithReactor(repo);
         AccountModel accountModel = getMainController().getModelFactory()
@@ -155,6 +160,40 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
         }
     }
 
+    private void loadPulseInPastWeekWithReactor(final Repo repo) {
+        Observable<List<PullRequest>> closedPullsObservable = getModel().loadClosedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<List<PullRequest>> openedPullsObservable = getModel().loadOpenedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+
+        Observable<List<Issue>> closedIssuesObservable = getModel().loadClosedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<List<Issue>> openedIssuesObservable = getModel().loadOpendIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable.combineLatest(closedPullsObservable, openedPullsObservable,
+                closedIssuesObservable, openedIssuesObservable,
+                new Func4<List<PullRequest>, List<PullRequest>, List<Issue>, List<Issue>, Map<String, Integer>>() {
+                    @Override
+                    public Map<String, Integer> call(List<PullRequest> closedPulls, List<PullRequest> openedPulls,
+                                                     List<Issue> closedIssues, List<Issue> openedIssues) {
+                        Map<String, Integer> result = new HashMap<>(4);
+                        result.put("closedPullsCount", closedPulls.size());
+                        result.put("openedPullsCount", openedPulls.size());
+                        result.put("closedIssuesCount", closedIssues.size());
+                        result.put("openedIssuesCount", openedIssues.size());
+                        return result;
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Map<String, Integer>>() {
+                    @Override
+                    public void call(Map<String, Integer> map) {
+                        getUIView().showPulse(map.get("closedPullsCount"), map.get("openedPullsCount"), map.get("closedIssuesCount"), map.get("openedIssuesCount"));
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        getUIView().showPulse(0, 0, 0, 0);
+                    }
+                });
+    }
+
     private void loadRecentIssuesWithReactor(Repo repo) {
         getModel().loadRecentIssuesWithReactor(repo.owner.login, repo.name)
                 .subscribeOn(Schedulers.io())
@@ -167,6 +206,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
+                        getUIView().showIssues(null);
                         throwable.printStackTrace();
                     }
                 });
@@ -184,6 +224,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
+                        getUIView().showPullRequests(null);
                         throwable.printStackTrace();
                     }
                 });

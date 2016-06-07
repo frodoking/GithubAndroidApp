@@ -7,20 +7,19 @@ import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.cache.Cache;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
+import com.frodo.app.framework.log.Logger;
 import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkInterceptor;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.github.bean.dto.request.CreateAuthorization;
-import com.frodo.github.bean.dto.request.RequestTokenDTO;
 import com.frodo.github.bean.dto.response.GithubAuthorization;
-import com.frodo.github.bean.dto.response.Token;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.user.UserModel;
+import com.frodo.github.common.AuthorizationConfig;
 import com.frodo.github.common.GithubMediaTypes;
 import com.frodo.github.common.Path;
-import com.frodo.github.common.Scope;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,40 +42,47 @@ public class AccountModel extends AbstractModel {
     private UserModel userModel;
 
     private AndroidFetchNetworkDataTask createAuthorizationNetworkDataTask;
-    private AndroidFetchNetworkDataTask requestTokenNetworkDataTask;
     private volatile String login;
-    private volatile boolean isSignIn;
+    private volatile boolean isSignIn = false;
 
     public AccountModel(MainController controller) {
         super(controller);
-        if (userModel == null) {
-            initBusiness();
-        }
     }
 
     @Override
     public void initBusiness() {
+        if (userModel != null) return;
+
+        Logger.fLog().tag("AccountModel").i("------- init -------");
+
         userModel = getMainController().getModelFactory()
                 .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
 
         if (getMainController().getCacheSystem().existCacheInInternal("login")) {
-            this.login = getMainController().getCacheSystem().findCacheFromInternal("login", String.class);
-            this.isSignIn = true;
+            final String username = getMainController().getCacheSystem().findCacheFromInternal("login", String.class);
 
-            final Object loginToken = getMainController().getCacheSystem().findCacheFromInternal(login, String.class);
-            if (loginToken != null) {
+            Logger.fLog().tag("Account").i("Login [ " + username + " ]");
+            final String tokenKey = getBase64(username).trim();
+            Logger.fLog().tag("Token").i("Key [ " + tokenKey + " ]");
+            if (getMainController().getCacheSystem().existCacheInInternal(tokenKey)) {
+                final String loginToken = getMainController().getCacheSystem().findCacheFromInternal(tokenKey, String.class);
+                Logger.fLog().tag("Token").i("Cached Authorization [ " + loginToken + " ]");
                 getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
                     @Override
                     public Void intercept(Request request) {
+                        Logger.fLog().tag("Token").i("Interceptor Authorization(Cached) [ " + loginToken + " ]");
                         request.getHeaders().add(new Header("Authorization", "token " + loginToken));
                         return super.intercept(request);
                     }
                 });
+                this.login = username;
+                this.isSignIn = true;
+                return;
             }
-        } else {
-            this.login = null;
-            this.isSignIn = false;
         }
+
+        this.login = null;
+        this.isSignIn = false;
     }
 
     @Override
@@ -86,45 +92,42 @@ public class AccountModel extends AbstractModel {
 
     public Observable<User> loginUserWithReactor(final String username, final String password) {
         CreateAuthorization createAuthorization = new CreateAuthorization();
-        createAuthorization.scopes = new String[]{
-                Scope.ADMIN_ORG, Scope.ADMIN_ORG_HOOK, Scope.ADMIN_PUBLIC_KEY, Scope.ADMIN_REPO_HOOK,
-                Scope.DELETE_REPO,
-                Scope.GIST,
-                Scope.NOTIFICATIONS,
-                Scope.REPO,
-                Scope.USER,
-        };
-        createAuthorization.note = "GithubAndroidClient";
-        return createAuthorization(username, password, createAuthorization).doOnNext(new Action1<GithubAuthorization>() {
-            @Override
-            public void call(final GithubAuthorization githubAuthorization) {
-                getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
+        createAuthorization.scopes = AuthorizationConfig.SCOPES;
+        createAuthorization.client_id = AuthorizationConfig.CLIENT_ID;
+        createAuthorization.client_secret = AuthorizationConfig.CLIENT_SECRET;
+        createAuthorization.note = AuthorizationConfig.NOTE;
+        return createAuthorization(username, password, createAuthorization)
+                .flatMap(new Func1<GithubAuthorization, Observable<User>>() {
                     @Override
-                    public Void intercept(Request request) {
-                        getMainController().getCacheSystem().put(username, githubAuthorization.token, Cache.Type.INTERNAL);
-                        request.getHeaders().add(new Header("Authorization", "token " + githubAuthorization.token));
-                        return super.intercept(request);
+                    public Observable<User> call(final GithubAuthorization authorization) {
+                        Logger.fLog().tag("Token").i("Create Authorization [ " + authorization.token + " ]");
+                        final String tokenKey = getBase64(username).trim();
+                        Logger.fLog().tag("Token").i("Key [ " + tokenKey + " ]");
+                        getMainController().getCacheSystem().put(tokenKey, authorization.token, Cache.Type.INTERNAL);
+                        getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
+                            @Override
+                            public Void intercept(Request request) {
+                                Logger.fLog().tag("Token").i("Interceptor Authorization [ " + authorization.token + " ]");
+                                request.getHeaders().add(new Header("Authorization", "token " + authorization.token));
+                                return super.intercept(request);
+                            }
+                        });
+
+                        return userModel.loadUserWithReactor0(username);
+                    }
+                }).doOnNext(new Action1<User>() {
+                    @Override
+                    public void call(User user) {
+                        if (user != null) {
+                            getMainController().getCacheSystem().put("login", user.login, Cache.Type.INTERNAL);
+                            login = user.login;
+                            isSignIn = true;
+                        } else {
+                            login = null;
+                            isSignIn = false;
+                        }
                     }
                 });
-            }
-        }).flatMap(new Func1<GithubAuthorization, Observable<User>>() {
-            @Override
-            public Observable<User> call(GithubAuthorization githubAuthorization) {
-                return userModel.loadUserWithReactor0(username);
-            }
-        }).doOnNext(new Action1<User>() {
-            @Override
-            public void call(User user) {
-                if (user != null) {
-                    getMainController().getCacheSystem().put("login", user.login, Cache.Type.INTERNAL);
-                    login = user.login;
-                    isSignIn = true;
-                } else {
-                    login = null;
-                    isSignIn = false;
-                }
-            }
-        });
     }
 
     public Observable<Void> logoutUserWithReactor() {
@@ -153,16 +156,16 @@ public class AccountModel extends AbstractModel {
      * @param createAuthorization
      * @return
      */
-    public Observable<GithubAuthorization> createAuthorization(final String username, final String password, final CreateAuthorization createAuthorization) {
+    private Observable<GithubAuthorization> createAuthorization(final String username, final String password, final CreateAuthorization createAuthorization) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 List<Header> headerList = new ArrayList<>();
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/vnd.github.v3+json"), JsonConverter.toJson(createAuthorization));
+                RequestBody requestBody = RequestBody.create(MediaType.parse(GithubMediaTypes.BasicJson), JsonConverter.toJson(createAuthorization));
                 String userCredentials = username + ":" + password;
-                String basicAuth = "Basic " + new String(Base64.encode(userCredentials.getBytes(), Base64.DEFAULT));
+                String basicAuth = "Basic " + getBase64(userCredentials);
                 headerList.add(new Header("Authorization", basicAuth.trim()));
-                headerList.add(new Header("Accept", "application/vnd.github.v3.json"));
+                headerList.add(new Header("Accept", GithubMediaTypes.BasicJson));
 
                 Request request = new Request.Builder<RequestBody>()
                         .method("POST")
@@ -189,60 +192,15 @@ public class AccountModel extends AbstractModel {
         });
     }
 
-    /**
-     * Web Application Flow
-     *
-     * @param code
-     * @param clientId
-     * @param clientSecret
-     * @param redirectUri
-     * @return
-     */
-    public Observable<Token> requestToken(final String code, final String clientId, final String clientSecret, final String redirectUri) {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(Subscriber<? super Response> subscriber) {
-                RequestTokenDTO tokenDTO = new RequestTokenDTO();
-                tokenDTO.client_id = clientId;
-                tokenDTO.client_secret = clientSecret;
-                tokenDTO.redirect_uri = redirectUri;
-                tokenDTO.code = code;
-
-                RequestBody requestBody = RequestBody.create(MediaType.parse(GithubMediaTypes.BasicJson), JsonConverter.toJson(tokenDTO));
-                List<Header> headerList = new ArrayList<>();
-                headerList.add(new Header("Accept", "application/json"));
-
-                Request request = new Request.Builder<RequestBody>()
-                        .method("POST")
-                        .relativeUrl(Path.Authentication.OAUTH_ACCESS_TOKEN)
-                        .headers(headerList)
-                        .body(requestBody)
-                        .build();
-
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                requestTokenNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(requestTokenNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<Token>>() {
-            @Override
-            public Observable<Token> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    Token token = JsonConverter.convert(rb.string(), Token.class);
-                    return Observable.just(token);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
-    }
-
     public boolean isSignIn() {
         return isSignIn;
     }
 
     public String getSignInUser() {
         return login;
+    }
+
+    private static String getBase64(String string) {
+        return new String(Base64.encode(string.getBytes(), Base64.DEFAULT));
     }
 }

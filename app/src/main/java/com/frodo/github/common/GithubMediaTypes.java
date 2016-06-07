@@ -5,7 +5,7 @@ package com.frodo.github.common;
  */
 public class GithubMediaTypes {
     public static final String Basic = "application/vnd.github.v3";
-    public static final String BasicJson = "application/vnd.github.v3+json";
+    public static final String BasicJson = Basic + "+json";
 
     public static final String Diff = Basic + ".diff";
     public static final String Patch = Basic + ".patch";

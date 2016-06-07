@@ -12,14 +12,19 @@ import com.frodo.app.framework.config.Environment;
 import com.frodo.app.framework.controller.IController;
 import com.frodo.app.framework.exception.ExceptionHandler;
 import com.frodo.app.framework.log.LogCollector;
+import com.frodo.app.framework.log.Logger;
+import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkInterceptor;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
+import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.scene.DefaultScene;
 import com.frodo.app.framework.scene.Scene;
 import com.frodo.app.framework.theme.Theme;
+import com.frodo.github.business.account.AccountModel;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by frodo on 2016/4/28.
@@ -31,6 +36,11 @@ public class GithubApplicatioin extends MicroApplication {
         super.init();
         Fresco.initialize(this);
         getMainController().getLogCollector().enableCollect(true);
+
+        getMainController()
+                .getModelFactory()
+                .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController())
+                .initBusiness();
     }
 
     @Override
@@ -58,14 +68,14 @@ public class GithubApplicatioin extends MicroApplication {
         return new Theme() {
             @Override
             public int themeColor() {
-                return 0xff00fe;
+                return ResourceManager.getColor(R.color.colorPrimaryDark);
             }
         };
     }
 
     @Override
     public NetworkTransport loadNetworkTransport() {
-        return new SimpleAndroidNetworkSystem(getMainController(), null, null);
+        return new SimpleAndroidNetworkSystem(getMainController());
     }
 
     @Override
@@ -95,15 +105,29 @@ public class GithubApplicatioin extends MicroApplication {
 
     private class SimpleAndroidNetworkSystem extends AndroidNetworkSystem {
 
-        public SimpleAndroidNetworkSystem(IController controller, final String userAccount, final String userPasswordSha1) {
+        public SimpleAndroidNetworkSystem(IController controller) {
             super(controller);
             setAPIUrl(controller.getConfig().getCurrentEnvironment().getUrl());
             addInterceptor(new NetworkInterceptor.RequestInterceptor() {
                 @Override
                 public Void intercept(Request request) {
-                    Environment env = getMainController().getConfig().getCurrentEnvironment();
-                    // FIXME: 2016/4/28
                     return super.intercept(request);
+                }
+            });
+            addInterceptor(new NetworkInterceptor.ResponseSuccessInterceptor() {
+                @Override
+                public Void intercept(Response response) {
+                    List<Header> headers = response.getHeaders();
+                    if (headers != null && !headers.isEmpty()) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("\n");
+                        for (Header header : headers) {
+                            sb.append(header.getName()).append(" : ").append(header.getValue()).append("\n");
+                        }
+                        Logger.fLog().tag("Response").i(sb.toString());
+                    }
+
+                    return super.intercept(response);
                 }
             });
         }
