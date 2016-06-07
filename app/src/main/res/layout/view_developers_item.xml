@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/item_height_default"
     android:background="@drawable/item_selector">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.frodo.github.view.FrescoAndIconicsImageView
         android:id="@+id/head_sdv"
         android:layout_width="@dimen/image_size_default"
         android:layout_height="@dimen/image_size_default"
         android:layout_margin="@dimen/margin_middle"
-        android:contentDescription="@null"
-        fresco:fadeDuration="300"
-        fresco:placeholderImage="@drawable/octicon_mark_github"
-        fresco:actualImageScaleType="centerCrop"/>
+        app:fadeDuration="300"
+        app:actualImageScaleType="centerCrop"
+        app:iiv_icon="oct_mark_github"/>
 
     <LinearLayout
         android:id="@+id/content_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/head_sdv"
-        android:layout_toLeftOf="@+id/owner_tv"
+        android:layout_toLeftOf="@+id/owner_ov"
         android:layout_marginTop="@dimen/margin_middle"
         android:orientation="vertical">
 
@@ -40,7 +39,6 @@
             android:id="@+id/info_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="beijing"
             android:layout_marginTop="@dimen/margin_small"
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/black"/>
@@ -52,13 +50,15 @@
         android:layout_alignStart="@+id/content_ll"
         android:layout_alignParentBottom="true"/>
 
-    <TextView
-        android:id="@+id/owner_tv"
+    <com.frodo.github.view.OcticonView
+        android:id="@+id/owner_ov"
+        style="@style/OcticonViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/margin_middle"
         android:textSize="@dimen/text_size_xxsmall"
-        android:drawableRight="@drawable/octicon_person"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@android:color/darker_gray"
+        app:iiv_icon = "oct_person"
+        app:iconDirection="end"/>
 </RelativeLayout>

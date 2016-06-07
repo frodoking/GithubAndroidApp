@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -122,20 +121,6 @@ public class ProfileView extends AbstractUIView {
 
         popularRepositoriesLV.setOnItemClickListener(onItemClickListener);
         contributedToRepositoriesLV.setOnItemClickListener(onItemClickListener);
-
-        popularRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class);
-            }
-        });
-
-        followersTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class);
-            }
-        });
     }
 
     @Override
@@ -143,7 +128,7 @@ public class ProfileView extends AbstractUIView {
         getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
     }
 
-    public void showDetail(User user, boolean isLoginUser) {
+    public void showDetail(final User user, boolean isLoginUser) {
         headSDV.setImageURI(Uri.parse(user.avatar_url));
         fullnameTV.setText(user.login);
         usernameTV.setText(user.name);
@@ -160,6 +145,32 @@ public class ProfileView extends AbstractUIView {
 
         showRepositoryList(popularRepositoriesLV, popularRepositoryAdapter, user.popularRepositories);
         showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);
+
+        followersTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("users_args", String.format("users_user_followers_%s", user.login));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+            }
+        });
+        followingTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("users_args", String.format("users_user_following_%s", user.login));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+            }
+        });
+
+        popularRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("repos_args", String.format("repos_user_%s", user.login));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class, arguments);
+            }
+        });
     }
 
     public void showRepositoryList(ListView listView, RepositoriesForListViewAdapter adapter, List<Repo> repositories) {

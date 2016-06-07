@@ -125,13 +125,21 @@ public class UserModel extends AbstractModel {
         });
     }
 
-    public Observable<List<User>> loadUsers() {
+    public Observable<List<User>> loadUserFollowers(String username) {
+        return loadUsers(Path.replace(Path.Users.USER_FOLLOWERS, new Pair<>("username", username)));
+    }
+
+    public Observable<List<User>> loadUserFollowing(String username) {
+        return loadUsers(Path.replace(Path.Users.USER_FOLLOWING, new Pair<>("username", username)));
+    }
+
+    private Observable<List<User>> loadUsers(final String path) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(Path.replace(Path.Users.USER_FOLLOWERS, new Pair<>("username", "frodoking")))
+                        .relativeUrl(path)
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);

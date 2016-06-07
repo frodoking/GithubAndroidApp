@@ -37,7 +37,11 @@ public class WebApiProvider {
         if (popularReposElems != null) {
             userWebInfo = new User();
             if (starred != null) {
-                userWebInfo.starred = Integer.valueOf(starred);
+                if (starred.contains("k")) {
+                    userWebInfo.starred = Integer.valueOf(starred.replace("[.k]", ""));
+                } else {
+                    userWebInfo.starred = Integer.valueOf(starred);
+                }
             }
             for (int i = 0; i < popularReposElems.size(); i++) {
                 Element element = popularReposElems.get(i);
@@ -60,7 +64,7 @@ public class WebApiProvider {
                                     owner.login = strings[0];
                                     repo.owner = owner;
                                     repo.name = strings[1];
-                                }else {
+                                } else {
                                     repo.name = repoFullName;
                                 }
 

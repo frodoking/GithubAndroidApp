@@ -20,8 +20,15 @@ import com.mikepenz.octicons_typeface_library.Octicons;
  */
 public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, RepositoriesAdapter.ViewHolder> {
 
+    private boolean isSimple = false;
+
     public RepositoriesAdapter(Context context) {
+        this(context, false);
+    }
+
+    public RepositoriesAdapter(Context context, boolean isSimple) {
         super(context, R.layout.view_item);
+        this.isSimple = isSimple;
     }
 
     @Override
@@ -53,12 +60,22 @@ public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, Repositor
         if (getItemViewType(position) == HEADER) {
         } else {
             final Repo repo = getItem(position - 1);
-            if (repo.owner != null && repo.owner.avatar_url != null) {
-                holder.repoOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(repo.owner.avatar_url));
+
+            if (isSimple) {
+                if (repo.fork) {
+                    holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_gist_fork);
+                } else {
+                    holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
+                }
+
+            } else {
+                if (repo.owner != null && repo.owner.avatar_url != null) {
+                    holder.repoOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(repo.owner.avatar_url));
+                }
             }
 
             holder.repoOV.setText(repo.owner.login + "/" + repo.name);
-            holder.starCountOV.setText(String.format("%s stars", repo.stargazers_count));
+            holder.starCountOV.setText(String.valueOf(repo.stargazers_count));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

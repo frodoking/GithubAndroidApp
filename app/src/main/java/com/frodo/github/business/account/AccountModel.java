@@ -7,7 +7,6 @@ import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.cache.Cache;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
-import com.frodo.app.framework.log.Logger;
 import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkInterceptor;
 import com.frodo.app.framework.net.NetworkTransport;
@@ -53,24 +52,17 @@ public class AccountModel extends AbstractModel {
     public void initBusiness() {
         if (userModel != null) return;
 
-        Logger.fLog().tag("AccountModel").i("------- init -------");
-
         userModel = getMainController().getModelFactory()
                 .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
 
         if (getMainController().getCacheSystem().existCacheInInternal("login")) {
             final String username = getMainController().getCacheSystem().findCacheFromInternal("login", String.class);
-
-            Logger.fLog().tag("Account").i("Login [ " + username + " ]");
             final String tokenKey = getBase64(username).trim();
-            Logger.fLog().tag("Token").i("Key [ " + tokenKey + " ]");
             if (getMainController().getCacheSystem().existCacheInInternal(tokenKey)) {
                 final String loginToken = getMainController().getCacheSystem().findCacheFromInternal(tokenKey, String.class);
-                Logger.fLog().tag("Token").i("Cached Authorization [ " + loginToken + " ]");
                 getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
                     @Override
                     public Void intercept(Request request) {
-                        Logger.fLog().tag("Token").i("Interceptor Authorization(Cached) [ " + loginToken + " ]");
                         request.getHeaders().add(new Header("Authorization", "token " + loginToken));
                         return super.intercept(request);
                     }
@@ -100,14 +92,11 @@ public class AccountModel extends AbstractModel {
                 .flatMap(new Func1<GithubAuthorization, Observable<User>>() {
                     @Override
                     public Observable<User> call(final GithubAuthorization authorization) {
-                        Logger.fLog().tag("Token").i("Create Authorization [ " + authorization.token + " ]");
                         final String tokenKey = getBase64(username).trim();
-                        Logger.fLog().tag("Token").i("Key [ " + tokenKey + " ]");
                         getMainController().getCacheSystem().put(tokenKey, authorization.token, Cache.Type.INTERNAL);
                         getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
                             @Override
                             public Void intercept(Request request) {
-                                Logger.fLog().tag("Token").i("Interceptor Authorization [ " + authorization.token + " ]");
                                 request.getHeaders().add(new Header("Authorization", "token " + authorization.token));
                                 return super.intercept(request);
                             }

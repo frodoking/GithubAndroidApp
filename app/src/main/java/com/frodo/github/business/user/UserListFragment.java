@@ -1,5 +1,6 @@
 package com.frodo.github.business.user;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.frodo.github.bean.dto.response.User;
@@ -10,6 +11,7 @@ import com.frodo.github.view.CircleProgressDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -47,31 +49,50 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
 
     @Override
     public void onFirstTimeLaunched() {
-        getModel().loadUsers().subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        getUIView().showEmptyView();
-                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+        Bundle bundle = getArguments();
+        Observable<List<User>> observable = null;
+        //TODO users_user_followers_{username}
+        if (bundle != null && bundle.containsKey("users_args")) {
+            String[] argsArray = bundle.getString("users_args").split("_");
+
+            if (argsArray.length == 4 && argsArray[0].equalsIgnoreCase("users")) {
+                if (argsArray[1].equalsIgnoreCase("user")) {
+                    if (argsArray[2].equalsIgnoreCase("followers")) {
+                        observable = getModel().loadUserFollowers(argsArray[3]);
+                    } else if (argsArray[2].equalsIgnoreCase("following")) {
+                        observable = getModel().loadUserFollowing(argsArray[3]);
                     }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<User>>() {
-                               @Override
-                               public void call(List<User> users) {
-                                   CircleProgressDialog.hideLoadingDialog();
-                                   setStateBeans((ArrayList<User>) users);
-                                   getUIView().hideEmptyView();
-                                   getUIView().showList(users);
-                               }
-                           },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                CircleProgressDialog.hideLoadingDialog();
-                                getUIView().showErrorView(throwable);
-                            }
-                        });
+                } else if (argsArray[1].equalsIgnoreCase("repo")) {
+                }
+            }
+        }
+
+        if (observable != null)
+            observable.subscribeOn(Schedulers.io())
+                    .doOnSubscribe(new Action0() {
+                        @Override
+                        public void call() {
+                            getUIView().showEmptyView();
+                            CircleProgressDialog.showLoadingDialog(getAndroidContext());
+                        }
+                    })
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<List<User>>() {
+                                   @Override
+                                   public void call(List<User> users) {
+                                       CircleProgressDialog.hideLoadingDialog();
+                                       setStateBeans((ArrayList<User>) users);
+                                       getUIView().hideEmptyView();
+                                       getUIView().showList(users);
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    CircleProgressDialog.hideLoadingDialog();
+                                    getUIView().showErrorView(throwable);
+                                }
+                            });
     }
 }

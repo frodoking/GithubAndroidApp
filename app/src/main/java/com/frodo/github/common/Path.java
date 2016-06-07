@@ -63,9 +63,13 @@ public final class Path {
          */
         public static final String USER = "/users/{username}";
         /**
-         * Followers
+         * List followers of a user
          */
         public static final String USER_FOLLOWERS = USER + "/followers";
+        /**
+         * List users followed by another user
+         */
+        public static final String USER_FOLLOWING = USER + "/following";
         /**
          * Repositories
          */
