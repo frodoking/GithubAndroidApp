@@ -25,8 +25,8 @@ Android studio 2.0
 ## Author(frodoking)
 * Email: awangyun8@gmail.com
 * Blog：http://frodoking.github.io/
-* 
-##App File
+
+##Debug Apk (v1.0.0)
 [app-google-debug](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0.0/app-google-debug.apk)
 
 ##App Master Drawing
