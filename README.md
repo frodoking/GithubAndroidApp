@@ -1,27 +1,26 @@
 ## GithubAndroidClient 
 
-This project is a Github client on Android platform。 This App drawing  is based on the design of Github Web page(H5)。
+This project is a Github client on Android platform, This App drawing  is based on the design of Github Web page(H5).
 
 ##Feature
 1. account (Auth2.0/Sign in/Sign out)
 2. explore (showcases/repos)
 3. user (profile/followers/following)
-4. repo (detail)
-5. repo contents
+4. repo (detail/contents)
 
 there are many features not yet implemented, you can contribute to it if you are interested in this project.
 
 ##API
-[Github Developer](https://developer.github.com/v3/)
+1. [Github Developer](https://developer.github.com/v3/)
+2. [Octions](https://octicons.github.com/)
  
 ##About Open Source
 ####IDE
 Android studio 2.0
 
 ####Third Party Project
-[App-Architecture](https://github.com/frodoking/App-Architecture.git)
-app architecture on android platform. 
-[MarkdownView](https://github.com/falnatsheh/MarkdownView)
+1. [App-Architecture](https://github.com/frodoking/App-Architecture.git)app architecture on android platform.
+2. [MarkdownView](https://github.com/falnatsheh/MarkdownView)
 
 ## Author(frodoking)
 * Email: awangyun8@gmail.com
