@@ -12,7 +12,9 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.toolbox.TextUtils;
+import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.GitBlob;
+import com.frodo.github.bean.dto.response.GitTree;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.bean.dto.response.PullRequest;
@@ -44,6 +46,8 @@ public class RepositoryModel extends AbstractModel {
     private AndroidFetchNetworkDataTask fetchAllLabelsFileNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchIssuesFileNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchPullsFileNetworkDataTask;
+
+    private AndroidFetchNetworkDataTask fetchGitTreeNetworkDataTask;
 
     public RepositoryModel(MainController controller) {
         super(controller);
@@ -90,36 +94,6 @@ public class RepositoryModel extends AbstractModel {
         UserModel userModel = getMainController().getModelFactory()
                 .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
         return userModel.loadRepositoriesWithReactor(username);
-    }
-
-    public Observable<GitBlob> loadFile(final String ownerName, final String repoName, final String fileName) {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(final Subscriber<? super Response> subscriber) {
-                Request request = new Request.Builder()
-                        .method("GET")
-                        .relativeUrl(Path.replace(Path.Repositories.REPOS_CONTENTS,
-                                new Pair<>("owner", ownerName),
-                                new Pair<>("repo", repoName),
-                                new Pair<>("+path", fileName)))
-                        .build();
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchRepositoryFileNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchRepositoryFileNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<GitBlob>>() {
-            @Override
-            public Observable<GitBlob> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    GitBlob blob = JsonConverter.convert(rb.string(), GitBlob.class);
-                    return Observable.just(blob);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
     }
 
     public Observable<List<Label>> loadAllLabelsWithReactor(final String ownerName, final String repoName) {
@@ -335,5 +309,84 @@ public class RepositoryModel extends AbstractModel {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
         df.setTimeZone(tz);
         return df.format(cal.getTime());
+    }
+
+    public Observable<Content> loadReadmeWithReactor(final String ownerName, final String repoName) {
+        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_README,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName)), "master");
+    }
+
+    public Observable<Content> loadContentWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
+        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName),
+                new Pair<>("path", path)), ref);
+    }
+
+    public Observable<List<Content>> loadContentsWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
+        return loadContentsWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName),
+                new Pair<>("path", path)), ref);
+    }
+
+    private Observable<List<Content>> loadContentsWithReactor(final String path, final String ref) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(path)
+                        .build();
+                request.addQueryParam("ref", ref);
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchGitTreeNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchGitTreeNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<Content>>>() {
+            @Override
+            public Observable<List<Content>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<Content> contents = JsonConverter.convert(rb.string(), new TypeReference<List<Content>>() {
+                    });
+                    return Observable.just(contents);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
+    public Observable<Content> loadContentWithReactor(final String path, final String ref) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(path)
+                        .build();
+                if (!TextUtils.isEmpty(ref))
+                    request.addQueryParam("ref", ref);
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchGitTreeNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchGitTreeNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<Content>>() {
+            @Override
+            public Observable<Content> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    Content content = JsonConverter.convert(rb.string(), new TypeReference<Content>() {
+                    });
+                    return Observable.just(content);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
     }
 }

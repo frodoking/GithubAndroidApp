@@ -16,23 +16,6 @@
             android:checkable="true"/>
     </group>
     <group
-        android:id="@+id/group_api"
-        android:checkableBehavior="single"
-        android:title="@string/menu_group_api">
-        <item
-            android:id="@+id/action_iconics_test"
-            android:title="Iconics"
-            android:checkable="true"/>
-        <item
-            android:id="@+id/action_icon_api"
-            android:title="@string/octicons"
-            android:checkable="true"/>
-        <item
-            android:id="@+id/action_jsoup_api"
-            android:title="@string/jsoup"
-            android:checkable="true"/>
-    </group>
-    <group
         android:id="@+id/group_other"
         android:checkableBehavior="single"
         android:title="@string/menu_group_api">

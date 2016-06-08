@@ -237,6 +237,10 @@ public class MainActivity extends FragmentContainerActivity {
             navigationView.inflateMenu(R.menu.menu_drawer_not_signed);
         }
 
+        if (getMainController().getConfig().isDebug()) {
+            navigationView.inflateMenu(R.menu.menu_debug);
+        }
+
         updateMenu(navigationView.getMenu());
     }
 

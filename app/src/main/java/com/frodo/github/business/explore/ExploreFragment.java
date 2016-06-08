@@ -10,6 +10,7 @@ import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
                                         getUIView().showShowCaseList(showCases);
                                     }
                                 }
-                                getUIView().showErrorView(throwable);
+                                getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
                             }
                         });
     }

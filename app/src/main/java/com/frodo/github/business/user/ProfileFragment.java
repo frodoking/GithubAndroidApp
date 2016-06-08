@@ -15,6 +15,7 @@ import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -111,7 +112,7 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                getUIView().showErrorView(throwable);
+                                getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
                             }
                         });
     }

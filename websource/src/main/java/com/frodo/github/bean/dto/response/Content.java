@@ -61,13 +61,18 @@ public class Content extends ShaUrl implements Comparable<Content>, Parcelable {
 
     @Override
     public int compareTo(Content another) {
+        if (type.equals(another.type)) {
+            return name.compareTo(another.name);
+        }
         if (isDir()) {
-            return another.isDir() ? -name.compareTo(another.name) : 1;
-        } else if (another.isDir()) {
             return -1;
         }
 
-        return -name.compareTo(another.name);
+        if (another.isDir()) {
+            return 1;
+        }
+
+        return 0;
     }
 
     @Override

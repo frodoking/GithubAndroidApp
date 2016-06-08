@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/path_ll"
+        layout="@layout/view_item"/>
+
+    <View style="@style/LineStyle"/>
+
+    <include layout="@layout/view_item"/>
+
+    <View style="@style/LineStyle"/>
+
+    <us.feras.mdv.MarkdownView
+        android:id="@+id/contents_mdv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_middle"
+        android:background="@android:color/white"/>
+</LinearLayout>

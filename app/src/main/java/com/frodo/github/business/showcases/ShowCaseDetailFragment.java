@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -84,7 +85,7 @@ public class ShowCaseDetailFragment extends StatedFragment<ShowCaseDetailView, S
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                getUIView().showErrorView(throwable);
+                                getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
                             }
                         });
     }

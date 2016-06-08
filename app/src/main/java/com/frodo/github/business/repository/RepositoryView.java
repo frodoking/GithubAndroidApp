@@ -1,6 +1,8 @@
 package com.frodo.github.business.repository;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,8 +15,11 @@ import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.android.ui.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
+import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
@@ -63,6 +68,8 @@ public class RepositoryView extends AbstractUIView {
     private CardViewGroup notificationsCVG;
 
     private LinearLayout.LayoutParams emptyLayoutParams;
+
+    private Repo repo;
 
     public RepositoryView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
         super(presenter, inflater, container, R.layout.fragment_repository);
@@ -167,9 +174,19 @@ public class RepositoryView extends AbstractUIView {
 
     @Override
     public void registerListener() {
+        branchsCVG.getFooterView().findViewById(R.id.repo_view_code_ov).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("repo", repo.owner.login + "/" + repo.name);
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryContentsDirectoryFragment.class, arguments);
+            }
+        });
     }
 
     public void showDetail(Repo repository) {
+        this.repo = repository;
+
         if (!TextUtils.isEmpty(repository.description))
             descriptionTV.setText(repository.description);
         issuesCountOV.setText(String.format("%s issues", repository.open_issues_count));
@@ -191,8 +208,18 @@ public class RepositoryView extends AbstractUIView {
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
     }
 
-    public void showReadme(String readmeContents) {
-        readmeMDV.loadMarkdown(readmeContents);
+    public void showReadme(final Content content) {
+        if (content.encoding.equalsIgnoreCase("base64")) {
+            readmeMDV.loadMarkdown(new String(Base64.decode(content.content, Base64.DEFAULT)));
+        }
+        readmeCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putParcelable("content", content);
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryContentsFileFragment.class, arguments);
+            }
+        });
     }
 
     public void showPulse(int closedPullsCount, int openedPullsCount, int closedIssuesCount, int openedIssuesCount) {

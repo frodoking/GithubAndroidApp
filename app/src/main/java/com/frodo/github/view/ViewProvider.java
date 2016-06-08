@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.frodo.app.android.core.toolbox.DrawableHelper;
+import com.frodo.app.framework.exception.HttpException;
+import com.frodo.github.business.AbstractUIView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +28,18 @@ public class ViewProvider {
             view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1));
         }
         return view;
+    }
+
+    public static String handleError(boolean debug, Throwable throwable) {
+        if (debug) {
+            return Log.getStackTraceString(throwable);
+        } else {
+            if (throwable instanceof HttpException) {
+                return "net error, please tap cat to retry.";
+            } else {
+                return "have some error, please tap cat to retry";
+            }
+        }
     }
 
     public static void saveBitmap(Bitmap bitmap, String path, String fileName) {

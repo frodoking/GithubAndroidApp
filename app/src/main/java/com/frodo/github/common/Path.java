@@ -29,7 +29,7 @@ public final class Path {
     }
 
     public final static class GitData {
-
+        public static final String GIT_TREE = Repositories.REPOS_FULLNAME + "/git/trees/{sha}";
     }
 
     public final static class Issues {
@@ -47,7 +47,8 @@ public final class Path {
 
     public final static class Repositories {
         public static final String REPOS_FULLNAME = "/repos/{owner}/{repo}";
-        public static final String REPOS_CONTENTS = REPOS_FULLNAME + "/contents/{+path}";
+        public static final String REPOS_README = REPOS_FULLNAME + "/readme";
+        public static final String REPOS_CONTENTS = REPOS_FULLNAME + "/contents/{path}";
         public static final String REPOS_LABELS = REPOS_FULLNAME + "/labels";
         public static final String REPOS_ISSUES = REPOS_FULLNAME + "/issues";
         public static final String REPOS_PULLS = REPOS_FULLNAME + "/pulls";

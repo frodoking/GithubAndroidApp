@@ -3,7 +3,6 @@ package com.frodo.github.business.repository;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,12 +12,13 @@ import android.view.ViewGroup;
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
-import com.frodo.github.bean.dto.response.GitBlob;
+import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +125,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                             @Override
                             public void call(Throwable throwable) {
                                 CircleProgressDialog.hideLoadingDialog();
-                                getUIView().showErrorView(throwable);
+                                getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
                             }
                         });
     }
@@ -142,14 +142,12 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
 
     private void loadReadMeFileWithReactor(Repo repo) {
         if (!TextUtils.isEmpty(repo.contents_url)) {
-            getModel().loadFile(repo.owner.login, repo.name, "README.md")
+            getModel().loadReadmeWithReactor(repo.owner.login, repo.name)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<GitBlob>() {
+                    .subscribe(new Action1<Content>() {
                         @Override
-                        public void call(GitBlob gitBlob) {
-                            if (gitBlob.encoding.equalsIgnoreCase("base64")) {
-                                getUIView().showReadme(new String(Base64.decode(gitBlob.content, Base64.DEFAULT)));
-                            }
+                        public void call(Content content) {
+                            getUIView().showReadme(content);
                         }
                     }, new Action1<Throwable>() {
                         @Override

@@ -7,6 +7,7 @@ import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.SearchListFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,7 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                                 @Override
                                 public void call(Throwable throwable) {
                                     CircleProgressDialog.hideLoadingDialog();
-                                    getUIView().showErrorView(throwable);
+                                    getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
                                 }
                             });
     }

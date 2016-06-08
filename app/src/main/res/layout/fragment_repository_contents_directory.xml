@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_default"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/margin_middle"
+        android:paddingRight="@dimen/margin_middle">
+
+        <com.frodo.github.view.OcticonView
+            android:id="@+id/branchs_ov"
+            style="@style/OcticonViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_middle"
+            app:iiv_icon="oct_git_branch"
+            app:iconDirection="start"/>
+
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:layout_height="16dp"
+            android:layout_width="16dp"
+            app:iiv_icon="oct_chevron_down" />
+
+        <View style="@style/LineVStyle"
+              android:layout_marginLeft="@dimen/margin_middle"
+              android:layout_marginRight="@dimen/margin_middle"/>
+
+        <com.frodo.github.view.OcticonView
+            android:id="@+id/commits_ov"
+            style="@style/OcticonViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_size_middle"
+            app:iiv_icon="oct_history"
+            app:iconDirection="start"/>
+    </LinearLayout>
+    <View style="@style/LineStyle"/>
+    <TextView
+        android:id="@+id/path_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
+        android:padding="@dimen/margin_middle"
+        android:textSize="@dimen/text_size_xxsmall"
+        android:textColor="@android:color/darker_gray" />
+    <ListView
+        android:id="@+id/directory_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
