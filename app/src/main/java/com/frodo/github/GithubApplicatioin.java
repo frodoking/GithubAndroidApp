@@ -35,7 +35,7 @@ public class GithubApplicatioin extends MicroApplication {
     public void init() {
         super.init();
         Fresco.initialize(this);
-        getMainController().getLogCollector().enableCollect(true);
+        getMainController().getLogCollector().enableCollect(BuildConfig.DEBUG);
 
         getMainController()
                 .getModelFactory()
@@ -45,7 +45,7 @@ public class GithubApplicatioin extends MicroApplication {
 
     @Override
     public LogCollector loadLogCollector() {
-        return new AndroidLogCollectorSystem(getMainController()) {
+        return new AndroidLogCollectorSystem(getMainController(), BuildConfig.DEBUG ? LogCollector.VERBOSE : LogCollector.ASSERT) {
             @Override
             public void uploadLeakBlocking(File file, String leakInfo) {
             }
@@ -54,7 +54,7 @@ public class GithubApplicatioin extends MicroApplication {
 
     @Override
     public Configuration loadConfiguration() {
-        final Environment environment = new Environment(0, "githubV3", "api.github.com", "", true);
+        final Environment environment = new Environment(0, "githubV3", "api.github.com", "", BuildConfig.DEBUG);
         return new AndroidConfig(getMainController(), environment);
     }
 

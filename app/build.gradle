@@ -10,7 +10,7 @@ android {
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode VERSION_CODE as int
         versionName VERSION_NAME as String
-        multiDexEnabled false
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -23,16 +23,34 @@ android {
         incremental true
     }
 
+    signingConfigs {
+        release {
+            storeFile file(STORE_FILE as String)
+            storePassword STORE_PASSPWORD as String
+            keyAlias KEY_ALIAS as String
+            keyPassword KEY_PASSWORD as String
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            shrinkResources false
+        }
+    }
+    productFlavors {
+        google{}
     }
 }
 
 dependencies {
-    compile "com.github.frodoking:app-architecture-android:1.2.3-SNAPSHOT"
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile "com.github.frodoking:app-architecture-android:1.2.4-SNAPSHOT"
     compile "com.facebook.fresco:animated-gif:0.10.0"
     compile project(':websource')
 

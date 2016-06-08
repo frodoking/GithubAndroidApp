@@ -19,8 +19,10 @@ there are many features not yet implemented, you can contribute to it if you are
 Android studio 2.0
 
 ####Third Party Project
-1. [App-Architecture](https://github.com/frodoking/App-Architecture.git)app architecture on android platform.
+1. [App-Architecture](https://github.com/frodoking/App-Architecture.git)
+    app architecture on android platform.
 2. [MarkdownView](https://github.com/falnatsheh/MarkdownView)
+    MarkdownView is an Android webview with the capablity of loading Markdown text or file and display it as HTML, it uses MarkdownJ and extends Android webview.
 
 ## Author(frodoking)
 * Email: awangyun8@gmail.com

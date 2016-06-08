@@ -7,13 +7,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.frodo.app.android.core.toolbox.DrawableHelper;
-import com.frodo.app.android.core.toolbox.T;
 import com.frodo.app.framework.exception.HttpException;
-import com.frodo.github.business.AbstractUIView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

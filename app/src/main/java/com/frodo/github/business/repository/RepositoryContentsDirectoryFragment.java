@@ -49,12 +49,12 @@ public class RepositoryContentsDirectoryFragment extends StatedFragment<Reposito
 
     @Override
     public void onSaveState(Bundle outState) {
-        outState.putParcelableArrayList("state", (ArrayList<? extends Parcelable>) stateContents);
+        outState.putParcelableArrayList("contentsState", (ArrayList<? extends Parcelable>) stateContents);
     }
 
     @Override
     public void onRestoreState(Bundle savedInstanceState) {
-        stateContents = savedInstanceState.getParcelableArrayList("state");
+        stateContents = savedInstanceState.getParcelableArrayList("contentsState");
         getUIView().showContents(stateContents);
     }
 

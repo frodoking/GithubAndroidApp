@@ -14,7 +14,6 @@ import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.business.AbstractUIView;
-import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.OcticonView;
 
@@ -89,8 +88,7 @@ public class RepositoryContentsDirectoryView extends AbstractUIView {
             directoryLV.setVisibility(View.GONE);
         } else {
             directoryLV.setVisibility(View.VISIBLE);
+            adapter.refreshObjects(contents);
         }
-
-        adapter.refreshObjects(contents);
     }
 }
