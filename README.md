@@ -1,15 +1,18 @@
 ## GithubAndroidClient 
 
-GithubAndroidClient实现了的GitHub第三方Android客户端。 App的整体设计参考手机端Github H5效果。
+This project is a Github client on Android platform。 This App drawing  is based on the design of Github Web page(H5)。
 
-目前主要实现功能：
-1. 登录 
-2. explore / showcases repos
-3. profile / followers following
-4. repo 
+##Feature
+1. account (Auth2.0/Sign in/Sign out)
+2. explore (showcases/repos)
+3. user (profile/followers/following)
+4. repo (detail)
 5. repo contents
 
-这些数据是从GitHub提供的接口来的，地址是https://developer.github.com/v3/
+there are many features not yet implemented, you can contribute to it if you are interested in this project.
+
+##API
+[Github Developer](https://developer.github.com/v3/)
  
 ##About Open Source
 ####IDE
@@ -18,6 +21,7 @@ Android studio 2.0
 ####Third Party Project
 [App-Architecture](https://github.com/frodoking/App-Architecture.git)
 app architecture on android platform. 
+[MarkdownView](https://github.com/falnatsheh/MarkdownView)
 
 ## Author(frodoking)
 * Email: awangyun8@gmail.com

@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.frodo.app.android.core.toolbox.DrawableHelper;
+import com.frodo.app.android.core.toolbox.T;
 import com.frodo.app.framework.exception.HttpException;
 import com.frodo.github.business.AbstractUIView;
 
@@ -39,6 +41,19 @@ public class ViewProvider {
             } else {
                 return "have some error, please tap cat to retry";
             }
+        }
+    }
+
+    public static void wrapNotImplementFeature(final Context context, View v) {
+        if (v != null) {
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "This feature is not implemented, hope you can contribute to this project.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(context, "This feature is not implemented, hope you can contribute to this project.", Toast.LENGTH_SHORT).show();
         }
     }
 

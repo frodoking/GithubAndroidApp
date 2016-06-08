@@ -27,6 +27,7 @@ import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.ApiFragment;
 import com.frodo.github.view.CircleProgressDialog;
+import com.frodo.github.view.ViewProvider;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.octicons_typeface_library.Octicons;
 
@@ -139,6 +140,7 @@ public class MainActivity extends FragmentContainerActivity {
                                 replaceFragment(ApiFragment.class, "JsoupApi", bundle1);
                                 break;
                             default:
+                                ViewProvider.wrapNotImplementFeature(MainActivity.this, null);
                                 break;
                         }
                         return true;

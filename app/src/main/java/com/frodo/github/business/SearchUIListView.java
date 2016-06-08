@@ -14,6 +14,7 @@ import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
+import com.frodo.github.view.ViewProvider;
 
 import java.util.List;
 
@@ -89,6 +90,8 @@ public abstract class SearchUIListView<ItemBean> extends AbstractUIView {
                 }
             }
         });
+
+        ViewProvider.wrapNotImplementFeature(getPresenter().getAndroidContext(), searchET);
     }
 
     private void showSearchView(boolean tag) {
