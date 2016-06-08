@@ -27,7 +27,7 @@ Android studio 2.0
 * Blog：http://frodoking.github.io/
 
 ##Debug Apk (v1.0.0)
-[app-google-debug](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0.0/app-google-debug.apk)
+[app-google-debug.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0.0/app-google-debug.apk)
 
 ##App Master Drawing
 <img  src="http://frodoking.github.io/img/github-client/home.png" width="240" height="427">
