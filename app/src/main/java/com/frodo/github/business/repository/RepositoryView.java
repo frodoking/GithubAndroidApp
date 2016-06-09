@@ -21,7 +21,6 @@ import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
-import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.view.BaseListViewAdapter;
@@ -312,7 +311,7 @@ public class RepositoryView extends AbstractUIView {
         }
     }
 
-    public void showPullRequests(List<PullRequest> pullRequests) {
+    public void showPullRequests(List<Issue> pullRequests) {
         LinearLayout ll = (LinearLayout) pullRequestsCVG.getContentView();
         ll.removeAllViews();
         if (pullRequests == null || pullRequests.isEmpty()) {
@@ -322,14 +321,12 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            List<PullRequest> tmpList = pullRequests.size() > 5 ? pullRequests.subList(0, 5) : pullRequests;
-
             ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
             issueListView.setAdapter(adapter);
-            adapter.refreshObjects(tmpList);
+            adapter.refreshObjects(pullRequests);
 
             pullRequestsCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
                 @Override

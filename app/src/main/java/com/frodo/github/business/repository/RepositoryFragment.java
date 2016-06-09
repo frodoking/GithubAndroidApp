@@ -14,7 +14,6 @@ import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
-import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
@@ -159,16 +158,16 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     private void loadPulseInPastWeekWithReactor(final Repo repo) {
-        Observable<List<PullRequest>> closedPullsObservable = getModel().loadClosedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
-        Observable<List<PullRequest>> openedPullsObservable = getModel().loadOpenedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<List<Issue>> closedPullsObservable = getModel().loadMergedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<List<Issue>> openedPullsObservable = getModel().loadProposedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
 
         Observable<List<Issue>> closedIssuesObservable = getModel().loadClosedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
-        Observable<List<Issue>> openedIssuesObservable = getModel().loadOpendIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<List<Issue>> openedIssuesObservable = getModel().loadCreatedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
         Observable.combineLatest(closedPullsObservable, openedPullsObservable,
                 closedIssuesObservable, openedIssuesObservable,
-                new Func4<List<PullRequest>, List<PullRequest>, List<Issue>, List<Issue>, Map<String, Integer>>() {
+                new Func4<List<Issue>, List<Issue>, List<Issue>, List<Issue>, Map<String, Integer>>() {
                     @Override
-                    public Map<String, Integer> call(List<PullRequest> closedPulls, List<PullRequest> openedPulls,
+                    public Map<String, Integer> call(List<Issue> closedPulls, List<Issue> openedPulls,
                                                      List<Issue> closedIssues, List<Issue> openedIssues) {
                         Map<String, Integer> result = new HashMap<>(4);
                         result.put("closedPullsCount", closedPulls.size());
@@ -214,9 +213,9 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
         getModel().loadRecentPullsWithReactor(repo.owner.login, repo.name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<PullRequest>>() {
+                .subscribe(new Action1<List<Issue>>() {
                     @Override
-                    public void call(List<PullRequest> pullRequests) {
+                    public void call(List<Issue> pullRequests) {
                         getUIView().showPullRequests(pullRequests);
                     }
                 }, new Action1<Throwable>() {

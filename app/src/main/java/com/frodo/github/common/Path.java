@@ -55,7 +55,10 @@ public final class Path {
     }
 
     public final static class Search {
-
+        public static final String USERS = "/search/users";
+        public static final String REPOS = "/search/repositories";
+        public static final String ISSUES = "/search/issues";
+        public static final String CODE = "/search/code";
     }
 
     public final static class Users {

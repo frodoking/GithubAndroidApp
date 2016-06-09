@@ -13,12 +13,11 @@ import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.dto.response.Content;
-import com.frodo.github.bean.dto.response.GitBlob;
-import com.frodo.github.bean.dto.response.GitTree;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
+import com.frodo.github.bean.dto.response.search.IssuesSearch;
 import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
@@ -41,13 +40,14 @@ public class RepositoryModel extends AbstractModel {
     public static final String TAG = RepositoryModel.class.getSimpleName();
 
     private AndroidFetchNetworkDataTask fetchRepositoryNetworkDataTask;
-    private AndroidFetchNetworkDataTask fetchRepositoryFileNetworkDataTask;
 
     private AndroidFetchNetworkDataTask fetchAllLabelsFileNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchIssuesFileNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchPullsFileNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchContentsNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchContentNetworkDataTask;
 
-    private AndroidFetchNetworkDataTask fetchGitTreeNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchSearchNetworkDataTask;
 
     public RepositoryModel(MainController controller) {
         super(controller);
@@ -125,18 +125,132 @@ public class RepositoryModel extends AbstractModel {
     }
 
     /**
-     * https://api.github.com/repos/FreeCodeCamp/FreeCodeCamp/issues?state=open&since=2016-05-30T18:58:10Z
+     * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:closed+closed:>2016-06-02&sort=created
      */
     public Observable<List<Issue>> loadClosedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
-        return loadIssuesWithReactor(ownerName, repoName, "all", "closed", null, "comments", null, getPastWeek(), -1, -1);
+        return searchIssuesInPastWeek(ownerName, repoName, "issue", "closed", "closed", "updated");
     }
 
-    public Observable<List<Issue>> loadOpendIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
-        return loadIssuesWithReactor(ownerName, repoName, "all", "open", null, "comments", null, getPastWeek(), -1, -1);
+    /**
+     * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:open+created:>2016-06-02&sort=created
+     */
+    public Observable<List<Issue>> loadCreatedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return searchIssuesInPastWeek(ownerName, repoName, "issue", "open", "created", "created");
     }
 
+    /**
+     * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:open&sort=comments&page=1&per_page=5
+     */
     public Observable<List<Issue>> loadRecentIssuesWithReactor(final String ownerName, final String repoName) {
-        return loadIssuesWithReactor(ownerName, repoName, null, null, null, "comments", null, null, 0, 5);
+        String q = String.format("repo:%s/%s+type:issue+is:open", ownerName, repoName);
+        return search(q, "comments", null, 1, 5).map(new Func1<IssuesSearch, List<Issue>>() {
+            @Override
+            public List<Issue> call(IssuesSearch issuesSearch) {
+                return issuesSearch.items;
+            }
+        });
+    }
+
+
+    public Observable<List<Issue>> loadMergedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return searchIssuesInPastWeek(ownerName, repoName, "pr", "merged", "merged", "updated");
+    }
+
+    public Observable<List<Issue>> loadProposedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+        return searchIssuesInPastWeek(ownerName, repoName, "pr", "closed", "closed", "updated");
+    }
+
+    /**
+     * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:open&sort=popularity&page=1&per_page=5
+     */
+    public Observable<List<Issue>> loadRecentPullsWithReactor(final String ownerName, final String repoName) {
+        String q = String.format("repo:%s/%s+type:issue+is:open", ownerName, repoName);
+        return search(q, "popularity", null, 1, 5).map(new Func1<IssuesSearch, List<Issue>>() {
+            @Override
+            public List<Issue> call(IssuesSearch issuesSearch) {
+                return issuesSearch.items;
+            }
+        });
+    }
+
+
+    public Observable<Content> loadReadmeWithReactor(final String ownerName, final String repoName) {
+        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_README,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName)), "master");
+    }
+
+    public Observable<Content> loadContentWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
+        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName),
+                new Pair<>("path", path)), ref);
+    }
+
+    public Observable<List<Content>> loadContentsWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
+        return loadContentsWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
+                new Pair<>("owner", ownerName),
+                new Pair<>("repo", repoName),
+                new Pair<>("path", path)), ref);
+    }
+
+    private Observable<List<Content>> loadContentsWithReactor(final String path, final String ref) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(path)
+                        .build();
+                request.addQueryParam("ref", ref);
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchContentsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchContentsNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<Content>>>() {
+            @Override
+            public Observable<List<Content>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<Content> contents = JsonConverter.convert(rb.string(), new TypeReference<List<Content>>() {
+                    });
+                    return Observable.just(contents);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
+    public Observable<Content> loadContentWithReactor(final String path, final String ref) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(path)
+                        .build();
+                if (!TextUtils.isEmpty(ref))
+                    request.addQueryParam("ref", ref);
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchContentNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchContentNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<Content>>() {
+            @Override
+            public Observable<Content> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    Content content = JsonConverter.convert(rb.string(), new TypeReference<Content>() {
+                    });
+                    return Observable.just(content);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
     }
 
     /**
@@ -219,18 +333,6 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public Observable<List<PullRequest>> loadClosedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
-        return loadPullsWithReactor(ownerName, repoName, "closed", null, null, "popularity", null, -1, -1);
-    }
-
-    public Observable<List<PullRequest>> loadOpenedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
-        return loadPullsWithReactor(ownerName, repoName, "open", null, null, "popularity", null, -1, -1);
-    }
-
-    public Observable<List<PullRequest>> loadRecentPullsWithReactor(final String ownerName, final String repoName) {
-        return loadPullsWithReactor(ownerName, repoName, null, null, null, "popularity", null, 0, 5);
-    }
-
     /**
      * List pull requests
      *
@@ -301,6 +403,64 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
+
+    public Observable<List<Issue>> searchIssuesInPastWeek(String ownerName, String repoName,
+                                                          String type, String is, String isType,
+                                                          String sort) {
+        String q = String.format("repo:%s/%s+type:%s+is:%s+%s:>%s", ownerName, repoName, type, is, isType, getPastWeek());
+        return search(q, sort, null).map(new Func1<IssuesSearch, List<Issue>>() {
+            @Override
+            public List<Issue> call(IssuesSearch issuesSearch) {
+                return issuesSearch.items;
+            }
+        });
+    }
+
+    public Observable<IssuesSearch> search(final String q, final String sort, final String order) {
+        return search(q, sort, order, -1, -1);
+    }
+
+    public Observable<IssuesSearch> search(final String q, final String sort, final String order, final int page, final int perPage) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.Search.ISSUES)
+                        .build();
+                if (!TextUtils.isEmpty(q))
+                    request.addQueryParam("q", q);
+                if (!TextUtils.isEmpty(sort))
+                    request.addQueryParam("sort", sort);
+                if (!TextUtils.isEmpty(order))
+                    request.addQueryParam("order", order);
+
+                if (page != -1)
+                    request.addQueryParam("page", String.valueOf(page));
+
+                if (perPage != -1)
+                    request.addQueryParam("per_page", String.valueOf(perPage));
+
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchSearchNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchSearchNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<IssuesSearch>>() {
+            @Override
+            public Observable<IssuesSearch> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    IssuesSearch issuesSearch = JsonConverter.convert(rb.string(), new TypeReference<IssuesSearch>() {
+                    });
+                    return Observable.just(issuesSearch);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
     public static String getPastWeek() {
         Calendar cal = Calendar.getInstance();
         cal.add(java.util.Calendar.DATE, -7);
@@ -309,84 +469,5 @@ public class RepositoryModel extends AbstractModel {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
         df.setTimeZone(tz);
         return df.format(cal.getTime());
-    }
-
-    public Observable<Content> loadReadmeWithReactor(final String ownerName, final String repoName) {
-        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_README,
-                new Pair<>("owner", ownerName),
-                new Pair<>("repo", repoName)), "master");
-    }
-
-    public Observable<Content> loadContentWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
-        return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
-                new Pair<>("owner", ownerName),
-                new Pair<>("repo", repoName),
-                new Pair<>("path", path)), ref);
-    }
-
-    public Observable<List<Content>> loadContentsWithReactor(final String ownerName, final String repoName, final String path, final String ref) {
-        return loadContentsWithReactor(Path.replace(Path.Repositories.REPOS_CONTENTS,
-                new Pair<>("owner", ownerName),
-                new Pair<>("repo", repoName),
-                new Pair<>("path", path)), ref);
-    }
-
-    private Observable<List<Content>> loadContentsWithReactor(final String path, final String ref) {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(final Subscriber<? super Response> subscriber) {
-                Request request = new Request.Builder()
-                        .method("GET")
-                        .relativeUrl(path)
-                        .build();
-                request.addQueryParam("ref", ref);
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchGitTreeNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchGitTreeNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<List<Content>>>() {
-            @Override
-            public Observable<List<Content>> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    List<Content> contents = JsonConverter.convert(rb.string(), new TypeReference<List<Content>>() {
-                    });
-                    return Observable.just(contents);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
-    }
-
-    public Observable<Content> loadContentWithReactor(final String path, final String ref) {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(final Subscriber<? super Response> subscriber) {
-                Request request = new Request.Builder()
-                        .method("GET")
-                        .relativeUrl(path)
-                        .build();
-                if (!TextUtils.isEmpty(ref))
-                    request.addQueryParam("ref", ref);
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchGitTreeNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchGitTreeNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<Content>>() {
-            @Override
-            public Observable<Content> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    Content content = JsonConverter.convert(rb.string(), new TypeReference<Content>() {
-                    });
-                    return Observable.just(content);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
     }
 }
