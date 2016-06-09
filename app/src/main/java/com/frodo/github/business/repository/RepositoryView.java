@@ -252,7 +252,7 @@ public class RepositoryView extends AbstractUIView {
                 ResourceManager.getDrawable(R.drawable.progressbar_horizontal_pulse_issues),
                 closedIssuesCount, openedIssuesCount,
                 Octicons.Icon.oct_issue_closed, Octicons.Icon.oct_issue_opened,
-                "Closed issues", "Opened issues");
+                "Closed issues", "New issues");
     }
 
     private void fillPulesItem(View itemView, String titleText, Drawable progressDrawable,

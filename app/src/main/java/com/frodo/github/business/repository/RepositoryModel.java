@@ -22,6 +22,8 @@ import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -127,14 +129,14 @@ public class RepositoryModel extends AbstractModel {
     /**
      * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:closed+closed:>2016-06-02&sort=created
      */
-    public Observable<List<Issue>> loadClosedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
+    public Observable<Integer> loadClosedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
         return searchIssuesInPastWeek(ownerName, repoName, "issue", "closed", "closed", "updated");
     }
 
     /**
      * https://api.github.com/search/issues?q=repo:FortAwesome/Font-Awesome+type:issue+is:open+created:>2016-06-02&sort=created
      */
-    public Observable<List<Issue>> loadCreatedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
+    public Observable<Integer> loadCreatedIssuesInPastWeekWithReactor(final String ownerName, final String repoName) {
         return searchIssuesInPastWeek(ownerName, repoName, "issue", "open", "created", "created");
     }
 
@@ -152,11 +154,11 @@ public class RepositoryModel extends AbstractModel {
     }
 
 
-    public Observable<List<Issue>> loadMergedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+    public Observable<Integer> loadMergedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
         return searchIssuesInPastWeek(ownerName, repoName, "pr", "merged", "merged", "updated");
     }
 
-    public Observable<List<Issue>> loadProposedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
+    public Observable<Integer> loadProposedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
         return searchIssuesInPastWeek(ownerName, repoName, "pr", "closed", "closed", "updated");
     }
 
@@ -404,14 +406,14 @@ public class RepositoryModel extends AbstractModel {
     }
 
 
-    public Observable<List<Issue>> searchIssuesInPastWeek(String ownerName, String repoName,
+    public Observable<Integer> searchIssuesInPastWeek(String ownerName, String repoName,
                                                           String type, String is, String isType,
                                                           String sort) {
         String q = String.format("repo:%s/%s+type:%s+is:%s+%s:>%s", ownerName, repoName, type, is, isType, getPastWeek());
-        return search(q, sort, null).map(new Func1<IssuesSearch, List<Issue>>() {
+        return search(q, sort, null).map(new Func1<IssuesSearch, Integer>() {
             @Override
-            public List<Issue> call(IssuesSearch issuesSearch) {
-                return issuesSearch.items;
+            public Integer call(IssuesSearch issuesSearch) {
+                return issuesSearch.totalCount;
             }
         });
     }
@@ -428,18 +430,19 @@ public class RepositoryModel extends AbstractModel {
                         .method("GET")
                         .relativeUrl(Path.Search.ISSUES)
                         .build();
-                if (!TextUtils.isEmpty(q))
-                    request.addQueryParam("q", q);
+                if (!TextUtils.isEmpty(q)) {
+                    warpRequestMethodAddQueryParam(request, "q", q);
+                }
                 if (!TextUtils.isEmpty(sort))
-                    request.addQueryParam("sort", sort);
+                    warpRequestMethodAddQueryParam(request, "sort", sort);
                 if (!TextUtils.isEmpty(order))
-                    request.addQueryParam("order", order);
+                    warpRequestMethodAddQueryParam(request, "order", order);
 
                 if (page != -1)
-                    request.addQueryParam("page", String.valueOf(page));
+                    warpRequestMethodAddQueryParam(request, "page", String.valueOf(page));
 
                 if (perPage != -1)
-                    request.addQueryParam("per_page", String.valueOf(perPage));
+                    warpRequestMethodAddQueryParam(request, "per_page", String.valueOf(perPage));
 
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
@@ -466,8 +469,20 @@ public class RepositoryModel extends AbstractModel {
         cal.add(java.util.Calendar.DATE, -7);
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         df.setTimeZone(tz);
         return df.format(cal.getTime());
+    }
+
+    public static void warpRequestMethodAddQueryParam(Request request, String key, String value) {
+        Class<?> requestClass = request.getClass();
+
+        try {
+            Method method = requestClass.getDeclaredMethod("addQueryParam", String.class, String.class, boolean.class, boolean.class);
+            method.setAccessible(true);
+            method.invoke(request, key, value, false, false);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }
