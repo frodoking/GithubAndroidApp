@@ -77,24 +77,24 @@ public class CardViewGroup extends CardView {
         return headerLayout;
     }
 
+    public View getContentView() {
+        return contentLayout;
+    }
+
     public void setContentView(View contentView) {
         this.contentLayout = contentView;
         rootViewGroup.removeAllViews();
         reFillView();
     }
 
-    public View getContentView() {
-        return contentLayout;
+    public View getFooterView() {
+        return footerLayout;
     }
 
     public void setFooterView(View footerView) {
         this.footerLayout = footerView;
         rootViewGroup.removeAllViews();
         reFillView();
-    }
-
-    public View getFooterView() {
-        return footerLayout;
     }
 
     private void reFillView() {

@@ -1,7 +1,6 @@
 package com.frodo.github.business.repository;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.frodo.app.android.core.AndroidUIViewController;

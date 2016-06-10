@@ -10,6 +10,14 @@ public final class Path {
     public static final String HOST_GITHUB_WEB = "http://github.com";
     public static final String HOST_CODEHUB = "http://trending.codehub-app.com";
 
+    public static String replace(String url, Pair<String, String>... pairs) {
+        for (Pair<String, String> pair : pairs) {
+            url = url.replace("{" + pair.first + "}", pair.second);
+        }
+
+        return url;
+    }
+
     public final static class Explore {
         public static final String SHOWCASES = "/v2/showcases";
         public static final String TRENDING = "/v2/trending";
@@ -21,7 +29,7 @@ public final class Path {
     }
 
     public final static class Activity {
-
+        public static final String RECEIVED_EVENTS = "/users/{username}/received_events";
     }
 
     public final static class Gists {
@@ -78,13 +86,5 @@ public final class Path {
          * Repositories
          */
         public static final String USER_REPOS = USER + "/repos";
-    }
-
-    public static String replace(String url, Pair<String, String>... pairs) {
-        for (Pair<String, String> pair : pairs) {
-            url = url.replace("{" + pair.first + "}", pair.second);
-        }
-
-        return url;
     }
 }

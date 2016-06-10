@@ -22,6 +22,7 @@ import com.frodo.app.framework.broadcast.LocalBroadcastManager;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.business.account.LoginFragment;
+import com.frodo.github.business.activity.EventsFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
@@ -114,6 +115,7 @@ public class MainActivity extends FragmentContainerActivity {
                         mPreMenuItem = menuItem;
 
                         toolbar.setTitle(menuItem.getTitle());
+                        Bundle bundle = null;
                         switch (menuItem.getItemId()) {
                             case R.id.action_sign_in:
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
@@ -124,20 +126,25 @@ public class MainActivity extends FragmentContainerActivity {
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
                                 break;
+                            case R.id.action_events:
+                                bundle = new Bundle();
+                                bundle.putString("username", accountModel.getSignInUser());
+                                FragmentScheduler.replaceFragment(MainActivity.this, EventsFragment.class, bundle);
+                                break;
                             case R.id.action_iconics_test:
-                                Bundle bundle = new Bundle();
+                                bundle = new Bundle();
                                 bundle.putString("api", "IconicsTest");
-                                replaceFragment(ApiFragment.class, "IconicsTest", bundle);
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_icon_api:
-                                Bundle bundle2 = new Bundle();
-                                bundle2.putString("api", "StaticOcticons");
-                                replaceFragment(ApiFragment.class, "StaticOcticons", bundle2);
+                                bundle = new Bundle();
+                                bundle.putString("api", "StaticOcticons");
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_jsoup_api:
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putString("api", "JsoupApi");
-                                replaceFragment(ApiFragment.class, "JsoupApi", bundle1);
+                                bundle = new Bundle();
+                                bundle.putString("api", "JsoupApi");
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             default:
                                 ViewProvider.wrapNotImplementFeature(MainActivity.this, null);

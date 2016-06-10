@@ -156,26 +156,26 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     }
 
     private void loadPulseInPastWeekWithReactor(final Repo repo) {
-        Observable<Integer> closedPullsObservable = getModel().loadMergedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
-        Observable<Integer> openedPullsObservable = getModel().loadProposedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<Integer> mergedPullsObservable = getModel().loadMergedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<Integer> proposedPullsObservable = getModel().loadProposedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
 
         Observable<Integer> closedIssuesObservable = getModel().loadClosedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
         Observable<Integer> openedIssuesObservable = getModel().loadCreatedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
-        Observable.combineLatest(closedPullsObservable, openedPullsObservable,
+        Observable.combineLatest(mergedPullsObservable, proposedPullsObservable,
                 closedIssuesObservable, openedIssuesObservable,
-                new Func4<Integer,Integer,Integer, Integer, Integer[]>() {
+                new Func4<Integer, Integer, Integer, Integer, Integer[]>() {
                     @Override
-                    public Integer[] call(Integer closedPullsCount,Integer openedPullsCount,
-                                                     Integer closedIssuesCount, Integer openedIssuesCount) {
+                    public Integer[] call(Integer closedPullsCount, Integer openedPullsCount,
+                                          Integer closedIssuesCount, Integer openedIssuesCount) {
 
-                        return new Integer[]{closedPullsCount, openedPullsCount,closedIssuesCount,openedIssuesCount};
+                        return new Integer[]{closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount};
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Integer[]>() {
                     @Override
                     public void call(Integer[] counts) {
-                        getUIView().showPulse(counts[0],counts[1],counts[2],counts[3]);
+                        getUIView().showPulse(counts[0], counts[1], counts[2], counts[3]);
                     }
                 }, new Action1<Throwable>() {
                     @Override

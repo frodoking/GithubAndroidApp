@@ -68,7 +68,7 @@ public class OcticonView extends LinearLayout {
         if (a.hasValue(R.styleable.OcticonView_iconSize)) {
             int size = a.getDimensionPixelSize(R.styleable.OcticonView_iconSize, 0);
             if (size != 0) {
-                addView(view, new LayoutParams(size, LayoutParams.MATCH_PARENT));
+                addView(view, new LayoutParams(size, size));
             } else {
                 addView(view);
             }

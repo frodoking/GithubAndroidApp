@@ -55,10 +55,31 @@ public class RepositoryModel extends AbstractModel {
         super(controller);
     }
 
+    public static String getPastWeek() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(java.util.Calendar.DATE, -7);
+
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+        return df.format(cal.getTime());
+    }
+
+    public static void warpRequestMethodAddQueryParam(Request request, String key, String value) {
+        Class<?> requestClass = request.getClass();
+
+        try {
+            Method method = requestClass.getDeclaredMethod("addQueryParam", String.class, String.class, boolean.class, boolean.class);
+            method.setAccessible(true);
+            method.invoke(request, key, value, false, false);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void initBusiness() {
     }
-
 
     @Override
     public String name() {
@@ -153,13 +174,12 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-
     public Observable<Integer> loadMergedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
         return searchIssuesInPastWeek(ownerName, repoName, "pr", "merged", "merged", "updated");
     }
 
     public Observable<Integer> loadProposedPullsInPastWeekWithReactor(final String ownerName, final String repoName) {
-        return searchIssuesInPastWeek(ownerName, repoName, "pr", "closed", "closed", "updated");
+        return searchIssuesInPastWeek(ownerName, repoName, "pr", "open", "created", "created");
     }
 
     /**
@@ -174,7 +194,6 @@ public class RepositoryModel extends AbstractModel {
             }
         });
     }
-
 
     public Observable<Content> loadReadmeWithReactor(final String ownerName, final String repoName) {
         return loadContentWithReactor(Path.replace(Path.Repositories.REPOS_README,
@@ -405,10 +424,9 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-
     public Observable<Integer> searchIssuesInPastWeek(String ownerName, String repoName,
-                                                          String type, String is, String isType,
-                                                          String sort) {
+                                                      String type, String is, String isType,
+                                                      String sort) {
         String q = String.format("repo:%s/%s+type:%s+is:%s+%s:>%s", ownerName, repoName, type, is, isType, getPastWeek());
         return search(q, sort, null).map(new Func1<IssuesSearch, Integer>() {
             @Override
@@ -462,27 +480,5 @@ public class RepositoryModel extends AbstractModel {
                 }
             }
         });
-    }
-
-    public static String getPastWeek() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(java.util.Calendar.DATE, -7);
-
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setTimeZone(tz);
-        return df.format(cal.getTime());
-    }
-
-    public static void warpRequestMethodAddQueryParam(Request request, String key, String value) {
-        Class<?> requestClass = request.getClass();
-
-        try {
-            Method method = requestClass.getDeclaredMethod("addQueryParam", String.class, String.class, boolean.class, boolean.class);
-            method.setAccessible(true);
-            method.invoke(request, key, value, false, false);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 }

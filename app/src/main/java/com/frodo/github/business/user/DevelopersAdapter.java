@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
@@ -17,8 +16,6 @@ import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.OcticonView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by frodo on 2016/5/31.

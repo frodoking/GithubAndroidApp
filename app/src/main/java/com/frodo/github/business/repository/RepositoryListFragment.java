@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.frodo.github.bean.dto.response.Repo;
-import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.SearchListFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.CircleProgressDialog;

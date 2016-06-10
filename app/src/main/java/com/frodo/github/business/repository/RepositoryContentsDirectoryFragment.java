@@ -94,6 +94,7 @@ public class RepositoryContentsDirectoryFragment extends StatedFragment<Reposito
                 .subscribe(new Action1<List<Content>>() {
                                @Override
                                public void call(List<Content> contents) {
+                                   stateContents = contents;
                                    getUIView().hideEmptyView();
                                    getUIView().showContents(contents);
                                    CircleProgressDialog.hideLoadingDialog();

@@ -48,6 +48,10 @@ public class AccountModel extends AbstractModel {
         super(controller);
     }
 
+    private static String getBase64(String string) {
+        return new String(Base64.encode(string.getBytes(), Base64.DEFAULT));
+    }
+
     @Override
     public void initBusiness() {
         if (userModel != null) return;
@@ -187,9 +191,5 @@ public class AccountModel extends AbstractModel {
 
     public String getSignInUser() {
         return login;
-    }
-
-    private static String getBase64(String string) {
-        return new String(Base64.encode(string.getBytes(), Base64.DEFAULT));
     }
 }

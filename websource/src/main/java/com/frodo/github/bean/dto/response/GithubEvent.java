@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.frodo.github.bean.dto.response.events.EventType;
 import com.frodo.github.bean.dto.response.events.payload.Payload;
 
+import java.util.Date;
+
 /**
  * Created by Bernat on 31/08/2014.
  */
@@ -29,7 +31,7 @@ public class GithubEvent implements Parcelable {
     public Payload payload;
     @JsonProperty("public")
     public boolean public_event;
-    public String created_at;
+    public Date created_at;
 
     public GithubEvent() {
     }
@@ -44,7 +46,8 @@ public class GithubEvent implements Parcelable {
         this.repo = in.readParcelable(Repo.class.getClassLoader());
         this.payload = in.readParcelable(Payload.class.getClassLoader());
         this.public_event = in.readByte() != 0;
-        this.created_at = in.readString();
+        long tmpCreated_at = in.readLong();
+        this.created_at = tmpCreated_at == -1 ? null : new Date(tmpCreated_at);
     }
 
     public EventType getType() {
@@ -66,6 +69,6 @@ public class GithubEvent implements Parcelable {
         dest.writeParcelable(this.repo, 0);
         dest.writeParcelable(this.payload, 0);
         dest.writeByte(public_event ? (byte) 1 : (byte) 0);
-        dest.writeString(this.created_at);
+        dest.writeLong(created_at != null ? created_at.getTime() : -1);
     }
 }

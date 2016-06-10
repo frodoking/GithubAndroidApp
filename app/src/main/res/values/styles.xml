@@ -66,6 +66,7 @@
     <style name="OcticonViewStyle" parent="TextAppearanceStyle">
         <item name="android:textSize">@dimen/text_size_xxsmall</item>
         <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
         <item name="iconDirection">start</item>
         <item name="iconPadding">@dimen/margin_small</item>
         <item name="iconSize">@dimen/icon_size</item>
