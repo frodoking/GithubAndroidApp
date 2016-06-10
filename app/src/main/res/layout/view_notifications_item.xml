@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector"
+    android:minHeight="@dimen/item_height_default"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_middle">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginRight="@dimen/margin_middle"
+        android:orientation="vertical">
+
+        <com.frodo.github.view.OcticonView
+            android:id="@+id/title_ov"
+            style="@style/OcticonViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_size_middle"
+            android:textStyle="bold"
+            app:iconDirection="start" />
+
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_size_xxsmall" />
+    </LinearLayout>
+
+    <com.frodo.github.view.FrescoAndIconicsImageView
+        android:id="@+id/check_fiiv"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        app:iiv_color="@android:color/darker_gray"
+        app:iiv_icon="oct_check" />
+</LinearLayout>

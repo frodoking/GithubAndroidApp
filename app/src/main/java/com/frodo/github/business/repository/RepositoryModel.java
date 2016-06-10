@@ -18,7 +18,6 @@ import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.search.IssuesSearch;
-import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
@@ -42,6 +41,7 @@ public class RepositoryModel extends AbstractModel {
     public static final String TAG = RepositoryModel.class.getSimpleName();
 
     private AndroidFetchNetworkDataTask fetchRepositoryNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchRepositoriesNetworkDataTask;
 
     private AndroidFetchNetworkDataTask fetchAllLabelsFileNetworkDataTask;
     private AndroidFetchNetworkDataTask fetchIssuesFileNetworkDataTask;
@@ -113,10 +113,40 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public Observable<List<Repo>> loadUsersRepos(String username) {
-        UserModel userModel = getMainController().getModelFactory()
-                .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
-        return userModel.loadRepositoriesWithReactor(username);
+    public Observable<List<Repo>> loadUserRepositoriesWithReactor(String username) {
+        return loadRepositoriesByPathWithReactor(Path.replace(Path.Users.USER_REPOS, new Pair<>("username", username)));
+    }
+
+    public Observable<List<Repo>> loadRepositoryForksWithReactor(String ownerName, String repoName) {
+        return loadRepositoriesByPathWithReactor(Path.replace(Path.Repositories.REPOS_FORKS, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)));
+    }
+
+    public Observable<List<Repo>> loadRepositoriesByPathWithReactor(final String path) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(path)
+                        .build();
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchRepositoriesNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<Repo>>>() {
+            @Override
+            public Observable<List<Repo>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<Repo> repos = JsonConverter.convert(rb.string(), new TypeReference<List<Repo>>() {
+                    });
+                    return Observable.just(repos);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
     }
 
     public Observable<List<Label>> loadAllLabelsWithReactor(final String ownerName, final String repoName) {

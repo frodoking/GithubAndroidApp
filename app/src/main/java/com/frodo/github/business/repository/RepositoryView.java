@@ -23,6 +23,7 @@ import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
+import com.frodo.github.business.user.UserListFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.MaxHeightListView;
@@ -179,6 +180,33 @@ public class RepositoryView extends AbstractUIView {
                 Bundle arguments = new Bundle();
                 arguments.putString("repo", repo.owner.login + "/" + repo.name);
                 FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryContentsDirectoryFragment.class, arguments);
+            }
+        });
+
+        stargazersTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("users_args", String.format("users_repo_stargazers_%s_%s", repo.owner.login, repo.name));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+            }
+        });
+
+        watchersTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("users_args", String.format("users_repo_watchers_%s_%s", repo.owner.login, repo.name));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+            }
+        });
+
+        forksTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("repos_args", String.format("repos_forks_%s_%s", repo.owner.login, repo.name));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class, arguments);
             }
         });
     }

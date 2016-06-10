@@ -1,5 +1,6 @@
 package com.frodo.github;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,10 +20,12 @@ import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.broadcast.LocalBroadcastManager;
+import com.frodo.app.framework.log.Logger;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.business.account.LoginFragment;
 import com.frodo.github.business.activity.EventsFragment;
+import com.frodo.github.business.activity.NotificationsFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
@@ -130,6 +133,9 @@ public class MainActivity extends FragmentContainerActivity {
                                 bundle = new Bundle();
                                 bundle.putString("username", accountModel.getSignInUser());
                                 FragmentScheduler.replaceFragment(MainActivity.this, EventsFragment.class, bundle);
+                                break;
+                            case R.id.action_notifications:
+                                FragmentScheduler.replaceFragment(MainActivity.this, NotificationsFragment.class);
                                 break;
                             case R.id.action_iconics_test:
                                 bundle = new Bundle();
@@ -282,6 +288,12 @@ public class MainActivity extends FragmentContainerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Logger.fLog().tag(tag()).i("onConfigurationChanged");
     }
 
     @Override

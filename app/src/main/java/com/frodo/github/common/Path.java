@@ -30,6 +30,7 @@ public final class Path {
 
     public final static class Activity {
         public static final String RECEIVED_EVENTS = "/users/{username}/received_events";
+        public static final String NOTIFICATIONS = "/notifications";
     }
 
     public final static class Gists {
@@ -60,6 +61,10 @@ public final class Path {
         public static final String REPOS_LABELS = REPOS_FULLNAME + "/labels";
         public static final String REPOS_ISSUES = REPOS_FULLNAME + "/issues";
         public static final String REPOS_PULLS = REPOS_FULLNAME + "/pulls";
+
+        public static final String REPOS_STARGAZERS = REPOS_FULLNAME + "/stargazers";
+        public static final String REPOS_WATCHERS = REPOS_FULLNAME + "/watchers";
+        public static final String REPOS_FORKS = REPOS_FULLNAME + "/forks";
     }
 
     public final static class Search {

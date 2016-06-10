@@ -53,10 +53,11 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
         Bundle bundle = getArguments();
         Observable<List<User>> observable = null;
         //TODO users_user_followers_{username}
+        // users_repo_stargazers_{owner}_{repo}
         if (bundle != null && bundle.containsKey("users_args")) {
             String[] argsArray = bundle.getString("users_args").split("_");
 
-            if (argsArray.length == 4 && argsArray[0].equalsIgnoreCase("users")) {
+            if (argsArray[0].equalsIgnoreCase("users")) {
                 if (argsArray[1].equalsIgnoreCase("user")) {
                     if (argsArray[2].equalsIgnoreCase("followers")) {
                         observable = getModel().loadUserFollowers(argsArray[3]);
@@ -64,6 +65,11 @@ public class UserListFragment extends SearchListFragment<UserModel, User> {
                         observable = getModel().loadUserFollowing(argsArray[3]);
                     }
                 } else if (argsArray[1].equalsIgnoreCase("repo")) {
+                    if (argsArray[2].equalsIgnoreCase("stargazers")) {
+                        observable = getModel().loadRepoStargazers(argsArray[3], argsArray[4]);
+                    } else if (argsArray[2].equalsIgnoreCase("watchers")) {
+                        observable = getModel().loadRepoWatchers(argsArray[3], argsArray[4]);
+                    }
                 }
             }
         }

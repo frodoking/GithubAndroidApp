@@ -54,14 +54,17 @@ public class RepositoryListFragment extends SearchListFragment<RepositoryModel, 
         Bundle bundle = getArguments();
         Observable<List<Repo>> observable = null;
         //TODO repos_user_{username}
+        // repos_forks_{owner}_{repo}
         if (bundle != null && bundle.containsKey("repos_args")) {
             String[] argsArray = bundle.getString("repos_args").split("_");
 
-            if (argsArray.length == 3 && argsArray[0].equalsIgnoreCase("repos")) {
+            if (argsArray[0].equalsIgnoreCase("repos")) {
                 if (argsArray[1].equalsIgnoreCase("user")) {
-                    observable = getModel().loadUsersRepos(argsArray[2]);
+                    observable = getModel().loadUserRepositoriesWithReactor(argsArray[2]);
                 } else if (argsArray[1].equalsIgnoreCase("explore")) {
                     // do something
+                } else if (argsArray[1].equalsIgnoreCase("forks")) {
+                    observable = getModel().loadRepositoryForksWithReactor(argsArray[2], argsArray[3]);
                 }
             }
         }
