@@ -79,7 +79,7 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
     private void loadDataWithReactor() {
         final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
-        final Observable<List<Repo>> repositoryObservable = getModel().loadRepositoriesWithReactor();
+        final Observable<List<Repo>> repositoryObservable = getModel().loadTrendingRepositoriesInWeeklyWithReactor();
 
         Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repo>, Map<String, Object>>() {
             @Override

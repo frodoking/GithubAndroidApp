@@ -304,6 +304,29 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
+    public Observable<List<Issue>> loadIssuesForAccountWithReactor(final String filter,
+                                                                   final String state,
+                                                                   final String labels,
+                                                                   final String sort,
+                                                                   final String direction,
+                                                                   final String since,
+                                                                   final int page, final int perPage) {
+        return loadIssuesWithReactor(Path.replace(Path.Users.USER_ISSUES),
+                filter, state, labels, sort, direction, since, page, perPage);
+    }
+
+    public Observable<List<Issue>> loadIssuesForRepoWithReactor(final String ownerName, final String repoName,
+                                                                final String filter,
+                                                                final String state,
+                                                                final String labels,
+                                                                final String sort,
+                                                                final String direction,
+                                                                final String since,
+                                                                final int page, final int perPage) {
+        return loadIssuesWithReactor(Path.replace(Path.Repositories.REPOS_ISSUES, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)),
+                filter, state, labels, sort, direction, since, page, perPage);
+    }
+
     /**
      * List Issues
      *
@@ -325,7 +348,7 @@ public class RepositoryModel extends AbstractModel {
      * @param perPage
      * @return Observable<List<Issue>>
      */
-    public Observable<List<Issue>> loadIssuesWithReactor(final String ownerName, final String repoName,
+    public Observable<List<Issue>> loadIssuesWithReactor(final String path,
                                                          final String filter,
                                                          final String state,
                                                          final String labels,
@@ -338,7 +361,7 @@ public class RepositoryModel extends AbstractModel {
             public void call(final Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(Path.replace(Path.Repositories.REPOS_ISSUES, new Pair<>("owner", ownerName), new Pair<>("repo", repoName)))
+                        .relativeUrl(path)
                         .build();
                 if (!TextUtils.isEmpty(filter)) {
                     request.addQueryParam("filter", filter);

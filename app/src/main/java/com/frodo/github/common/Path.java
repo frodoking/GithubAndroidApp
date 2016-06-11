@@ -91,5 +91,15 @@ public final class Path {
          * Repositories
          */
         public static final String USER_REPOS = USER + "/repos";
+
+        /**
+         * authenticated user
+         */
+        public static final String USER_ISSUES = "/issues";
+
+        /**
+         * do follow or unfollow
+         */
+        public static final String USER_FOLLOW = "/user/following/{username}";
     }
 }

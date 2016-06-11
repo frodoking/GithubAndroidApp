@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/filter_rg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_default"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/filter_open_rb"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/item_selector"
+            android:textColor="@drawable/textcolor_selector"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_middle"
+            android:text="Open"/>
+
+        <RadioButton
+            android:id="@+id/filter_closed_rb"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/item_selector"
+            android:textColor="@drawable/textcolor_selector"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_middle"
+            android:text="Closed"/>
+
+        <RadioButton
+            android:id="@+id/filter_yours_rb"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/item_selector"
+            android:textColor="@drawable/textcolor_selector"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_middle"
+            android:text="Yours"/>
+    </RadioGroup>
+
+    <View style="@style/LineStyle" />
+
+    <ListView
+        android:id="@+id/lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1px" />
+</LinearLayout>

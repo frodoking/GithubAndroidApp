@@ -9,10 +9,12 @@ import android.widget.TextView;
 import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Issue;
+import com.frodo.github.bean.dto.response.IssueState;
 import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.view.AutoTabLayout;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.FrescoAndIconicsImageView;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.text.DateFormat;
 
@@ -42,6 +44,14 @@ public class IssuesForListViewAdapter extends BaseListViewAdapter<Issue> {
         }
 
         final Issue issue = getItem(position);
+        if (issue.state.equals(IssueState.open)){
+            vh.stateFIIV.setColor(ResourceManager.getColor(android.R.color.holo_green_light));
+            vh.stateFIIV.setIcon(Octicons.Icon.oct_issue_opened);
+        } else if (issue.state.equals(IssueState.closed)){
+            vh.stateFIIV.setColor(ResourceManager.getColor(android.R.color.holo_red_light));
+            vh.stateFIIV.setIcon(Octicons.Icon.oct_issue_closed);
+        }
+
         vh.titleTV.setText(issue.title);
         vh.stateInfoTV.setText(String.format("%s by %s at %s", issue.state, issue.user.login, DateFormat.getDateTimeInstance().format(issue.updated_at)));
         vh.numberTV.setText(String.format("#%s", issue.number));

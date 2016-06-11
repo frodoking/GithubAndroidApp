@@ -8,6 +8,7 @@ import com.frodo.app.framework.controller.MainController;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
+import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.showcases.ShowCaseListCache;
@@ -98,7 +99,11 @@ public class ExploreModel extends AbstractModel {
         });
     }
 
-    public Observable<List<Repo>> loadRepositoriesWithReactor() {
+    public Observable<List<Repo>> loadTrendingRepositoriesInWeeklyWithReactor() {
+        return loadTrendingRepositoriesWithReactor("weekly", null);
+    }
+
+    public Observable<List<Repo>> loadTrendingRepositoriesWithReactor(final String since, final String language) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
@@ -106,8 +111,10 @@ public class ExploreModel extends AbstractModel {
                         .method("GET")
                         .relativeUrl(Path.Explore.TRENDING)
                         .build();
-                request.addQueryParam("since", "weekly");
-                request.addQueryParam("language", "");
+                if (!TextUtils.isEmpty(since))
+                    request.addQueryParam("since", since);
+                if (!TextUtils.isEmpty(language))
+                    request.addQueryParam("language", language);
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_CODEHUB);
                 fetchRepositoriesNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);

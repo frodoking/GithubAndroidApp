@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.business.user.UserModel;
 import com.frodo.github.view.CircleProgressDialog;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,6 +51,11 @@ public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
                                public void call(User user) {
                                    CircleProgressDialog.hideLoadingDialog();
                                    getMainController().getLocalBroadcastManager().onBroadcast("drawer", user);
+
+                                   getMainController()
+                                           .getModelFactory()
+                                           .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController())
+                                           .followingUser("frodoking");
                                }
                            },
                         new Action1<Throwable>() {

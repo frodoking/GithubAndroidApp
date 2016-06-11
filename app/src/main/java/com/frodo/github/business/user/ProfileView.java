@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
+import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
@@ -81,6 +82,8 @@ public class ProfileView extends AbstractUIView {
         contributedToRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.contributed_to_repositories_cvg);
 
         popularRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        popularRepositoriesLV.setDividerHeight(2);
+        popularRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
         popularRepositoriesCVG.setContentView(popularRepositoriesLV);
 
         LinearLayout headerView = (LinearLayout) popularRepositoriesCVG.getHeaderView();
@@ -94,6 +97,8 @@ public class ProfileView extends AbstractUIView {
         popularRepositoriesLV.setAdapter(popularRepositoryAdapter);
 
         contributedToRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        contributedToRepositoriesLV.setDividerHeight(2);
+        contributedToRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
         contributedToRepositoriesCVG.setContentView(contributedToRepositoriesLV);
 
         LinearLayout headerView2 = (LinearLayout) contributedToRepositoriesCVG.getHeaderView();

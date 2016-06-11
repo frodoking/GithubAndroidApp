@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
+import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
@@ -77,6 +78,8 @@ public class ExploreView extends AbstractUIView {
 
         trendingRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.trending_repositories_cvg);
         trendingRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
+        trendingRepositoriesLV.setDividerHeight(2);
+        trendingRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
         trendingRepositoriesCVG.setContentView(trendingRepositoriesLV);
 
         OcticonView titleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.title_ov);

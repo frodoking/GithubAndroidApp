@@ -9,6 +9,7 @@ import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
 import com.frodo.app.framework.controller.MainController;
+import com.frodo.app.framework.net.Header;
 import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
@@ -163,6 +164,28 @@ public class UserModel extends AbstractModel {
                 } catch (IOException e) {
                     return Observable.error(e);
                 }
+            }
+        });
+    }
+
+    public Observable<Boolean> followingUser(final String username) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.replace(Path.Users.USER_FOLLOW, new Pair<>("username", username)))
+                        .build();
+                request.getHeaders().add(new Header("Content-Length", "0"));
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
+            }
+        }).map(new Func1<Response, Boolean>() {
+            @Override
+            public Boolean call(Response response) {
+                return response.getStatus() == 204;
             }
         });
     }

@@ -20,10 +20,9 @@
 
     <group
         android:id="@+id/group_info"
-        android:checkableBehavior="single"
-        android:title="@string/menu_group_info">
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/action_news"
+            android:id="@+id/action_issues"
             android:title="@string/menu_issues"
             android:checkable="true"/>
         <item
@@ -33,11 +32,18 @@
     </group>
     <group
         android:id="@+id/group_other"
-        android:checkableBehavior="single"
-        android:title="@string/menu_group_api">
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/action_icon_setting"
+            android:id="@+id/action_setting"
             android:title="@string/menu_setting"
+            android:checkable="true"/>
+    </group>
+    <group
+        android:id="@+id/group_author"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_author"
+            android:title="@string/menu_author"
             android:checkable="true"/>
     </group>
 </menu>

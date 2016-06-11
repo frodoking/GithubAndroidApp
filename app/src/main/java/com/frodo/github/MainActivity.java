@@ -27,6 +27,7 @@ import com.frodo.github.business.account.LoginFragment;
 import com.frodo.github.business.activity.EventsFragment;
 import com.frodo.github.business.activity.NotificationsFragment;
 import com.frodo.github.business.explore.ExploreFragment;
+import com.frodo.github.business.repository.RepositoryIssuesFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.ApiFragment;
@@ -118,7 +119,7 @@ public class MainActivity extends FragmentContainerActivity {
                         mPreMenuItem = menuItem;
 
                         toolbar.setTitle(menuItem.getTitle());
-                        Bundle bundle = null;
+                        Bundle bundle;
                         switch (menuItem.getItemId()) {
                             case R.id.action_sign_in:
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
@@ -129,6 +130,11 @@ public class MainActivity extends FragmentContainerActivity {
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
                                 break;
+                            case R.id.action_issues:
+                                bundle = new Bundle();
+                                bundle.putString("issues_args", "issues_account");
+                                FragmentScheduler.replaceFragment(MainActivity.this, RepositoryIssuesFragment.class, bundle);
+                                break;
                             case R.id.action_events:
                                 bundle = new Bundle();
                                 bundle.putString("username", accountModel.getSignInUser());
@@ -136,6 +142,11 @@ public class MainActivity extends FragmentContainerActivity {
                                 break;
                             case R.id.action_notifications:
                                 FragmentScheduler.replaceFragment(MainActivity.this, NotificationsFragment.class);
+                                break;
+                            case R.id.action_author:
+                                bundle = new Bundle();
+                                bundle.putString("username", "frodoking");
+                                FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, ProfileFragment.class, bundle);
                                 break;
                             case R.id.action_iconics_test:
                                 bundle = new Bundle();
@@ -264,12 +275,14 @@ public class MainActivity extends FragmentContainerActivity {
         updateMenuItem(menu.findItem(R.id.action_explore), Octicons.Icon.oct_telescope);
         updateMenuItem(menu.findItem(R.id.action_sign_in), Octicons.Icon.oct_sign_in);
         updateMenuItem(menu.findItem(R.id.action_sign_out), Octicons.Icon.oct_sign_out);
-        updateMenuItem(menu.findItem(R.id.action_news), Octicons.Icon.oct_radio_tower);
+        updateMenuItem(menu.findItem(R.id.action_issues), Octicons.Icon.oct_radio_tower);
         updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_issue_opened);
+        updateMenuItem(menu.findItem(R.id.action_setting), Octicons.Icon.oct_gear);
+        updateMenuItem(menu.findItem(R.id.action_author), Octicons.Icon.oct_gist_secret);
+
         updateMenuItem(menu.findItem(R.id.action_iconics_test), Octicons.Icon.oct_repo);
         updateMenuItem(menu.findItem(R.id.action_icon_api), Octicons.Icon.oct_repo);
         updateMenuItem(menu.findItem(R.id.action_jsoup_api), Octicons.Icon.oct_repo);
-        updateMenuItem(menu.findItem(R.id.action_icon_setting), Octicons.Icon.oct_gear);
     }
 
     private void updateMenuItem(MenuItem menuItem, Octicons.Icon icon) {

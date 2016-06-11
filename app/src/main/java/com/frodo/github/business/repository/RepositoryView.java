@@ -209,6 +209,15 @@ public class RepositoryView extends AbstractUIView {
                 FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class, arguments);
             }
         });
+
+        issuesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("issues_args", String.format("issues_repo_%s_%s", repo.owner.login, repo.name));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryIssuesFragment.class, arguments);
+            }
+        });
     }
 
     public void showDetail(Repo repository) {
@@ -321,14 +330,14 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            List<Issue> tmpList = issues.size() > 5 ? issues.subList(0, 5) : issues;
-
             ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
+            issueListView.setDividerHeight(2);
+            issueListView.setDivider(ResourceManager.getDrawable(R.drawable.divider));
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
             issueListView.setAdapter(adapter);
-            adapter.refreshObjects(tmpList);
+            adapter.refreshObjects(issues);
 
             issuesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -350,6 +359,8 @@ public class RepositoryView extends AbstractUIView {
             ll.addView(textView, emptyLayoutParams);
         } else {
             ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
+            issueListView.setDividerHeight(2);
+            issueListView.setDivider(ResourceManager.getDrawable(R.drawable.divider));
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());

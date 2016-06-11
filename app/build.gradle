@@ -36,10 +36,12 @@ android {
         release {
             signingConfig signingConfigs.release
             shrinkResources true
+            debuggable false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             shrinkResources false
+            debuggable true
         }
     }
     productFlavors {
