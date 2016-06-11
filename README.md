@@ -7,6 +7,7 @@ This project is a Github client on Android platform, This App drawing  is based 
 2. explore (showcases/repos)
 3. user (profile/followers/following)
 4. repo (detail/contents)
+5. events, notification, issues
 
 there are many features not yet implemented, you can contribute to it if you are interested in this project.
 
@@ -28,8 +29,8 @@ Android studio 2.0
 * Email: awangyun8@gmail.com
 * Blog：http://frodoking.github.io/
 
-##Debug Apk (v1.0.0)
-[app-google-debug.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0.0/app-google-debug.apk)
+##Apk (v1.0.0)
+[github-v1.0.0-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0.0/github-v1.0.0.apk)
 
 ##App Master Drawing
 <img  src="http://frodoking.github.io/img/github-client/home.png" width="240" height="427">
