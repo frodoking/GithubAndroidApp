@@ -275,8 +275,8 @@ public class MainActivity extends FragmentContainerActivity {
         updateMenuItem(menu.findItem(R.id.action_explore), Octicons.Icon.oct_telescope);
         updateMenuItem(menu.findItem(R.id.action_sign_in), Octicons.Icon.oct_sign_in);
         updateMenuItem(menu.findItem(R.id.action_sign_out), Octicons.Icon.oct_sign_out);
-        updateMenuItem(menu.findItem(R.id.action_issues), Octicons.Icon.oct_radio_tower);
-        updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_issue_opened);
+        updateMenuItem(menu.findItem(R.id.action_issues), Octicons.Icon.oct_issue_opened);
+        updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_radio_tower);
         updateMenuItem(menu.findItem(R.id.action_setting), Octicons.Icon.oct_gear);
         updateMenuItem(menu.findItem(R.id.action_author), Octicons.Icon.oct_gist_secret);
 
