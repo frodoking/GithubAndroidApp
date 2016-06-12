@@ -197,6 +197,7 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_header"
+            app:contentLayout="@layout/view_maxheight_listview"
             app:footerLayout="@layout/view_footer"
             android:visibility="gone"/>
 
@@ -208,6 +209,7 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_header"
+            app:contentLayout="@layout/view_maxheight_listview"
             android:visibility="gone"/>
 
     </LinearLayout>

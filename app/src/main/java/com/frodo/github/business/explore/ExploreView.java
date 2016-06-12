@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
@@ -25,7 +24,6 @@ import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.CardViewGroup;
-import com.frodo.github.view.MaxHeightListView;
 import com.frodo.github.view.OcticonView;
 import com.mikepenz.octicons_typeface_library.Octicons;
 
@@ -77,10 +75,7 @@ public class ExploreView extends AbstractUIView {
         viewPager.setAdapter(pagerAdapter);
 
         trendingRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.trending_repositories_cvg);
-        trendingRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
-        trendingRepositoriesLV.setDividerHeight(2);
-        trendingRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
-        trendingRepositoriesCVG.setContentView(trendingRepositoriesLV);
+        trendingRepositoriesLV = (ListView) trendingRepositoriesCVG.getContentView();
 
         OcticonView titleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.title_ov);
         titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_flame);

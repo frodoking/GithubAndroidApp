@@ -98,7 +98,7 @@ public class MainActivity extends FragmentContainerActivity {
                     String login = accountModel.getSignInUser();
                     Bundle arguments = new Bundle();
                     arguments.putString("username", login);
-                    FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, ProfileFragment.class, arguments);
+                    FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, arguments);
                 } else {
                     FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
                 }

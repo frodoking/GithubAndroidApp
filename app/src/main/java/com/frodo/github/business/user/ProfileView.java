@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
-import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
@@ -25,7 +24,6 @@ import com.frodo.github.business.repository.RepositoryFragment;
 import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.FrescoAndIconicsImageView;
-import com.frodo.github.view.MaxHeightListView;
 import com.frodo.github.view.OcticonView;
 
 import java.util.List;
@@ -81,9 +79,7 @@ public class ProfileView extends AbstractUIView {
         popularRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.popular_repositories_cvg);
         contributedToRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.contributed_to_repositories_cvg);
 
-        popularRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
-        popularRepositoriesLV.setDividerHeight(2);
-        popularRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
+        popularRepositoriesLV = (ListView) popularRepositoriesCVG.getContentView();
         popularRepositoriesCVG.setContentView(popularRepositoriesLV);
 
         LinearLayout headerView = (LinearLayout) popularRepositoriesCVG.getHeaderView();
@@ -96,9 +92,7 @@ public class ProfileView extends AbstractUIView {
         popularRepositoryAdapter = new RepositoriesForListViewAdapter(getPresenter().getAndroidContext());
         popularRepositoriesLV.setAdapter(popularRepositoryAdapter);
 
-        contributedToRepositoriesLV = new MaxHeightListView(getPresenter().getAndroidContext());
-        contributedToRepositoriesLV.setDividerHeight(2);
-        contributedToRepositoriesLV.setDivider(ResourceManager.getDrawable(R.drawable.divider));
+        contributedToRepositoriesLV = (ListView) contributedToRepositoriesCVG.getContentView();
         contributedToRepositoriesCVG.setContentView(contributedToRepositoriesLV);
 
         LinearLayout headerView2 = (LinearLayout) contributedToRepositoriesCVG.getHeaderView();

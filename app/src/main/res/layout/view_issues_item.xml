@@ -40,7 +40,7 @@
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/darker_gray"/>
 
-        <com.frodo.github.view.AutoTabLayout
+        <com.frodo.github.view.FlowLayout
             android:id="@+id/labels_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

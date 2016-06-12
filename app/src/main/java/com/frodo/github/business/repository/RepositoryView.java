@@ -18,15 +18,16 @@ import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
+import com.frodo.github.MainActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
+import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserListFragment;
 import com.frodo.github.view.BaseListViewAdapter;
 import com.frodo.github.view.CardViewGroup;
-import com.frodo.github.view.MaxHeightListView;
 import com.frodo.github.view.OcticonView;
 import com.mikepenz.iconics.utils.Utils;
 import com.mikepenz.octicons_typeface_library.Octicons;
@@ -220,7 +221,7 @@ public class RepositoryView extends AbstractUIView {
         });
     }
 
-    public void showDetail(Repo repository) {
+    public void showDetail(final Repo repository) {
         this.repo = repository;
 
         if (!TextUtils.isEmpty(repository.description))
@@ -242,6 +243,15 @@ public class RepositoryView extends AbstractUIView {
         if (!TextUtils.isEmpty(repository.default_branch))
             branchsOV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
+
+        ((View)ownerOV.getParent()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putString("username", repository.owner.login);
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter(), ProfileFragment.class, arguments);
+            }
+        });
     }
 
     public void showReadme(final Content content) {
@@ -303,7 +313,7 @@ public class RepositoryView extends AbstractUIView {
             ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.pb);
             progressBar.setProgressDrawable(progressDrawable);
             progressBar.setMax(100);
-            progressBar.setProgress(endSize == 0 ? 100 : (int) ((startSize / endSize) * 100));
+            progressBar.setProgress(endSize == 0 ? 100 : (int) (startSize / (startSize+endSize) * 100));
 
             View firstView = itemView.findViewById(R.id.first_ll);
             OcticonView startVO = (OcticonView) firstView.findViewById(R.id.title_ov);
@@ -330,9 +340,7 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
-            issueListView.setDividerHeight(2);
-            issueListView.setDivider(ResourceManager.getDrawable(R.drawable.divider));
+            ListView issueListView =  (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
@@ -358,9 +366,7 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            ListView issueListView = new MaxHeightListView(getPresenter().getAndroidContext());
-            issueListView.setDividerHeight(2);
-            issueListView.setDivider(ResourceManager.getDrawable(R.drawable.divider));
+            ListView issueListView = (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
