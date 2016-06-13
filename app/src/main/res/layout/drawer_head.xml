@@ -16,6 +16,7 @@
         android:contentDescription="@null"
         android:background="@android:color/white"
         app:fadeDuration="300"
+        android:layout_marginTop="@dimen/margin_xlarge"
         app:roundAsCircle="true"
         app:roundWithOverlayColor="?attr/colorPrimaryDark"
         app:roundingBorderWidth="1dp"

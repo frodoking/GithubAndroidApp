@@ -31,7 +31,7 @@
 
     <dimen name="icon_size">16dp</dimen>
 
-    <dimen name="image_size_xxlarge">85dp</dimen>
+    <dimen name="image_size_xxlarge">100dp</dimen>
     <dimen name="image_size_xlarge">45dp</dimen>
     <dimen name="image_size_large">35dp</dimen>
     <dimen name="image_size_default">25dp</dimen>

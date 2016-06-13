@@ -8,6 +8,7 @@
     <string name="menu_sign_in">Sign in</string>
     <string name="menu_sign_out">Sign out</string>
     <string name="menu_code">Code</string>
+    <string name="menu_news">News</string>
     <string name="menu_issues">Issues</string>
     <string name="menu_events">Events</string>
     <string name="menu_organizations">Organizations</string>

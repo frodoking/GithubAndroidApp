@@ -28,6 +28,7 @@ import com.frodo.github.business.activity.EventsFragment;
 import com.frodo.github.business.activity.NotificationsFragment;
 import com.frodo.github.business.explore.ExploreFragment;
 import com.frodo.github.business.repository.RepositoryIssuesFragment;
+import com.frodo.github.business.repository.RepositoryListFragment;
 import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.ApiFragment;
@@ -121,6 +122,9 @@ public class MainActivity extends FragmentContainerActivity {
                         toolbar.setTitle(menuItem.getTitle());
                         Bundle bundle;
                         switch (menuItem.getItemId()) {
+                            case R.id.action_notifications:
+                                FragmentScheduler.replaceFragment(MainActivity.this, NotificationsFragment.class);
+                                break;
                             case R.id.action_sign_in:
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
                                 break;
@@ -130,18 +134,25 @@ public class MainActivity extends FragmentContainerActivity {
                             case R.id.action_explore:
                                 FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
                                 break;
+                            case R.id.action_news:
+                                bundle = new Bundle();
+                                bundle.putString("events_args", String.format("events_user_%s", accountModel.getSignInUser()));
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
+                                break;
                             case R.id.action_issues:
                                 bundle = new Bundle();
                                 bundle.putString("issues_args", "issues_account");
-                                FragmentScheduler.replaceFragment(MainActivity.this, RepositoryIssuesFragment.class, bundle);
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, RepositoryIssuesFragment.class, bundle);
                                 break;
                             case R.id.action_events:
                                 bundle = new Bundle();
-                                bundle.putString("username", accountModel.getSignInUser());
-                                FragmentScheduler.replaceFragment(MainActivity.this, EventsFragment.class, bundle);
+                                bundle.putString("events_args", String.format("events_account_%s", accountModel.getSignInUser()));
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
                                 break;
-                            case R.id.action_notifications:
-                                FragmentScheduler.replaceFragment(MainActivity.this, NotificationsFragment.class);
+                            case R.id.action_repositories:
+                                bundle = new Bundle();
+                                bundle.putString("repos_args", String.format("repos_user_%s", accountModel.getSignInUser()));
+                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, RepositoryListFragment.class, bundle);
                                 break;
                             case R.id.action_author:
                                 bundle = new Bundle();
@@ -151,17 +162,17 @@ public class MainActivity extends FragmentContainerActivity {
                             case R.id.action_iconics_test:
                                 bundle = new Bundle();
                                 bundle.putString("api", "IconicsTest");
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_icon_api:
                                 bundle = new Bundle();
                                 bundle.putString("api", "StaticOcticons");
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_jsoup_api:
                                 bundle = new Bundle();
                                 bundle.putString("api", "JsoupApi");
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             default:
                                 ViewProvider.wrapNotImplementFeature(MainActivity.this, null);
@@ -275,8 +286,10 @@ public class MainActivity extends FragmentContainerActivity {
         updateMenuItem(menu.findItem(R.id.action_explore), Octicons.Icon.oct_telescope);
         updateMenuItem(menu.findItem(R.id.action_sign_in), Octicons.Icon.oct_sign_in);
         updateMenuItem(menu.findItem(R.id.action_sign_out), Octicons.Icon.oct_sign_out);
+        updateMenuItem(menu.findItem(R.id.action_news), Octicons.Icon.oct_radio_tower);
         updateMenuItem(menu.findItem(R.id.action_issues), Octicons.Icon.oct_issue_opened);
-        updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_radio_tower);
+        updateMenuItem(menu.findItem(R.id.action_events), Octicons.Icon.oct_rss);
+        updateMenuItem(menu.findItem(R.id.action_repositories), Octicons.Icon.oct_repo);
         updateMenuItem(menu.findItem(R.id.action_setting), Octicons.Icon.oct_gear);
         updateMenuItem(menu.findItem(R.id.action_author), Octicons.Icon.oct_gist_secret);
 
@@ -287,7 +300,7 @@ public class MainActivity extends FragmentContainerActivity {
 
     private void updateMenuItem(MenuItem menuItem, Octicons.Icon icon) {
         if (menuItem != null)
-            menuItem.setIcon(new IconicsDrawable(this).icon(icon).colorRes(android.R.color.black));
+            menuItem.setIcon(new IconicsDrawable(this).icon(icon).sizeDp(16).colorRes(android.R.color.black));
     }
 
     @Override

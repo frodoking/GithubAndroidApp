@@ -4,6 +4,7 @@
     <group
         android:id="@+id/group_base"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/action_notifications"
             android:title="@string/menu_notifications"
@@ -22,12 +23,20 @@
         android:id="@+id/group_info"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/action_news"
+            android:title="@string/menu_news"
+            android:checkable="true"/>
+        <item
             android:id="@+id/action_issues"
             android:title="@string/menu_issues"
             android:checkable="true"/>
         <item
             android:id="@+id/action_events"
             android:title="@string/menu_events"
+            android:checkable="true"/>
+        <item
+            android:id="@+id/action_repositories"
+            android:title="@string/menu_repositories"
             android:checkable="true"/>
     </group>
     <group

@@ -69,7 +69,7 @@ public class EventsView extends AbstractUIView {
                 vh.titleOV.setText(String.format("%s commented on issue %s#%s", event.actor.login, event.repo.name, event.payload.issue.number));
                 vh.actorOV.setVisibility(View.VISIBLE);
 
-                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.payload.comment.user.avatar_url));
+                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
                 vh.actorOV.setText(event.payload.comment.body);
             } else if (event.type.equals(EventType.WatchEvent)) {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_star);
@@ -83,6 +83,20 @@ public class EventsView extends AbstractUIView {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_git_branch);
                 vh.titleOV.setText(String.format("%s forked %s", event.actor.login, event.repo.name));
                 vh.actorOV.setVisibility(View.GONE);
+            } else if (event.type.equals(EventType.ReleaseEvent)) {
+                vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_tag);
+                vh.titleOV.setText(String.format("%s released to %s at %s", event.actor.login, event.payload.release.name,event.repo.name));
+
+                vh.actorOV.setVisibility(View.VISIBLE);
+                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
+                vh.actorOV.setText(event.payload.release.assets.get(0).name);
+            } else if (event.type.equals(EventType.PushEvent)) {
+                vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_git_commit);
+                vh.titleOV.setText(String.format("%s pushed to %s at %s", event.actor.login, event.payload.ref, event.repo.name));
+
+                vh.actorOV.setVisibility(View.VISIBLE);
+                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
+                vh.actorOV.setText(event.payload.commits.get(0).message);
             } else {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_unmute);
                 vh.titleOV.setText("unknown");

@@ -41,13 +41,21 @@ public class EventsModel extends AbstractModel {
         return TAG;
     }
 
+    public Observable<List<GithubEvent>> loadAccountEvents(String accountUser) {
+        return loadEventsWithReactor(Path.replace(Path.Activity.USER_EVENTS, new Pair<>("username", accountUser)));
+    }
+
     public Observable<List<GithubEvent>> loadReceivedEvents(final String username) {
+        return loadEventsWithReactor(Path.replace(Path.Activity.RECEIVED_EVENTS, new Pair<>("username", username)));
+    }
+
+    private Observable<List<GithubEvent>> loadEventsWithReactor(final String path) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 Request request = new Request.Builder()
                         .method("GET")
-                        .relativeUrl(Path.replace(Path.Activity.RECEIVED_EVENTS, new Pair<>("username", username)))
+                        .relativeUrl(path)
                         .build();
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);

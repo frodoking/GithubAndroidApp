@@ -30,7 +30,9 @@ public final class Path {
 
     public final static class Activity {
         public static final String RECEIVED_EVENTS = "/users/{username}/received_events";
+        public static final String USER_EVENTS = "/users/{username}/events";
         public static final String NOTIFICATIONS = "/notifications";
+        public static final String EVENTS = "/events";
     }
 
     public final static class Gists {
