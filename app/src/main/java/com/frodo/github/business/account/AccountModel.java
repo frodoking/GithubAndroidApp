@@ -17,7 +17,7 @@ import com.frodo.github.bean.dto.response.GithubAuthorization;
 import com.frodo.github.bean.dto.response.User;
 import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.AuthorizationConfig;
-import com.frodo.github.common.GithubMediaTypes;
+import com.frodo.github.common.GitHubMediaTypes;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
@@ -36,7 +36,6 @@ import rx.functions.Func1;
  * Created by frodo on 2016/5/5.
  */
 public class AccountModel extends AbstractModel {
-
     public static final String TAG = AccountModel.class.getSimpleName();
     private UserModel userModel;
 
@@ -81,11 +80,6 @@ public class AccountModel extends AbstractModel {
         this.isSignIn = false;
     }
 
-    @Override
-    public String name() {
-        return TAG;
-    }
-
     public Observable<User> loginUserWithReactor(final String username, final String password) {
         CreateAuthorization createAuthorization = new CreateAuthorization();
         createAuthorization.scopes = AuthorizationConfig.SCOPES;
@@ -128,7 +122,7 @@ public class AccountModel extends AbstractModel {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    getMainController().getCacheSystem().evict(login);
+                    getMainController().getCacheSystem().evict(login, Cache.Type.INTERNAL);
                     login = null;
                     isSignIn = false;
                     subscriber.onNext(null);
@@ -154,11 +148,11 @@ public class AccountModel extends AbstractModel {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 List<Header> headerList = new ArrayList<>();
-                RequestBody requestBody = RequestBody.create(MediaType.parse(GithubMediaTypes.BasicJson), JsonConverter.toJson(createAuthorization));
+                RequestBody requestBody = RequestBody.create(MediaType.parse(GitHubMediaTypes.BasicJson), JsonConverter.toJson(createAuthorization));
                 String userCredentials = username + ":" + password;
                 String basicAuth = "Basic " + getBase64(userCredentials);
                 headerList.add(new Header("Authorization", basicAuth.trim()));
-                headerList.add(new Header("Accept", GithubMediaTypes.BasicJson));
+                headerList.add(new Header("Accept", GitHubMediaTypes.BasicJson));
 
                 Request request = new Request.Builder<RequestBody>()
                         .method("POST")

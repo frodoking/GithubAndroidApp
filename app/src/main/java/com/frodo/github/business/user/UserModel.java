@@ -39,17 +39,12 @@ public class UserModel extends AbstractModel {
 
     public UserModel(MainController controller) {
         super(controller);
-        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext());
+        final String userAgent = WebSettings.getDefaultUserAgent((Context) getMainController().getMicroContext().getContext());
         webApiProvider = new WebApiProvider(Path.HOST_GITHUB_WEB, userAgent);
     }
 
     @Override
     public void initBusiness() {
-    }
-
-    @Override
-    public String name() {
-        return TAG;
     }
 
     public Observable<User> loadUserWithReactor(final String username) {

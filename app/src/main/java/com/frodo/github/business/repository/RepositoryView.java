@@ -249,7 +249,7 @@ public class RepositoryView extends AbstractUIView {
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
                 arguments.putString("username", repository.owner.login);
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter(), ProfileFragment.class, arguments);
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ProfileFragment.class, arguments);
             }
         });
     }

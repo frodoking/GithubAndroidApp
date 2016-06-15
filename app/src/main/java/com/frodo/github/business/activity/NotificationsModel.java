@@ -31,15 +31,6 @@ public class NotificationsModel extends AbstractModel {
         super(controller);
     }
 
-    @Override
-    public void initBusiness() {
-    }
-
-    @Override
-    public String name() {
-        return TAG;
-    }
-
     public Observable<List<Notification>> loadNotifications() {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override

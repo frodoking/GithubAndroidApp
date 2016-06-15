@@ -77,15 +77,6 @@ public class RepositoryModel extends AbstractModel {
         }
     }
 
-    @Override
-    public void initBusiness() {
-    }
-
-    @Override
-    public String name() {
-        return TAG;
-    }
-
     public Observable<Repo> loadRepositoryDetailWithReactor(final String ownerName, final String repoName) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override

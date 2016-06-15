@@ -38,10 +38,6 @@ public class ExploreModel extends AbstractModel {
         super(controller);
     }
 
-    @Override
-    public void initBusiness() {
-    }
-
     public boolean isEnableCached() {
         return enableCached;
     }

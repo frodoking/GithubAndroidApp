@@ -3,7 +3,7 @@ package com.frodo.github.common;
 /**
  * Created by frodo on 2016/6/3.
  */
-public class GithubMediaTypes {
+public class GitHubMediaTypes {
     public static final String Basic = "application/vnd.github.v3";
     public static final String BasicJson = Basic + "+json";
 

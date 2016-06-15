@@ -48,7 +48,7 @@ public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
 
     @Override
     public void evictAll() {
-        getCacheSystem().evict("");
+        getCacheSystem().evictAll();
     }
 
     private String createAbsoluteKey(String relativeKey) {

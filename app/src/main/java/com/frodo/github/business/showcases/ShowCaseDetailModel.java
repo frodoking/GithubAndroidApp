@@ -28,10 +28,6 @@ public class ShowCaseDetailModel extends AbstractModel {
         super(controller);
     }
 
-    @Override
-    public void initBusiness() {
-    }
-
     public Observable<ShowCase> loadShowCaseDetailWithReactor(final String slug) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override

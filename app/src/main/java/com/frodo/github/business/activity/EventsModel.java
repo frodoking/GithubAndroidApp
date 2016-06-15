@@ -32,15 +32,6 @@ public class EventsModel extends AbstractModel {
         super(controller);
     }
 
-    @Override
-    public void initBusiness() {
-    }
-
-    @Override
-    public String name() {
-        return TAG;
-    }
-
     public Observable<List<GithubEvent>> loadAccountEvents(String accountUser) {
         return loadEventsWithReactor(Path.replace(Path.Activity.USER_EVENTS, new Pair<>("username", accountUser)));
     }
