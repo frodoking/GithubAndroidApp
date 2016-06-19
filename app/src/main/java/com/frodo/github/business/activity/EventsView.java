@@ -85,7 +85,7 @@ public class EventsView extends AbstractUIView {
                 vh.actorOV.setVisibility(View.GONE);
             } else if (event.type.equals(EventType.ReleaseEvent)) {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_tag);
-                vh.titleOV.setText(String.format("%s released to %s at %s", event.actor.login, event.payload.release.name,event.repo.name));
+                vh.titleOV.setText(String.format("%s released to %s at %s", event.actor.login, event.payload.release.name, event.repo.name));
 
                 vh.actorOV.setVisibility(View.VISIBLE);
                 vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));

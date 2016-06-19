@@ -2,6 +2,11 @@ package com.frodo.github.common;
 
 import android.support.v4.util.Pair;
 
+import com.frodo.app.framework.net.Request;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Created by frodo on 2016/4/30.
  */
@@ -18,9 +23,26 @@ public final class Path {
         return url;
     }
 
+    public static void warpRequestMethodAddQueryParam(Request request, String key, String value) {
+        Class<?> requestClass = request.getClass();
+
+        try {
+            Method method = requestClass.getDeclaredMethod("addQueryParam", String.class, String.class, boolean.class, boolean.class);
+            method.setAccessible(true);
+            method.invoke(request, key, value, false, false);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final static class Page{
+        public static final int PER_PAGE = 20;
+    }
+
     public final static class Explore {
         public static final String SHOWCASES = "/v2/showcases";
         public static final String TRENDING = "/v2/trending";
+        public static final String LANGUAGES = "/v2/languages";
     }
 
     public final static class Authentication {

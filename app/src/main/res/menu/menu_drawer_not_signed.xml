@@ -7,12 +7,10 @@
         <item
             android:id="@+id/action_explore"
             android:title="@string/menu_explore"
-            android:icon="@drawable/octicon_telescope"
             android:checkable="true"/>
         <item
             android:id="@+id/action_sign_in"
             android:title="@string/menu_sign_in"
-            android:icon="@drawable/octicon_sign_in"
             android:checkable="true"/>
     </group>
     <group

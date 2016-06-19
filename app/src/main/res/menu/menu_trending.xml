@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_repositories"
+        android:title="@string/menu_repositories"
+        android:icon="@drawable/octicon_repo"/>
+    <item
+        android:id="@+id/action_developers"
+        android:title="@string/menu_developers"
+        android:icon="@drawable/octicon_mark_github"/>
+</menu>

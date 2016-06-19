@@ -4,6 +4,7 @@
 
     <string name="app_name">GitHub</string>
     <string name="menu_notifications">Notifications</string>
+    <string name="menu_trending">Trending</string>
     <string name="menu_explore">Explore</string>
     <string name="menu_sign_in">Sign in</string>
     <string name="menu_sign_out">Sign out</string>
@@ -13,6 +14,7 @@
     <string name="menu_events">Events</string>
     <string name="menu_organizations">Organizations</string>
     <string name="menu_repositories">Repositories</string>
+    <string name="menu_developers">Developers</string>
     <string name="menu_gists">Gists</string>
     <string name="menu_pull_requests">Pull Requests</string>
     <string name="menu_pulse">Pulse</string>
@@ -25,4 +27,10 @@
     <string name="contribute_description">This application is provided by Frodo(Github:frodoking)</string>
     <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id. -->
     <string name="banner_ad_unit_id">ca-app-pub-5257007452683157~9157734222</string>
+
+    <array name="sinceArray">
+        <item>today</item>
+        <item>this week</item>
+        <item>this month</item>
+    </array>
 </resources>

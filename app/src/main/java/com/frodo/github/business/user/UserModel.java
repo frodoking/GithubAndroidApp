@@ -14,7 +14,10 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.task.BackgroundCallTask;
+import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.bean.dto.response.search.ReposSearch;
+import com.frodo.github.bean.dto.response.search.UsersSearch;
 import com.frodo.github.common.Path;
 import com.frodo.github.datasource.WebApiProvider;
 
@@ -33,6 +36,7 @@ import rx.functions.Func2;
 public class UserModel extends AbstractModel {
     public static final String TAG = UserModel.class.getSimpleName();
     private AndroidFetchNetworkDataTask fetchUserNetworkDataTask;
+    private AndroidFetchNetworkDataTask searchUsersNetworkDataTask;
     private BackgroundCallTask fetchUserFromWebTask;
 
     private WebApiProvider webApiProvider;
@@ -181,6 +185,51 @@ public class UserModel extends AbstractModel {
             @Override
             public Boolean call(Response response) {
                 return response.getStatus() == 204;
+            }
+        });
+    }
+
+    public Observable<UsersSearch> searchUsers(final String q, final String sort, final String order){
+        return searchUsers(q, sort, order, -1, -1);
+    }
+
+    public Observable<UsersSearch> searchUsers(final String q, final String sort, final String order, final int page, final int perPage) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.Search.USERS)
+                        .build();
+                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q)? "" : q);
+
+                if (!TextUtils.isEmpty(sort))
+                    Path.warpRequestMethodAddQueryParam(request, "sort", sort);
+                if (!TextUtils.isEmpty(order))
+                    Path.warpRequestMethodAddQueryParam(request, "order", order);
+
+                if (page != -1)
+                    Path.warpRequestMethodAddQueryParam(request, "page", String.valueOf(page));
+
+                if (perPage != -1)
+                    Path.warpRequestMethodAddQueryParam(request, "per_page", String.valueOf(perPage));
+
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                searchUsersNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(searchUsersNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<UsersSearch>>() {
+            @Override
+            public Observable<UsersSearch> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    UsersSearch usersSearch = JsonConverter.convert(rb.string(), new TypeReference<UsersSearch>() {
+                    });
+                    return Observable.just(usersSearch);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
             }
         });
     }

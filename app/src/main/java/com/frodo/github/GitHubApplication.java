@@ -21,6 +21,7 @@ import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.theme.Theme;
 import com.frodo.github.business.account.AccountModel;
+import com.frodo.github.business.ServerConfigurationModel;
 
 import java.io.File;
 import java.util.List;
@@ -75,6 +76,14 @@ public class GitHubApplication extends MultiDexApplication implements Applicatio
             @Override
             public NetworkTransport loadNetworkTransport() {
                 return new SimpleAndroidNetworkSystem(getMainController());
+            }
+
+            @Override
+            public void loadServerConfiguration() {
+                getMainController()
+                        .getModelFactory()
+                        .getOrCreateIfAbsent(ServerConfigurationModel.TAG, ServerConfigurationModel.class, getMainController())
+                        .initBusiness();
             }
         };
     }

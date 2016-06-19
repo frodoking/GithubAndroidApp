@@ -70,7 +70,7 @@ public class IssuesForListViewAdapter extends BaseListViewAdapter<Issue> {
             for (Label label : issue.labels) {
                 TextView labelTV = new TextView(getContext());
                 labelTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                labelTV.setPadding(5,0,5,0);
+                labelTV.setPadding(5, 0, 5, 0);
                 labelTV.setText(label.name);
 
                 try {

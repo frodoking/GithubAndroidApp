@@ -21,8 +21,6 @@ import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.business.repository.RepositoriesForListViewAdapter;
 import com.frodo.github.business.repository.RepositoryFragment;
-import com.frodo.github.business.repository.RepositoryListFragment;
-import com.frodo.github.business.showcases.ShowCaseDetailFragment;
 import com.frodo.github.view.CardViewGroup;
 import com.frodo.github.view.OcticonView;
 import com.mikepenz.octicons_typeface_library.Octicons;
@@ -107,7 +105,7 @@ public class ExploreView extends AbstractUIView {
         trendingRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class);
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), TrendingFragment.class);
             }
         });
     }

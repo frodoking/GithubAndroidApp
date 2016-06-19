@@ -4,9 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.frodo.app.android.ui.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.android.ui.fragment.StatedFragment;
+import com.frodo.github.R;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
@@ -33,6 +39,12 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     private static final String STATE_REPOSITORIES = "state_repositories";
     private ArrayList<ShowCase> showCases;
     private ArrayList<Repo> repositories;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
@@ -75,6 +87,22 @@ public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
     @Override
     public String tag() {
         return "Explore";
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_explore, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_trending:
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getAndroidContext(), TrendingFragment.class);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadDataWithReactor() {

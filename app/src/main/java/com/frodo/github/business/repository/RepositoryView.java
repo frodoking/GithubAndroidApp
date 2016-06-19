@@ -18,7 +18,6 @@ import com.frodo.app.android.core.toolbox.ResourceManager;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.app.framework.toolbox.TextUtils;
-import com.frodo.github.MainActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Content;
 import com.frodo.github.bean.dto.response.Issue;
@@ -244,7 +243,7 @@ public class RepositoryView extends AbstractUIView {
             branchsOV.setText(repository.default_branch);
         branchCommitTV.setText("Latest commit by frodoking 7 days ago");
 
-        ((View)ownerOV.getParent()).setOnClickListener(new View.OnClickListener() {
+        ((View) ownerOV.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
@@ -313,7 +312,7 @@ public class RepositoryView extends AbstractUIView {
             ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.pb);
             progressBar.setProgressDrawable(progressDrawable);
             progressBar.setMax(100);
-            progressBar.setProgress(endSize == 0 ? 100 : (int) (startSize / (startSize+endSize) * 100));
+            progressBar.setProgress(endSize == 0 ? 100 : (int) (startSize / (startSize + endSize) * 100));
 
             View firstView = itemView.findViewById(R.id.first_ll);
             OcticonView startVO = (OcticonView) firstView.findViewById(R.id.title_ov);
@@ -340,7 +339,7 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            ListView issueListView =  (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
+            ListView issueListView = (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
             ll.addView(issueListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());

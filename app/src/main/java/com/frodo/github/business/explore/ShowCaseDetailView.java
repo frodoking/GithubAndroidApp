@@ -1,4 +1,4 @@
-package com.frodo.github.business.showcases;
+package com.frodo.github.business.explore;
 
 import android.content.Context;
 import android.net.Uri;

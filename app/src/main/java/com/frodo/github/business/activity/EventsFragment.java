@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.dto.response.GithubEvent;
-import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
 

@@ -11,7 +11,11 @@ import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
-import com.frodo.github.business.showcases.ShowCaseListCache;
+import com.frodo.github.bean.dto.response.User;
+import com.frodo.github.bean.dto.response.search.ReposSearch;
+import com.frodo.github.bean.dto.response.search.UsersSearch;
+import com.frodo.github.business.repository.RepositoryModel;
+import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
@@ -127,6 +131,28 @@ public class ExploreModel extends AbstractModel {
                 } catch (IOException e) {
                     return Observable.error(e);
                 }
+            }
+        });
+    }
+
+    public Observable<List<User>> loadTrendingDevelopersWithReactor(String since, String language) {
+        String q = TextUtils.isEmpty(language)? "language": String.format("language:%s", language);
+        final UserModel userModel = getMainController().getModelFactory().getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
+        return userModel.searchUsers(q, "followers", null).map(new Func1<UsersSearch, List<User>>() {
+            @Override
+            public List<User> call(UsersSearch usersSearch) {
+                return usersSearch.items;
+            }
+        });
+    }
+
+    public Observable<List<Repo>> loadTrendingRepositoriesWithReactor2(String since, String language) {
+        String q = TextUtils.isEmpty(language)? "language": String.format("language:%s", language);
+        RepositoryModel repositoryModel = getMainController().getModelFactory().getOrCreateIfAbsent(RepositoryModel.TAG, RepositoryModel.class, getMainController());
+        return repositoryModel.searchRepos(q, "stars", null).map(new Func1<ReposSearch, List<Repo>>() {
+            @Override
+            public List<Repo> call(ReposSearch reposSearch) {
+                return reposSearch.items;
             }
         });
     }

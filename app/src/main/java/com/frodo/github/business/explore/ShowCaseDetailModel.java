@@ -1,4 +1,4 @@
-package com.frodo.github.business.showcases;
+package com.frodo.github.business.explore;
 
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;

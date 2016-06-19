@@ -18,6 +18,7 @@ import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.bean.dto.response.PullRequest;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.search.IssuesSearch;
+import com.frodo.github.bean.dto.response.search.ReposSearch;
 import com.frodo.github.common.Path;
 
 import java.io.IOException;
@@ -63,18 +64,6 @@ public class RepositoryModel extends AbstractModel {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(tz);
         return df.format(cal.getTime());
-    }
-
-    public static void warpRequestMethodAddQueryParam(Request request, String key, String value) {
-        Class<?> requestClass = request.getClass();
-
-        try {
-            Method method = requestClass.getDeclaredMethod("addQueryParam", String.class, String.class, boolean.class, boolean.class);
-            method.setAccessible(true);
-            method.invoke(request, key, value, false, false);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 
     public Observable<Repo> loadRepositoryDetailWithReactor(final String ownerName, final String repoName) {
@@ -321,8 +310,6 @@ public class RepositoryModel extends AbstractModel {
     /**
      * List Issues
      *
-     * @param ownerName owner login
-     * @param repoName  repo name
      * @param filter    Indicates which sorts of issues to return. Can be one of:
      *                  assigned: Issues assigned to you
      *                  created: Issues created by you
@@ -480,6 +467,51 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
+    public Observable<ReposSearch> searchRepos(final String q, final String sort, final String order){
+        return searchRepos(q, sort, order, -1, -1);
+    }
+
+    public Observable<ReposSearch> searchRepos(final String q, final String sort, final String order, final int page, final int perPage) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.Search.REPOS)
+                        .build();
+                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q)? "" : q);
+
+                if (!TextUtils.isEmpty(sort))
+                    Path.warpRequestMethodAddQueryParam(request, "sort", sort);
+                if (!TextUtils.isEmpty(order))
+                    Path.warpRequestMethodAddQueryParam(request, "order", order);
+
+                if (page != -1)
+                    Path.warpRequestMethodAddQueryParam(request, "page", String.valueOf(page));
+
+                if (perPage != -1)
+                    Path.warpRequestMethodAddQueryParam(request, "per_page", String.valueOf(perPage));
+
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchSearchNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchSearchNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<ReposSearch>>() {
+            @Override
+            public Observable<ReposSearch> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    ReposSearch reposSearch = JsonConverter.convert(rb.string(), new TypeReference<ReposSearch>() {
+                    });
+                    return Observable.just(reposSearch);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
     public Observable<IssuesSearch> search(final String q, final String sort, final String order) {
         return search(q, sort, order, -1, -1);
     }
@@ -493,18 +525,18 @@ public class RepositoryModel extends AbstractModel {
                         .relativeUrl(Path.Search.ISSUES)
                         .build();
                 if (!TextUtils.isEmpty(q)) {
-                    warpRequestMethodAddQueryParam(request, "q", q);
+                    Path.warpRequestMethodAddQueryParam(request, "q", q);
                 }
                 if (!TextUtils.isEmpty(sort))
-                    warpRequestMethodAddQueryParam(request, "sort", sort);
+                    Path.warpRequestMethodAddQueryParam(request, "sort", sort);
                 if (!TextUtils.isEmpty(order))
-                    warpRequestMethodAddQueryParam(request, "order", order);
+                    Path.warpRequestMethodAddQueryParam(request, "order", order);
 
                 if (page != -1)
-                    warpRequestMethodAddQueryParam(request, "page", String.valueOf(page));
+                    Path.warpRequestMethodAddQueryParam(request, "page", String.valueOf(page));
 
                 if (perPage != -1)
-                    warpRequestMethodAddQueryParam(request, "per_page", String.valueOf(perPage));
+                    Path.warpRequestMethodAddQueryParam(request, "per_page", String.valueOf(perPage));
 
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_GITHUB);
