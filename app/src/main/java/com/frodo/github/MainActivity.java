@@ -1,8 +1,10 @@
 package com.frodo.github;
 
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.frodo.app.android.core.toolbox.PermissionChecker;
 import com.frodo.app.android.core.toolbox.ScreenUtils;
 import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.android.ui.activity.FragmentContainerActivity;
@@ -57,6 +60,25 @@ public class MainActivity extends FragmentContainerActivity {
 
     private AccountModel accountModel;
     private UserModel userModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        PermissionChecker.verifyStoragePermissions(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PermissionChecker.REQUEST_EXTERNAL_STORAGE:
+                boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                getMainController().getLogCollector().enableCollect(writeAccepted);
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public int getLayoutId() {

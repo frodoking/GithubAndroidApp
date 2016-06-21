@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.github.R;
+import com.frodo.github.bean.dto.response.Commit;
 import com.frodo.github.bean.dto.response.GithubEvent;
+import com.frodo.github.bean.dto.response.ReleaseAsset;
 import com.frodo.github.bean.dto.response.events.EventType;
 import com.frodo.github.business.AbstractUIView;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
@@ -89,14 +91,48 @@ public class EventsView extends AbstractUIView {
 
                 vh.actorOV.setVisibility(View.VISIBLE);
                 vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
-                vh.actorOV.setText(event.payload.release.assets.get(0).name);
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < event.payload.release.assets.size(); i++) {
+                    ReleaseAsset asset = event.payload.release.assets.get(i);
+                    sb.append(asset.name);
+                    if (i != event.payload.release.assets.size() - 1) {
+                        sb.append("\n");
+                    }
+                }
+                vh.actorOV.setText(sb);
             } else if (event.type.equals(EventType.PushEvent)) {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_git_commit);
                 vh.titleOV.setText(String.format("%s pushed to %s at %s", event.actor.login, event.payload.ref, event.repo.name));
 
                 vh.actorOV.setVisibility(View.VISIBLE);
                 vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
-                vh.actorOV.setText(event.payload.commits.get(0).message);
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < event.payload.commits.size(); i++) {
+                    Commit commit = event.payload.commits.get(i);
+                    sb.append(commit.message);
+                    if (i != event.payload.commits.size() - 1) {
+                        sb.append("\n");
+                    }
+                }
+                vh.actorOV.setText(sb);
+            } else if (event.type.equals(EventType.PullRequestEvent)) {
+                vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_git_pull_request);
+
+                if (event.payload.action.equalsIgnoreCase("closed")) {
+                    vh.titleOV.setText(String.format("%s merged pull request %s#%s", event.actor.login, event.repo.name, event.payload.number));
+                }else if (event.payload.action.equalsIgnoreCase("opened")) {
+                    vh.titleOV.setText(String.format("%s opened pull request %s#%s", event.actor.login, event.repo.name, event.payload.number));
+                }
+
+                vh.actorOV.setVisibility(View.VISIBLE);
+                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
+
+                vh.actorOV.setText(String.format("%s commits with %s additions and %s deletions",
+                        event.payload.pull_request.commits,
+                        event.payload.pull_request.additions,
+                        event.payload.pull_request.deletions));
             } else {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_unmute);
                 vh.titleOV.setText("unknown");

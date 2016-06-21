@@ -14,6 +14,8 @@ import com.frodo.github.common.Path;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -65,7 +67,7 @@ public class ServerConfigurationModel extends AbstractModel {
                 final NetworkTransport networkTransport = getMainController().getNetworkTransport();
                 networkTransport.setAPIUrl(Path.HOST_CODEHUB);
                 AndroidFetchNetworkDataTask task = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(task);
+                Future f = getMainController().getBackgroundExecutor().execute(task);
             }
         }).flatMap(new Func1<Response, Observable<List<GithubLanguage>>>() {
             @Override
