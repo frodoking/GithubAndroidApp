@@ -104,7 +104,7 @@ public class UserModel extends AbstractModel {
                     public User runAsync() {
                         try {
                             return webApiProvider.getUser(username);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             subscriber.onError(e);
                             return null;
                         }
@@ -189,7 +189,7 @@ public class UserModel extends AbstractModel {
         });
     }
 
-    public Observable<UsersSearch> searchUsers(final String q, final String sort, final String order){
+    public Observable<UsersSearch> searchUsers(final String q, final String sort, final String order) {
         return searchUsers(q, sort, order, -1, -1);
     }
 
@@ -201,7 +201,7 @@ public class UserModel extends AbstractModel {
                         .method("GET")
                         .relativeUrl(Path.Search.USERS)
                         .build();
-                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q)? "" : q);
+                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q) ? "" : q);
 
                 if (!TextUtils.isEmpty(sort))
                     Path.warpRequestMethodAddQueryParam(request, "sort", sort);

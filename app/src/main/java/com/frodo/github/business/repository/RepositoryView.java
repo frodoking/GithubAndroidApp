@@ -2,12 +2,14 @@ package com.frodo.github.business.repository;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -72,7 +74,7 @@ public class RepositoryView extends AbstractUIView {
     private Repo repo;
 
     public RepositoryView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_repository);
+        super(presenter, inflater, container, R.layout.uiview_repository);
         emptyLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ResourceManager.getDimensionPixelSize(R.dimen.item_height_default));
         int margin = ResourceManager.getDimensionPixelSize(R.dimen.margin_middle);
@@ -346,10 +348,12 @@ public class RepositoryView extends AbstractUIView {
             issueListView.setAdapter(adapter);
             adapter.refreshObjects(issues);
 
-            issuesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+            issueListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View v) {
-                    //
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bundle arguments = new Bundle();
+                    arguments.putParcelable("issue", (Parcelable) parent.getItemAtPosition(position));
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), CommentsFragment.class, arguments);
                 }
             });
         }
@@ -371,13 +375,6 @@ public class RepositoryView extends AbstractUIView {
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
             issueListView.setAdapter(adapter);
             adapter.refreshObjects(pullRequests);
-
-            pullRequestsCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //
-                }
-            });
         }
     }
 

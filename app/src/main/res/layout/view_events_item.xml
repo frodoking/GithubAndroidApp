@@ -50,5 +50,5 @@
 
     <View
         style="@style/LineStyle"
-        android:layout_marginLeft="31dp"  />
+        android:layout_marginLeft="31dp" />
 </LinearLayout>

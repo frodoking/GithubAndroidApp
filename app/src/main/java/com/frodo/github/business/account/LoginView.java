@@ -23,7 +23,7 @@ public class LoginView extends UIView {
     private Button loginBtn;
 
     public LoginView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_login);
+        super(presenter, inflater, container, R.layout.uiview_login);
     }
 
     @Override

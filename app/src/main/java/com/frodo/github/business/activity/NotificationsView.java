@@ -28,7 +28,7 @@ public class NotificationsView extends AbstractUIView {
     private NotificationsAdapter adapter;
 
     public NotificationsView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_notifications);
+        super(presenter, inflater, container, R.layout.uiview_notifications);
     }
 
     @Override

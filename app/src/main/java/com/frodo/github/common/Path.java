@@ -84,6 +84,8 @@ public final class Path {
         public static final String REPOS_CONTENTS = REPOS_FULLNAME + "/contents/{path}";
         public static final String REPOS_LABELS = REPOS_FULLNAME + "/labels";
         public static final String REPOS_ISSUES = REPOS_FULLNAME + "/issues";
+        public static final String REPOS_ISSUES_NUMBER = REPOS_ISSUES + "/{number}";
+        public static final String REPOS_ISSUES_NUMBER_COMMENTS = REPOS_ISSUES_NUMBER + "/comments";
         public static final String REPOS_PULLS = REPOS_FULLNAME + "/pulls";
 
         public static final String REPOS_STARGAZERS = REPOS_FULLNAME + "/stargazers";

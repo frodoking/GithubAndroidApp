@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:gravity="center">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center">
 
     <com.frodo.github.view.OcticonView
         android:id="@+id/repo_view_code_ov"
@@ -18,9 +18,9 @@
         app:iiv_color="?attr/colorPrimary"
         android:textSize="@dimen/text_size_middle"
         android:textColor="?attr/colorPrimary"
-        android:text="View code"/>
+        android:text="View code" />
 
-    <View style="@style/LineVStyle"/>
+    <View style="@style/LineVStyle" />
 
     <com.frodo.github.view.OcticonView
         android:id="@+id/repo_jump_to_file_ov"
@@ -34,5 +34,5 @@
         app:iiv_color="?attr/colorPrimary"
         android:textSize="@dimen/text_size_middle"
         android:textColor="?attr/colorPrimary"
-        android:text="Jump to file"/>
+        android:text="Jump to file" />
 </LinearLayout>

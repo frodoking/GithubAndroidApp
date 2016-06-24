@@ -136,7 +136,7 @@ public class ExploreModel extends AbstractModel {
     }
 
     public Observable<List<User>> loadTrendingDevelopersWithReactor(String since, String language) {
-        String q = TextUtils.isEmpty(language)? "language": String.format("language:%s", language);
+        String q = TextUtils.isEmpty(language) ? "language" : String.format("language:%s", language);
         final UserModel userModel = getMainController().getModelFactory().getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController());
         return userModel.searchUsers(q, "followers", null).map(new Func1<UsersSearch, List<User>>() {
             @Override
@@ -147,7 +147,7 @@ public class ExploreModel extends AbstractModel {
     }
 
     public Observable<List<Repo>> loadTrendingRepositoriesWithReactor2(String since, String language) {
-        String q = TextUtils.isEmpty(language)? "language": String.format("language:%s", language);
+        String q = TextUtils.isEmpty(language) ? "language" : String.format("language:%s", language);
         RepositoryModel repositoryModel = getMainController().getModelFactory().getOrCreateIfAbsent(RepositoryModel.TAG, RepositoryModel.class, getMainController());
         return repositoryModel.searchRepos(q, "stars", null).map(new Func1<ReposSearch, List<Repo>>() {
             @Override

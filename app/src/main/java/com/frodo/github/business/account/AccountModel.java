@@ -122,7 +122,7 @@ public class AccountModel extends AbstractModel {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    getMainController().getCacheSystem().evict(login, Cache.Type.INTERNAL);
+                    getMainController().getCacheSystem().evict(getBase64(login).trim(), Cache.Type.INTERNAL);
                     login = null;
                     isSignIn = false;
                     subscriber.onNext(null);

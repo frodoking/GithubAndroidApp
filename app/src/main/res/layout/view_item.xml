@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -21,7 +20,7 @@
         android:textStyle="bold"
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/text_size_middle"
-        app:iconDirection="start"/>
+        app:iconDirection="start" />
 
 
     <com.frodo.github.view.OcticonView
@@ -31,6 +30,6 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"
         android:textColor="@android:color/darker_gray"
-        app:iconDirection="end"/>
+        app:iconDirection="end" />
 
 </LinearLayout>

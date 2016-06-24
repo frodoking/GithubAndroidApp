@@ -14,13 +14,11 @@ import com.frodo.github.common.Path;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -42,18 +40,22 @@ public class ServerConfigurationModel extends AbstractModel {
     public void initBusiness() {
         loadLanguagesWithReactor()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<GithubLanguage>>() {
                     @Override
                     public void call(List<GithubLanguage> list) {
                         languages = list;
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        languages = defaultLanguages();
+                        throwable.printStackTrace();
+                    }
                 });
-
     }
 
     public List<GithubLanguage> getLanguages() {
-        return languages==null || languages.isEmpty()? defaultLanguages():languages;
+        return languages == null || languages.isEmpty() ? defaultLanguages() : languages;
     }
 
     private Observable<List<GithubLanguage>> loadLanguagesWithReactor() {

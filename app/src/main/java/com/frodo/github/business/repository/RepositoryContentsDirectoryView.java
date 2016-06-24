@@ -32,7 +32,7 @@ public class RepositoryContentsDirectoryView extends AbstractUIView {
     private BaseListViewAdapter adapter;
 
     public RepositoryContentsDirectoryView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_repository_contents_directory);
+        super(presenter, inflater, container, R.layout.uiview_repository_contents_directory);
     }
 
     @Override

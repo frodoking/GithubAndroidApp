@@ -35,7 +35,7 @@ public class TrendingView extends AbstractUIView {
     private RepositoriesForListViewAdapter repositoriesForListViewAdapter;
 
     public TrendingView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_trending);
+        super(presenter, inflater, container, R.layout.uiview_trending);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TrendingView extends AbstractUIView {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 GithubLanguage language = (GithubLanguage) parent.getItemAtPosition(position);
-                ((TrendingFragment)getPresenter()).loadListBy(language.slug);
+                ((TrendingFragment) getPresenter()).loadListBy(language.slug);
             }
 
             @Override

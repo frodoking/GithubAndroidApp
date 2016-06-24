@@ -51,7 +51,7 @@ android {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
-    compile "com.github.frodoking:app-architecture-android:1.2.6-SNAPSHOT"
+    compile "com.github.frodoking:app-architecture-android:1.2.8-LOCAL-SNAPSHOT"
     compile "com.facebook.fresco:animated-gif:0.10.0"
     compile project(':websource')
 

@@ -13,6 +13,7 @@ import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.dto.response.Content;
+import com.frodo.github.bean.dto.response.GithubComment;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.bean.dto.response.PullRequest;
@@ -51,6 +52,7 @@ public class RepositoryModel extends AbstractModel {
     private AndroidFetchNetworkDataTask fetchContentNetworkDataTask;
 
     private AndroidFetchNetworkDataTask fetchSearchNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchCommentsNetworkDataTask;
 
     public RepositoryModel(MainController controller) {
         super(controller);
@@ -467,7 +469,7 @@ public class RepositoryModel extends AbstractModel {
         });
     }
 
-    public Observable<ReposSearch> searchRepos(final String q, final String sort, final String order){
+    public Observable<ReposSearch> searchRepos(final String q, final String sort, final String order) {
         return searchRepos(q, sort, order, -1, -1);
     }
 
@@ -479,7 +481,7 @@ public class RepositoryModel extends AbstractModel {
                         .method("GET")
                         .relativeUrl(Path.Search.REPOS)
                         .build();
-                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q)? "" : q);
+                Path.warpRequestMethodAddQueryParam(request, "q", TextUtils.isEmpty(q) ? "" : q);
 
                 if (!TextUtils.isEmpty(sort))
                     Path.warpRequestMethodAddQueryParam(request, "sort", sort);
@@ -551,6 +553,38 @@ public class RepositoryModel extends AbstractModel {
                     IssuesSearch issuesSearch = JsonConverter.convert(rb.string(), new TypeReference<IssuesSearch>() {
                     });
                     return Observable.just(issuesSearch);
+                } catch (IOException e) {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
+
+    public Observable<List<GithubComment>> listComments(final String ownerName, final String repoName, final int number) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+                Request request = new Request.Builder()
+                        .method("GET")
+                        .relativeUrl(Path.replace(Path.Repositories.REPOS_ISSUES_NUMBER_COMMENTS,
+                                new Pair<>("owner", ownerName),
+                                new Pair<>("repo", repoName),
+                                new Pair<>("number", String.valueOf(number))))
+                        .build();
+
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_GITHUB);
+                fetchCommentsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+                getMainController().getBackgroundExecutor().execute(fetchCommentsNetworkDataTask);
+            }
+        }).flatMap(new Func1<Response, Observable<List<GithubComment>>>() {
+            @Override
+            public Observable<List<GithubComment>> call(Response response) {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try {
+                    List<GithubComment> pulls = JsonConverter.convert(rb.string(), new TypeReference<List<GithubComment>>() {
+                    });
+                    return Observable.just(pulls);
                 } catch (IOException e) {
                     return Observable.error(e);
                 }

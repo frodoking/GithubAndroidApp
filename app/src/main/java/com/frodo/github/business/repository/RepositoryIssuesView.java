@@ -22,7 +22,7 @@ public class RepositoryIssuesView extends AbstractUIView {
     private IssuesForListViewAdapter adapter;
 
     public RepositoryIssuesView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_repository_issues);
+        super(presenter, inflater, container, R.layout.uiview_repository_issues);
     }
 
     @Override

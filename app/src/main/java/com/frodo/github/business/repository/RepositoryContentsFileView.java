@@ -20,7 +20,7 @@ public class RepositoryContentsFileView extends AbstractUIView {
     private MarkdownView contentsMDV;
 
     public RepositoryContentsFileView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_repository_contents_file);
+        super(presenter, inflater, container, R.layout.uiview_repository_contents_file);
     }
 
     @Override

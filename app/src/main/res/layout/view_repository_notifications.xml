@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,8 +21,7 @@
             android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/text_size_middle"
             android:text="Not Watching"
-            app:iconDirection="start"
-            />
+            app:iconDirection="start" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,10 +29,10 @@
             android:layout_marginLeft="21dp"
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/darker_gray"
-            android:text="Be notified when participating or @mentioned."/>
+            android:text="Be notified when participating or @mentioned." />
     </LinearLayout>
 
-    <View style="@style/LineStyle"/>
+    <View style="@style/LineStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,8 +52,7 @@
             android:textSize="@dimen/text_size_middle"
             android:text="Watching"
             app:iconDirection="start"
-            app:iiv_icon="oct_check"
-            />
+            app:iiv_icon="oct_check" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -62,10 +60,10 @@
             android:layout_marginLeft="21dp"
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/darker_gray"
-            android:text="Be notified of all conversations."/>
+            android:text="Be notified of all conversations." />
     </LinearLayout>
 
-    <View style="@style/LineStyle"/>
+    <View style="@style/LineStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,8 +82,7 @@
             android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/text_size_middle"
             android:text="Ignoring"
-            app:iconDirection="start"
-            />
+            app:iconDirection="start" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,6 +90,6 @@
             android:layout_marginLeft="21dp"
             android:textSize="@dimen/text_size_xxsmall"
             android:textColor="@android:color/darker_gray"
-            android:text="Never be notified."/>
+            android:text="Never be notified." />
     </LinearLayout>
 </LinearLayout>

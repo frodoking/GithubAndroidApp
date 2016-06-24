@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         app:iiv_icon="oct_issue_opened"
-        app:iiv_color="@android:color/holo_green_light"/>
+        app:iiv_color="@android:color/holo_green_light" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -31,19 +30,19 @@
             android:textSize="@dimen/text_size_middle"
             android:textStyle="bold"
             android:includeFontPadding="false"
-            android:textColor="?attr/colorPrimary"/>
+            android:textColor="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/state_info_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_xxsmall"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
         <com.frodo.github.view.FlowLayout
             android:id="@+id/labels_ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
@@ -51,5 +50,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xxsmall"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@android:color/darker_gray" />
 </LinearLayout>

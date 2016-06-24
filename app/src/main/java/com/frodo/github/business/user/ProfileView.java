@@ -56,7 +56,7 @@ public class ProfileView extends AbstractUIView {
     private RepositoriesForListViewAdapter contributedToRepositoryAdapter;
 
     public ProfileView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_profile);
+        super(presenter, inflater, container, R.layout.uiview_profile);
     }
 
     @Override
@@ -172,13 +172,13 @@ public class ProfileView extends AbstractUIView {
         });
     }
 
-    public void showRepositoryList(ListView listView, RepositoriesForListViewAdapter adapter, List<Repo> repositories) {
+    private void showRepositoryList(ListView listView, RepositoriesForListViewAdapter adapter, List<Repo> repositories) {
         if (repositories != null && !repositories.isEmpty()) {
             adapter.refreshObjects(repositories);
             adapter.notifyDataSetChanged();
             ((View) listView.getParent().getParent()).setVisibility(View.VISIBLE);
         } else {
-            ((View) listView.getParent().getParent()).setVisibility(View.INVISIBLE);
+            ((View) listView.getParent().getParent()).setVisibility(View.GONE);
         }
     }
 }

@@ -42,7 +42,7 @@ public class ExploreView extends AbstractUIView {
     private RepositoriesForListViewAdapter repositoryAdapter;
 
     public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_explore);
+        super(presenter, inflater, container, R.layout.uiview_explore);
     }
 
     @Override

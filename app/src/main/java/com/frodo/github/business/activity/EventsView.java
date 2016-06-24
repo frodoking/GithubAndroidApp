@@ -83,7 +83,7 @@ public class EventsView extends AbstractUIView {
                 vh.actorOV.setVisibility(View.GONE);
             } else if (event.type.equals(EventType.ForkEvent)) {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_git_branch);
-                vh.titleOV.setText(String.format("%s forked %s", event.actor.login, event.repo.name));
+                vh.titleOV.setText(String.format("%s forked %s to %s", event.actor.login, event.repo.name, event.payload.forkee.full_name));
                 vh.actorOV.setVisibility(View.GONE);
             } else if (event.type.equals(EventType.ReleaseEvent)) {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_tag);
@@ -122,7 +122,7 @@ public class EventsView extends AbstractUIView {
 
                 if (event.payload.action.equalsIgnoreCase("closed")) {
                     vh.titleOV.setText(String.format("%s merged pull request %s#%s", event.actor.login, event.repo.name, event.payload.number));
-                }else if (event.payload.action.equalsIgnoreCase("opened")) {
+                } else if (event.payload.action.equalsIgnoreCase("opened")) {
                     vh.titleOV.setText(String.format("%s opened pull request %s#%s", event.actor.login, event.repo.name, event.payload.number));
                 }
 
@@ -133,6 +133,18 @@ public class EventsView extends AbstractUIView {
                         event.payload.pull_request.commits,
                         event.payload.pull_request.additions,
                         event.payload.pull_request.deletions));
+            } else if (event.type.equals(EventType.IssuesEvent)) {
+                if (event.payload.action.equalsIgnoreCase("closed")) {
+                    vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_issue_closed);
+                    vh.titleOV.setText(String.format("%s closed issue%s#%s", event.actor.login, event.repo.name, event.payload.issue.number));
+                } else if (event.payload.action.equalsIgnoreCase("opened")) {
+                    vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_issue_opened);
+                    vh.titleOV.setText(String.format("%s opened issue%s#%s", event.actor.login, event.repo.name, event.payload.issue.number));
+                }
+
+                vh.actorOV.setVisibility(View.VISIBLE);
+                vh.actorOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(event.actor.avatar_url));
+                vh.actorOV.setText(event.payload.issue.title);
             } else {
                 vh.titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_unmute);
                 vh.titleOV.setText("unknown");

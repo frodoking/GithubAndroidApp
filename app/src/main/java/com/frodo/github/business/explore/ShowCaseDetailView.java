@@ -34,7 +34,7 @@ public class ShowCaseDetailView extends AbstractUIView {
     private Adapter repositoryAdapter;
 
     public ShowCaseDetailView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.fragment_showcase_detail);
+        super(presenter, inflater, container, R.layout.uiview_showcase_detail);
     }
 
     @Override

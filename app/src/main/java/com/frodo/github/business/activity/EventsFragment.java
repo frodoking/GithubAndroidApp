@@ -30,6 +30,8 @@ public class EventsFragment extends StatedFragment<EventsView, EventsModel> {
     private String repoOwner;
     private String repo;
 
+    private String title = "Events";
+
     @Override
     public EventsView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new EventsView(this, inflater, container);
@@ -46,11 +48,10 @@ public class EventsFragment extends StatedFragment<EventsView, EventsModel> {
         getUIView().showDetail(stateContents);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Events");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -67,6 +68,7 @@ public class EventsFragment extends StatedFragment<EventsView, EventsModel> {
                 if (argsArray[1].equalsIgnoreCase("account")) {
                     observable = getModel().loadAccountEvents(argsArray[2]);
                 } else if (argsArray[1].equalsIgnoreCase("user")) {
+                    title = "News";
                     observable = getModel().loadReceivedEvents(argsArray[2]);
                 } else if (argsArray[1].equalsIgnoreCase("repo")) {
                     repoOwner = argsArray[2];

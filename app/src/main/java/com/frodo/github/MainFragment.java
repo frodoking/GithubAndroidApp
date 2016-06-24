@@ -18,7 +18,7 @@ public class MainFragment extends StatedFragment {
 
     @Override
     public UIView createUIView(final Context context, LayoutInflater inflater, ViewGroup container) {
-        return new UIView(this, inflater, container, R.layout.fragment_main) {
+        return new UIView(this, inflater, container, R.layout.uiview_main) {
 
             @Override
             public void initView() {

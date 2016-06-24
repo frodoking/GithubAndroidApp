@@ -109,6 +109,7 @@ public class MainActivity extends FragmentContainerActivity {
                 if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                     drawerLayout.openDrawer(GravityCompat.START);
                 } else {
+                    toolbar.setTitle("GitHub");
                     MainActivity.super.onBackPressed();
                 }
             }
@@ -121,7 +122,7 @@ public class MainActivity extends FragmentContainerActivity {
                     String login = accountModel.getSignInUser();
                     Bundle arguments = new Bundle();
                     arguments.putString("username", login);
-                    FragmentScheduler.nextFragment(MainActivity.this, ProfileFragment.class, arguments);
+                    FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, ProfileFragment.class, arguments);
                 } else {
                     FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
                 }
@@ -145,7 +146,7 @@ public class MainActivity extends FragmentContainerActivity {
                         Bundle bundle;
                         switch (menuItem.getItemId()) {
                             case R.id.action_notifications:
-                                FragmentScheduler.replaceFragment(MainActivity.this, NotificationsFragment.class);
+                                FragmentScheduler.nextFragment(MainActivity.this, NotificationsFragment.class);
                                 break;
                             case R.id.action_sign_in:
                                 FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
@@ -154,27 +155,27 @@ public class MainActivity extends FragmentContainerActivity {
                                 onLogout();
                                 break;
                             case R.id.action_explore:
-                                FragmentScheduler.replaceFragment(MainActivity.this, ExploreFragment.class);
+                                FragmentScheduler.nextFragment(MainActivity.this, ExploreFragment.class);
                                 break;
                             case R.id.action_news:
                                 bundle = new Bundle();
                                 bundle.putString("events_args", String.format("events_user_%s", accountModel.getSignInUser()));
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
+                                FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
                                 break;
                             case R.id.action_issues:
                                 bundle = new Bundle();
                                 bundle.putString("issues_args", "issues_account");
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, RepositoryIssuesFragment.class, bundle);
+                                FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, RepositoryIssuesFragment.class, bundle);
                                 break;
                             case R.id.action_events:
                                 bundle = new Bundle();
                                 bundle.putString("events_args", String.format("events_account_%s", accountModel.getSignInUser()));
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
+                                FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, EventsFragment.class, bundle);
                                 break;
                             case R.id.action_repositories:
                                 bundle = new Bundle();
                                 bundle.putString("repos_args", String.format("repos_user_%s", accountModel.getSignInUser()));
-                                FragmentScheduler.replaceFragmentWithUniqueTag(MainActivity.this, RepositoryListFragment.class, bundle);
+                                FragmentScheduler.nextFragmentWithUniqueTag(MainActivity.this, RepositoryListFragment.class, bundle);
                                 break;
                             case R.id.action_author:
                                 bundle = new Bundle();
@@ -184,19 +185,20 @@ public class MainActivity extends FragmentContainerActivity {
                             case R.id.action_iconics_test:
                                 bundle = new Bundle();
                                 bundle.putString("api", "IconicsTest");
-                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.nextFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_icon_api:
                                 bundle = new Bundle();
                                 bundle.putString("api", "StaticOcticons");
-                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.nextFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             case R.id.action_jsoup_api:
                                 bundle = new Bundle();
                                 bundle.putString("api", "JsoupApi");
-                                FragmentScheduler.replaceFragment(MainActivity.this, ApiFragment.class, bundle);
+                                FragmentScheduler.nextFragment(MainActivity.this, ApiFragment.class, bundle);
                                 break;
                             default:
+                                toolbar.setTitle("GitHub");
                                 ViewProvider.wrapNotImplementFeature(MainActivity.this, null);
                                 break;
                         }
@@ -289,7 +291,7 @@ public class MainActivity extends FragmentContainerActivity {
             navigationView.inflateMenu(R.menu.menu_drawer_already_signed);
         } else {
             headSDV.setImageURI(null);
-            loginTV.setText("Github");
+            loginTV.setText("GitHub");
             repoTV.setText("https://github.com");
 
             navigationView.getMenu().clear();
