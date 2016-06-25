@@ -3,23 +3,29 @@ package com.frodo.github.business.repository;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.core.toolbox.DrawableProvider;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.android.ui.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.GithubComment;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.bean.dto.response.IssueState;
 import com.frodo.github.bean.dto.response.Label;
 import com.frodo.github.business.AbstractUIView;
+import com.frodo.github.business.user.ProfileFragment;
 import com.frodo.github.view.BaseRecyclerViewAdapter;
 import com.frodo.github.view.FlowLayout;
 import com.frodo.github.view.FrescoAndIconicsImageView;
@@ -157,12 +163,23 @@ public class CommentsView extends AbstractUIView {
 
             holder.userOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(comment.user.avatar_url));
             holder.userOV.setText(comment.user.login);
+            holder.dateOV.setText(comment.created_at.toLocaleString());
             holder.bodyMDV.loadMarkdown(comment.body);
+
+            ((View)holder.userOV.getParent()).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString("username", comment.user.login);
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getContext(), ProfileFragment.class, arguments);
+                }
+            });
         }
 
         class CommentsViewHolder extends RecyclerView.ViewHolder {
             int viewType;
 
+            // HEAD
             OcticonView stateOV;
             TextView titleTV;
             FrescoAndIconicsImageView headFIIV;
@@ -171,7 +188,9 @@ public class CommentsView extends AbstractUIView {
             FlowLayout labelsFL;
             MarkdownView bodyMDVMaster;
 
+            // ITEM
             OcticonView userOV;
+            OcticonView dateOV;
             MarkdownView bodyMDV;
 
             CommentsViewHolder(View itemView, int viewType) {
@@ -188,11 +207,13 @@ public class CommentsView extends AbstractUIView {
                     labelsFL = (FlowLayout) itemView.findViewById(R.id.labels_ll);
                     bodyMDVMaster = (MarkdownView) itemView.findViewById(R.id.body_mdv);
                 } else {
-                    userOV = (OcticonView) itemView.findViewById(R.id.user_ov);
+                    userOV = (OcticonView) itemView.findViewById(R.id.title_ov);
+                    userOV.resizeIcon(ResourceManager.getDimensionPixelSize(R.dimen.image_size_default));
+                    dateOV = (OcticonView) itemView.findViewById(R.id.subtitle_ov);
+                    dateOV.noIcon();
                     userOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_mark_github);
                     bodyMDV = (MarkdownView) itemView.findViewById(R.id.body_mdv);
                 }
-
             }
         }
     }

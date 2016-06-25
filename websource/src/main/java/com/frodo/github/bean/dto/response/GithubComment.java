@@ -13,7 +13,7 @@ public class GithubComment extends ShaUrl implements Parcelable {
     private static final int MAX_MESSAGE_LENGHT = 146;
     public String id;
     public String body;
-    public String body_html;
+    public String issue_url;
     public User user;
     public Date created_at;
     public Date updated_at;
@@ -25,7 +25,7 @@ public class GithubComment extends ShaUrl implements Parcelable {
         super(in);
         this.id = in.readString();
         this.body = in.readString();
-        this.body_html = in.readString();
+        this.issue_url = in.readString();
         this.user = in.readParcelable(User.class.getClassLoader());
         long tmpCreated_at = in.readLong();
         this.created_at = tmpCreated_at == -1 ? null : new Date(tmpCreated_at);
@@ -66,7 +66,7 @@ public class GithubComment extends ShaUrl implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(this.id);
         dest.writeString(this.body);
-        dest.writeString(this.body_html);
+        dest.writeString(this.issue_url);
         dest.writeParcelable(this.user, 0);
         dest.writeLong(created_at != null ? created_at.getTime() : -1);
         dest.writeLong(updated_at != null ? updated_at.getTime() : -1);

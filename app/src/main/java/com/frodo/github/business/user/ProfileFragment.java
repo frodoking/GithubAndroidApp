@@ -116,4 +116,11 @@ public class ProfileFragment extends StatedFragment<ProfileView, UserModel> {
                             }
                         });
     }
+
+    public void doFollow(String username) {
+        getModel().doFollow(username)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
 }

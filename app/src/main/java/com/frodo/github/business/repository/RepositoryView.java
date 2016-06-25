@@ -369,12 +369,21 @@ public class RepositoryView extends AbstractUIView {
             textView.setGravity(Gravity.CENTER_VERTICAL);
             ll.addView(textView, emptyLayoutParams);
         } else {
-            ListView issueListView = (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
-            ll.addView(issueListView);
+            ListView prListView = (ListView) View.inflate(getPresenter().getAndroidContext(), R.layout.view_maxheight_listview, null);
+            ll.addView(prListView);
 
             BaseListViewAdapter adapter = new IssuesForListViewAdapter(getPresenter().getAndroidContext());
-            issueListView.setAdapter(adapter);
+            prListView.setAdapter(adapter);
             adapter.refreshObjects(pullRequests);
+
+            prListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bundle arguments = new Bundle();
+                    arguments.putParcelable("issue", (Parcelable) parent.getItemAtPosition(position));
+                    FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), CommentsFragment.class, arguments);
+                }
+            });
         }
     }
 

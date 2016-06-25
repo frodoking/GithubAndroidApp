@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,11 +31,13 @@ public class Issue extends GithubComment implements Parcelable {
     public User assignee;
     public Milestone milestone;
     public int comments;
-    @JsonProperty("pull_request")
-    public PullRequest pullRequest;
-    @JsonProperty("closed_at")
-    public String closedAt;
-    public Repo repository;
+    public PullRequest pull_request;
+    public Date closed_at;
+    public User closed_by;
+    public String repository_url;
+    public String labels_url;
+    public String comments_url;
+    public String events_url;
 
     public Issue() {
     }
@@ -50,9 +53,14 @@ public class Issue extends GithubComment implements Parcelable {
         this.assignee = in.readParcelable(User.class.getClassLoader());
         this.milestone = in.readParcelable(Milestone.class.getClassLoader());
         this.comments = in.readInt();
-        this.pullRequest = in.readParcelable(PullRequest.class.getClassLoader());
-        this.closedAt = in.readString();
-        this.repository = in.readParcelable(Repo.class.getClassLoader());
+        this.pull_request = in.readParcelable(PullRequest.class.getClassLoader());
+        long tmpClosed_at = in.readLong();
+        this.closed_at = tmpClosed_at == -1 ? null : new Date(tmpClosed_at);
+        this.closed_by = in.readParcelable(User.class.getClassLoader());
+        this.repository_url = in.readString();
+        this.labels_url = in.readString();
+        this.comments_url = in.readString();
+        this.events_url = in.readString();
     }
 
     @Override
@@ -71,8 +79,13 @@ public class Issue extends GithubComment implements Parcelable {
         dest.writeParcelable(this.assignee, 0);
         dest.writeParcelable(this.milestone, 0);
         dest.writeInt(this.comments);
-        dest.writeParcelable(this.pullRequest, 0);
-        dest.writeString(this.closedAt);
-        dest.writeParcelable(this.repository, 0);
+        dest.writeParcelable(this.pull_request, 0);
+        dest.writeLong(closed_at != null ? closed_at.getTime() : -1);
+        dest.writeParcelable(this.closed_by, 0);
+
+        dest.writeString(this.repository_url);
+        dest.writeString(this.labels_url);
+        dest.writeString(this.comments_url);
+        dest.writeString(this.events_url);
     }
 }

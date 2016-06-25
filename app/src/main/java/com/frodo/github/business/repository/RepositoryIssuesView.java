@@ -1,11 +1,17 @@
 package com.frodo.github.business.repository;
 
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import com.frodo.app.android.core.AndroidUIViewController;
+import com.frodo.app.android.ui.FragmentScheduler;
+import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.business.AbstractUIView;
@@ -52,6 +58,14 @@ public class RepositoryIssuesView extends AbstractUIView {
                     default:
                         break;
                 }
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle arguments = new Bundle();
+                arguments.putParcelable("issue", (Parcelable) parent.getItemAtPosition(position));
+                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), CommentsFragment.class, arguments);
             }
         });
     }

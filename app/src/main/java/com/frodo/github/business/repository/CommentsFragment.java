@@ -11,6 +11,7 @@ import com.frodo.github.bean.dto.response.Issue;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,6 +24,10 @@ import rx.schedulers.Schedulers;
  */
 
 public class CommentsFragment extends StatedFragment<CommentsView, RepositoryModel> {
+
+    private Issue issue;
+    private ArrayList<GithubComment> comments;
+
     @Override
     public CommentsView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
         return new CommentsView(this, inflater, container);
@@ -33,9 +38,11 @@ public class CommentsFragment extends StatedFragment<CommentsView, RepositoryMod
         super.onFirstTimeLaunched();
         Bundle bundle = getArguments();
         if (bundle.containsKey("issue")) {
-            final Issue issue = bundle.getParcelable("issue");
+            issue = bundle.getParcelable("issue");
+            final String[] repoInfo = issue.repository_url.split("/");
 
-            getModel().listComments("frodoking", "App-Architecture", 14).subscribeOn(Schedulers.io())
+            getModel().listComments(repoInfo[repoInfo.length - 2], repoInfo[repoInfo.length - 1], issue.number)
+                    .subscribeOn(Schedulers.io())
                     .doOnSubscribe(new Action0() {
                         @Override
                         public void call() {
@@ -48,6 +55,7 @@ public class CommentsFragment extends StatedFragment<CommentsView, RepositoryMod
                     .subscribe(new Action1<List<GithubComment>>() {
                                    @Override
                                    public void call(List<GithubComment> comments) {
+                                       CommentsFragment.this.comments = (ArrayList<GithubComment>) comments;
                                        CircleProgressDialog.hideLoadingDialog();
                                        getUIView().hideEmptyView();
                                        getUIView().showComments(issue, comments);
@@ -61,5 +69,19 @@ public class CommentsFragment extends StatedFragment<CommentsView, RepositoryMod
                                 }
                             });
         }
+    }
+
+    @Override
+    public void onSaveState(Bundle outState) {
+        if (this.comments != null) {
+            outState.putParcelableArrayList("comments", this.comments);
+        }
+    }
+
+    @Override
+    public void onRestoreState(Bundle savedInstanceState) {
+        this.comments = savedInstanceState.getParcelableArrayList("comments");
+        this.issue = savedInstanceState.getParcelable("issue");
+        getUIView().showComments(issue, comments);
     }
 }

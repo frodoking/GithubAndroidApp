@@ -141,6 +141,12 @@ public class ProfileView extends AbstractUIView {
         followingTV.setText(String.valueOf(user.following));
 
         followBtn.setVisibility(isLoginUser ? View.GONE : View.VISIBLE);
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPresenter().doFollow(user.login);
+            }
+        });
 
         showRepositoryList(popularRepositoriesLV, popularRepositoryAdapter, user.popularRepositories);
         showRepositoryList(contributedToRepositoriesLV, contributedToRepositoryAdapter, user.contributeToRepositories);

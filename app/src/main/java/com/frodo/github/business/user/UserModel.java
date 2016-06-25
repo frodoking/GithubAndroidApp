@@ -233,4 +233,18 @@ public class UserModel extends AbstractModel {
             }
         });
     }
+
+    Observable<Void> doFollow(String username) {
+        return Observable.create(new Observable.OnSubscribe<Response>() {
+            @Override
+            public void call(final Subscriber<? super Response> subscriber) {
+
+            }
+        }).map(new Func1<Response, Void>() {
+            @Override
+            public Void call(Response response) {
+                return null;
+            }
+        });
+    }
 }

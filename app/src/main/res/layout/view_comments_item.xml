@@ -18,17 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.frodo.github.view.OcticonView
-                android:id="@+id/user_ov"
-                style="@style/OcticonViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/item_height_default"
-                android:paddingLeft="@dimen/margin_middle"
-                android:paddingRight="@dimen/margin_middle"
-                app:iconSize="@dimen/image_size_default"
-                app:iconPadding="@dimen/margin_middle"
-                app:iiv_icon="oct_github_mark" />
+            <include layout="@layout/view_item"/>
 
             <View style="@style/LineStyle" />
 

@@ -19,6 +19,7 @@ import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -34,6 +35,10 @@ import rx.schedulers.Schedulers;
 public class RepositoryFragment extends StatedFragment<RepositoryView, RepositoryModel> {
     private String repoName;
     private Repo repo;
+    private Content content;
+    private int closedPullsCount,   openedPullsCount,   closedIssuesCount,   openedIssuesCount;
+    private ArrayList<Issue> issues;
+    private ArrayList<Issue> pullRequests;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,13 +82,40 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
 
     @Override
     public void onSaveState(Bundle outState) {
+        if (repo!=null)
         outState.putParcelable("repo", repo);
+        if (content!=null)
+        outState.putParcelable("content", content);
+
+        outState.putInt("closedPullsCount", closedPullsCount);
+        outState.putInt("openedPullsCount", openedPullsCount);
+        outState.putInt("closedIssuesCount", closedIssuesCount);
+        outState.putInt("openedIssuesCount", openedIssuesCount);
+
+        if (issues!=null && !issues.isEmpty())
+            outState.putParcelableArrayList("issues", issues);
+        if (pullRequests!=null && !pullRequests.isEmpty())
+            outState.putParcelableArrayList("pullRequests", pullRequests);
     }
 
     @Override
     public void onRestoreState(Bundle savedInstanceState) {
         repo = savedInstanceState.getParcelable("repo");
+        content =savedInstanceState.getParcelable("content");
+
+        closedPullsCount =savedInstanceState.getInt("closedPullsCount");
+        openedPullsCount =savedInstanceState.getInt("openedPullsCount");
+        closedIssuesCount =savedInstanceState.getInt("closedIssuesCount");
+        openedIssuesCount =savedInstanceState.getInt("openedIssuesCount");
+
+        issues =savedInstanceState.getParcelableArrayList("issues");
+        pullRequests =savedInstanceState.getParcelableArrayList("pullRequests");
+
         getUIView().showDetail(repo);
+        getUIView().showReadme(content);
+        getUIView().showPulse(closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount);
+        getUIView().showIssues(issues);
+        getUIView().showPullRequests(pullRequests);
     }
 
     @Override
@@ -144,6 +176,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                     .subscribe(new Action1<Content>() {
                         @Override
                         public void call(Content content) {
+                            RepositoryFragment.this.content = content;
                             getUIView().showReadme(content);
                         }
                     }, new Action1<Throwable>() {
@@ -167,7 +200,10 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                     @Override
                     public Integer[] call(Integer closedPullsCount, Integer openedPullsCount,
                                           Integer closedIssuesCount, Integer openedIssuesCount) {
-
+                        RepositoryFragment.this.closedPullsCount = closedPullsCount;
+                        RepositoryFragment.this.openedPullsCount = openedPullsCount;
+                        RepositoryFragment.this.closedIssuesCount = closedIssuesCount;
+                        RepositoryFragment.this.openedIssuesCount = openedIssuesCount;
                         return new Integer[]{closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount};
                     }
                 }).subscribeOn(Schedulers.io())
@@ -192,6 +228,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 .subscribe(new Action1<List<Issue>>() {
                     @Override
                     public void call(List<Issue> issues) {
+                        RepositoryFragment.this.issues = (ArrayList<Issue>) issues;
                         getUIView().showIssues(issues);
                     }
                 }, new Action1<Throwable>() {
@@ -210,6 +247,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
                 .subscribe(new Action1<List<Issue>>() {
                     @Override
                     public void call(List<Issue> pullRequests) {
+                        RepositoryFragment.this.pullRequests = (ArrayList<Issue>) pullRequests;
                         getUIView().showPullRequests(pullRequests);
                     }
                 }, new Action1<Throwable>() {

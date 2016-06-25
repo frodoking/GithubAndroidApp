@@ -15,10 +15,15 @@
         <com.frodo.github.view.OcticonView
             android:id="@+id/state_ov"
             style="@style/OcticonViewStyle"
+            android:textSize="@dimen/text_size_middle"
             android:textColor="@android:color/white"
             app:iiv_color="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_xsmall"
+            android:paddingBottom="@dimen/margin_xsmall" />
 
         <TextView
             android:id="@+id/title_tv"
@@ -27,7 +32,6 @@
             android:layout_marginTop="@dimen/margin_middle"
             android:textSize="@dimen/text_size_xmiddle"
             android:textStyle="bold"
-            android:text="xxxx#14"
             android:includeFontPadding="false" />
 
         <LinearLayout
