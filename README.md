@@ -8,7 +8,7 @@ This project is a Github client on Android platform, This App drawing  is based 
 3. user (profile/followers/following)
 4. repo (detail/contents)
 5. events, notification, issues
-
+6. trending
 there are many features not yet implemented, you can contribute to it if you are interested in this project.
 
 ##API
@@ -31,9 +31,12 @@ Android studio 2.0
 
 ##Apk (v1.0.x snapshots)
 >*[github-v1.0.1-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk)
+
 >*[github-v1.0.2-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk)
 >*[github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
 >*[github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk)
+
+>*[github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
 
 ##App Master Drawing
 <img  src="http://frodoking.github.io/img/github-client/github-home.png" width="240" height="427">
