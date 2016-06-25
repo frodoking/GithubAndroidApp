@@ -30,13 +30,10 @@ Android studio 2.0
 * Blog：http://frodoking.github.io/
 
 ##Apk (v1.0.x snapshots)
->*[github-v1.0.1-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk)
-
->*[github-v1.0.2-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk)
->*[github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
->*[github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk)
-
->*[github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
+> * [github-v1.0.1-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk)
+* [github-v1.0.2-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk)
+* [github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
+* [github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk) 
 
 ##App Master Drawing
 <img  src="http://frodoking.github.io/img/github-client/github-home.png" width="240" height="427">
