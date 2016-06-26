@@ -24,9 +24,9 @@
     <string name="menu_group_info">info</string>
     <string name="menu_group_api">api</string>
 
-    <string name="contribute_description">This application is provided by Frodo(Github:frodoking)</string>
+    <string name="contribute_description">This application is provided by Frodo(GitHub:frodoking)</string>
     <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id. -->
-    <string name="banner_ad_unit_id">ca-app-pub-5257007452683157~9157734222</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5257007452683157/9157734222</string>
 
     <array name="sinceArray">
         <item>today</item>

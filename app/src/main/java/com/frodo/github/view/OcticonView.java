@@ -120,10 +120,10 @@ public class OcticonView extends LinearLayout {
         setTextColor(ResourceManager.getColor(colorRes));
     }
 
-    public final void resizeIcon(int size){
+    public final void resizeIcon(int size) {
         if (frescoAndIconicsImageView != null) {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) frescoAndIconicsImageView.getLayoutParams();
-            layoutParams.height =size;
+            layoutParams.height = size;
             layoutParams.width = size;
             frescoAndIconicsImageView.setLayoutParams(layoutParams);
         }

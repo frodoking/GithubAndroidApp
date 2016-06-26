@@ -37,6 +37,8 @@ import com.frodo.github.business.user.UserModel;
 import com.frodo.github.common.ApiFragment;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.octicons_typeface_library.Octicons;
 
@@ -65,6 +67,7 @@ public class MainActivity extends FragmentContainerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         PermissionChecker.verifyStoragePermissions(this);
         super.onCreate(savedInstanceState);
+        loadAds();
     }
 
     @Override
@@ -73,7 +76,7 @@ public class MainActivity extends FragmentContainerActivity {
         switch (requestCode) {
             case PermissionChecker.REQUEST_EXTERNAL_STORAGE:
                 boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                getMainController().getLogCollector().enableCollect(writeAccepted);
+                getMainController().getLogCollector().enableCollect(writeAccepted && getMainController().getConfig().isDebug());
                 break;
             default:
                 break;
@@ -389,5 +392,14 @@ public class MainActivity extends FragmentContainerActivity {
                                 CircleProgressDialog.hideLoadingDialog();
                             }
                         });
+    }
+
+    private void loadAds() {
+        InterstitialAd mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-5257007452683157/9157734222");
+        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+        adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+        mInterstitialAd.loadAd(adRequestBuilder.build());
+        mInterstitialAd.show();
     }
 }

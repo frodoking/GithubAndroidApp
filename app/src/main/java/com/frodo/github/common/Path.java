@@ -35,7 +35,7 @@ public final class Path {
         }
     }
 
-    public final static class Page{
+    public final static class Page {
         public static final int PER_PAGE = 20;
     }
 

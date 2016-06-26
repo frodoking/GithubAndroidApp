@@ -78,7 +78,7 @@ public class CommentsView extends AbstractUIView {
         getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
     }
 
-   static class Adapter extends BaseRecyclerViewAdapter<GithubComment, CommentsView.Adapter.CommentsViewHolder> {
+    static class Adapter extends BaseRecyclerViewAdapter<GithubComment, CommentsView.Adapter.CommentsViewHolder> {
         private Issue issue;
 
         public Adapter(Context context) {
@@ -111,7 +111,7 @@ public class CommentsView extends AbstractUIView {
 
         @Override
         public void onBindViewHolder(CommentsView.Adapter.CommentsViewHolder holder, int position) {
-            if (position == 0){
+            if (position == 0) {
                 if (issue != null) {
                     int labelRadius = ResourceManager.getDimensionPixelSize(R.dimen.corner_radius_default);
                     DrawableProvider.fillViewBackgroundDrawable(holder.stateOV, DrawableProvider.createGradientDrawable(ResourceManager.getColor(android.R.color.holo_green_dark), labelRadius));
@@ -159,14 +159,14 @@ public class CommentsView extends AbstractUIView {
                 return;
             }
 
-            final GithubComment comment = getItem(position -1);
+            final GithubComment comment = getItem(position - 1);
 
             holder.userOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(comment.user.avatar_url));
             holder.userOV.setText(comment.user.login);
             holder.dateOV.setText(comment.created_at.toLocaleString());
             holder.bodyMDV.loadMarkdown(comment.body);
 
-            ((View)holder.userOV.getParent()).setOnClickListener(new View.OnClickListener() {
+            ((View) holder.userOV.getParent()).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle arguments = new Bundle();

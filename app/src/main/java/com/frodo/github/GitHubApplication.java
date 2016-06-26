@@ -1,6 +1,8 @@
 package com.frodo.github;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.frodo.app.android.ApplicationDelegation;
 import com.frodo.app.android.MicroContextLoader;
@@ -20,8 +22,9 @@ import com.frodo.app.framework.net.NetworkTransport;
 import com.frodo.app.framework.net.Request;
 import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.theme.Theme;
-import com.frodo.github.business.account.AccountModel;
 import com.frodo.github.business.ServerConfigurationModel;
+import com.frodo.github.business.account.AccountModel;
+import com.google.android.gms.ads.MobileAds;
 
 import java.io.File;
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/4/28.
  */
-public class GitHubApplication extends MultiDexApplication implements ApplicationDelegation {
+public class GitHubApplication extends Application implements ApplicationDelegation {
 
     private MicroContextLoader contextLoader;
 
@@ -39,6 +42,12 @@ public class GitHubApplication extends MultiDexApplication implements Applicatio
         beforeLoad();
         contextLoader = loadMicroContextLoader();
         afterLoad();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override
@@ -90,7 +99,7 @@ public class GitHubApplication extends MultiDexApplication implements Applicatio
 
     @Override
     public void afterLoad() {
-        getMainController().getLogCollector().enableCollect(BuildConfig.DEBUG);
+        MobileAds.initialize(this, "ca-app-pub-5257007452683157~9157734222");
 
         getMainController()
                 .getModelFactory()

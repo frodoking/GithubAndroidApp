@@ -18,10 +18,4 @@
         app:iiv_icon="oct_mark_github"
         app:iiv_padding="30dp" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/ad_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:adSize="BANNER"
-        app:adUnitId="@string/banner_ad_unit_id" />
 </LinearLayout>

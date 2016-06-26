@@ -36,7 +36,7 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
     private String repoName;
     private Repo repo;
     private Content content;
-    private int closedPullsCount,   openedPullsCount,   closedIssuesCount,   openedIssuesCount;
+    private int closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount;
     private ArrayList<Issue> issues;
     private ArrayList<Issue> pullRequests;
 
@@ -82,34 +82,34 @@ public class RepositoryFragment extends StatedFragment<RepositoryView, Repositor
 
     @Override
     public void onSaveState(Bundle outState) {
-        if (repo!=null)
-        outState.putParcelable("repo", repo);
-        if (content!=null)
-        outState.putParcelable("content", content);
+        if (repo != null)
+            outState.putParcelable("repo", repo);
+        if (content != null)
+            outState.putParcelable("content", content);
 
         outState.putInt("closedPullsCount", closedPullsCount);
         outState.putInt("openedPullsCount", openedPullsCount);
         outState.putInt("closedIssuesCount", closedIssuesCount);
         outState.putInt("openedIssuesCount", openedIssuesCount);
 
-        if (issues!=null && !issues.isEmpty())
+        if (issues != null && !issues.isEmpty())
             outState.putParcelableArrayList("issues", issues);
-        if (pullRequests!=null && !pullRequests.isEmpty())
+        if (pullRequests != null && !pullRequests.isEmpty())
             outState.putParcelableArrayList("pullRequests", pullRequests);
     }
 
     @Override
     public void onRestoreState(Bundle savedInstanceState) {
         repo = savedInstanceState.getParcelable("repo");
-        content =savedInstanceState.getParcelable("content");
+        content = savedInstanceState.getParcelable("content");
 
-        closedPullsCount =savedInstanceState.getInt("closedPullsCount");
-        openedPullsCount =savedInstanceState.getInt("openedPullsCount");
-        closedIssuesCount =savedInstanceState.getInt("closedIssuesCount");
-        openedIssuesCount =savedInstanceState.getInt("openedIssuesCount");
+        closedPullsCount = savedInstanceState.getInt("closedPullsCount");
+        openedPullsCount = savedInstanceState.getInt("openedPullsCount");
+        closedIssuesCount = savedInstanceState.getInt("closedIssuesCount");
+        openedIssuesCount = savedInstanceState.getInt("openedIssuesCount");
 
-        issues =savedInstanceState.getParcelableArrayList("issues");
-        pullRequests =savedInstanceState.getParcelableArrayList("pullRequests");
+        issues = savedInstanceState.getParcelableArrayList("issues");
+        pullRequests = savedInstanceState.getParcelableArrayList("pullRequests");
 
         getUIView().showDetail(repo);
         getUIView().showReadme(content);

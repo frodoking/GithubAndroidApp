@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.frodo.app.android.core.AndroidUIViewController;
 import com.frodo.app.android.ui.FragmentScheduler;
-import com.frodo.app.android.ui.activity.FragmentContainerActivity;
 import com.frodo.github.R;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.bean.dto.response.User;
@@ -113,7 +112,7 @@ public class ProfileView extends AbstractUIView {
                 Repo repo = (Repo) parent.getAdapter().getItem(position);
                 if (repo != null) {
                     arguments.putString("repo", repo.owner.login + "/" + repo.name);
-                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+                    FragmentScheduler.nextFragmentWithUniqueTag(getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
                 }
             }
         };
@@ -144,7 +143,7 @@ public class ProfileView extends AbstractUIView {
         followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPresenter().doFollow(user.login);
+                ((ProfileFragment) getPresenter()).doFollow(user.login);
             }
         });
 
@@ -156,7 +155,7 @@ public class ProfileView extends AbstractUIView {
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
                 arguments.putString("users_args", String.format("users_user_followers_%s", user.login));
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+                FragmentScheduler.nextFragment(getPresenter().getAndroidContext(), UserListFragment.class, arguments);
             }
         });
         followingTV.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +163,7 @@ public class ProfileView extends AbstractUIView {
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
                 arguments.putString("users_args", String.format("users_user_following_%s", user.login));
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), UserListFragment.class, arguments);
+                FragmentScheduler.nextFragment(getPresenter().getAndroidContext(), UserListFragment.class, arguments);
             }
         });
 
@@ -173,7 +172,7 @@ public class ProfileView extends AbstractUIView {
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
                 arguments.putString("repos_args", String.format("repos_user_%s", user.login));
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryListFragment.class, arguments);
+                FragmentScheduler.nextFragment(getPresenter().getAndroidContext(), RepositoryListFragment.class, arguments);
             }
         });
     }
