@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimaryDark"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="@dimen/margin_large">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?attr/colorPrimaryDark"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:padding="@dimen/margin_large">
 
     <com.frodo.github.view.FrescoAndIconicsImageView
         android:id="@+id/head_sdv"
@@ -23,7 +23,7 @@
         app:placeholderImageScaleType="fitXY"
         app:failureImageScaleType="fitXY"
         app:actualImageScaleType="fitXY"
-        app:iiv_icon="oct_mark_github" />
+        app:iiv_icon="oct_mark_github"/>
 
     <TextView
         android:id="@+id/id_username"
@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/margin_middle"
         android:textSize="@dimen/text_size_large"
         android:textColor="@android:color/white"
-        android:text="Github" />
+        android:text="Github"/>
 
     <TextView
         android:id="@+id/id_repo"
@@ -41,5 +41,5 @@
         android:layout_marginTop="@dimen/margin_small"
         android:textSize="@dimen/text_size_middle"
         android:textColor="@android:color/white"
-        android:text="https://github.com" />
+        android:text="https://github.com"/>
 </LinearLayout>

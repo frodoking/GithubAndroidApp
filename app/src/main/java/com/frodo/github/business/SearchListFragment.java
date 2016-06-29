@@ -17,37 +17,37 @@ import java.util.ArrayList;
  */
 public abstract class SearchListFragment<M extends IModel, Bean extends Parcelable> extends StatedFragment<SearchUIListView, M> {
 
-    private static final String STATE_KEY = "state";
-    private ArrayList<Bean> stateBeans;
+	private static final String STATE_KEY = "state";
+	private ArrayList<Bean> stateBeans;
 
-    @Override
-    public SearchUIListView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new SearchUIListView<Bean>(this, inflater, container) {
+	@Override
+	public SearchUIListView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
+		return new SearchUIListView<Bean>(this, inflater, container) {
 
-            @Override
-            public BaseRecyclerViewAdapter adapter() {
-                return uiViewAdapter();
-            }
-        };
-    }
+			@Override
+			public BaseRecyclerViewAdapter adapter() {
+				return uiViewAdapter();
+			}
+		};
+	}
 
-    @Override
-    public void onSaveState(Bundle outState) {
-        outState.putParcelableArrayList(STATE_KEY, stateBeans);
-    }
+	@Override
+	public void onSaveState(Bundle outState) {
+		outState.putParcelableArrayList(STATE_KEY, stateBeans);
+	}
 
-    @Override
-    public void onRestoreState(Bundle savedInstanceState) {
-        stateBeans = savedInstanceState.getParcelableArrayList(STATE_KEY);
-        getUIView().showList(stateBeans);
-    }
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		stateBeans = savedInstanceState.getParcelableArrayList(STATE_KEY);
+		getUIView().showList(stateBeans);
+	}
 
 
-    public void setStateBeans(ArrayList<Bean> stateBeans) {
-        this.stateBeans = stateBeans;
-    }
+	public void setStateBeans(ArrayList<Bean> stateBeans) {
+		this.stateBeans = stateBeans;
+	}
 
-    public abstract BaseRecyclerViewAdapter uiViewAdapter();
+	public abstract BaseRecyclerViewAdapter uiViewAdapter();
 
-    public abstract void doSearch(String searchKey);
+	public abstract void doSearch(String searchKey);
 }

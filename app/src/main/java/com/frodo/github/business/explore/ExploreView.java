@@ -33,117 +33,117 @@ import java.util.List;
  */
 public class ExploreView extends AbstractUIView {
 
-    private ViewPager viewPager;
-    private PagerAdapter pagerAdapter;
-    private List<View> pager = new ArrayList<>();
+	private ViewPager viewPager;
+	private PagerAdapter pagerAdapter;
+	private List<View> pager = new ArrayList<>();
 
-    private CardViewGroup trendingRepositoriesCVG;
-    private ListView trendingRepositoriesLV;
-    private RepositoriesForListViewAdapter repositoryAdapter;
+	private CardViewGroup trendingRepositoriesCVG;
+	private ListView trendingRepositoriesLV;
+	private RepositoriesForListViewAdapter repositoryAdapter;
 
-    public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.uiview_explore);
-    }
+	public ExploreView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
+		super(presenter, inflater, container, R.layout.uiview_explore);
+	}
 
-    @Override
-    public void initView() {
-        viewPager = (ViewPager) getRootView().findViewById(R.id.showcases_vp);
-        pagerAdapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return pager.size();
-            }
+	@Override
+	public void initView() {
+		viewPager = (ViewPager) getRootView().findViewById(R.id.showcases_vp);
+		pagerAdapter = new PagerAdapter() {
+			@Override
+			public int getCount() {
+				return pager.size();
+			}
 
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view.equals(object);
-            }
+			@Override
+			public boolean isViewFromObject(View view, Object object) {
+				return view.equals(object);
+			}
 
-            @Override
-            public void destroyItem(ViewGroup view, int position, Object object) {
-                view.removeView(pager.get(position));
-            }
+			@Override
+			public void destroyItem(ViewGroup view, int position, Object object) {
+				view.removeView(pager.get(position));
+			}
 
-            @Override
-            public Object instantiateItem(ViewGroup view, int position) {
-                view.addView(pager.get(position));
-                return pager.get(position);
-            }
-        };
-        viewPager.setAdapter(pagerAdapter);
+			@Override
+			public Object instantiateItem(ViewGroup view, int position) {
+				view.addView(pager.get(position));
+				return pager.get(position);
+			}
+		};
+		viewPager.setAdapter(pagerAdapter);
 
-        trendingRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.trending_repositories_cvg);
-        trendingRepositoriesLV = (ListView) trendingRepositoriesCVG.getContentView();
+		trendingRepositoriesCVG = (CardViewGroup) getRootView().findViewById(R.id.trending_repositories_cvg);
+		trendingRepositoriesLV = (ListView) trendingRepositoriesCVG.getContentView();
 
-        OcticonView titleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.title_ov);
-        titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_flame);
-        titleOV.setText("Trending repositories");
-        titleOV.setTextColorRes(android.R.color.black);
+		OcticonView titleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.title_ov);
+		titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_flame);
+		titleOV.setText("Trending repositories");
+		titleOV.setTextColorRes(android.R.color.black);
 
-        OcticonView subtitleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.subtitle_ov);
-        subtitleOV.setText("this week");
-        subtitleOV.setPaddingDp(0);
+		OcticonView subtitleOV = (OcticonView) trendingRepositoriesCVG.getHeaderView().findViewById(R.id.subtitle_ov);
+		subtitleOV.setText("this week");
+		subtitleOV.setPaddingDp(0);
 
-        ((TextView) trendingRepositoriesCVG.getFooterView().findViewById(R.id.text_tv)).setText("View more trending repositories");
-        repositoryAdapter = new RepositoriesForListViewAdapter(getRootView().getContext());
-        trendingRepositoriesLV.setAdapter(repositoryAdapter);
-    }
+		((TextView) trendingRepositoriesCVG.getFooterView().findViewById(R.id.text_tv)).setText("View more trending repositories");
+		repositoryAdapter = new RepositoriesForListViewAdapter(getRootView().getContext());
+		trendingRepositoriesLV.setAdapter(repositoryAdapter);
+	}
 
-    @Override
-    public void registerListener() {
-        trendingRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle arguments = new Bundle();
-                Repo repository = repositoryAdapter.getItem(position);
-                if (repository != null) {
-                    arguments.putString("repo", repository.owner.login + "/" + repository.name);
-                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
-                }
-            }
-        });
-        trendingRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), TrendingFragment.class);
-            }
-        });
-    }
+	@Override
+	public void registerListener() {
+		trendingRepositoriesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Bundle arguments = new Bundle();
+				Repo repository = repositoryAdapter.getItem(position);
+				if (repository != null) {
+					arguments.putString("repo", repository.owner.login + "/" + repository.name);
+					FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+				}
+			}
+		});
+		trendingRepositoriesCVG.getFooterView().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), TrendingFragment.class);
+			}
+		});
+	}
 
-    public void showShowCaseList(List<ShowCase> showCases) {
-        if (showCases != null && !showCases.isEmpty()) {
-            for (final ShowCase showcase : showCases) {
-                View itemView = LayoutInflater.from(getRootView().getContext()).inflate(R.layout.view_showcases_viewpager_item, null);
-                SimpleDraweeView imageView = (SimpleDraweeView) itemView.findViewById(R.id.img_iv);
-                TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
+	public void showShowCaseList(List<ShowCase> showCases) {
+		if (showCases != null && !showCases.isEmpty()) {
+			for (final ShowCase showcase : showCases) {
+				View itemView = LayoutInflater.from(getRootView().getContext()).inflate(R.layout.view_showcases_viewpager_item, null);
+				SimpleDraweeView imageView = (SimpleDraweeView) itemView.findViewById(R.id.img_iv);
+				TextView textView = (TextView) itemView.findViewById(R.id.text_tv);
 
-                imageView.setImageURI(Uri.parse(showcase.image_url));
-                textView.setText(showcase.name);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle arguments = new Bundle();
-                        arguments.putString("slug", showcase.slug);
-                        FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ShowCaseDetailFragment.class, arguments);
-                    }
-                });
+				imageView.setImageURI(Uri.parse(showcase.image_url));
+				textView.setText(showcase.name);
+				itemView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Bundle arguments = new Bundle();
+						arguments.putString("slug", showcase.slug);
+						FragmentScheduler.nextFragment((FragmentContainerActivity) getPresenter().getAndroidContext(), ShowCaseDetailFragment.class, arguments);
+					}
+				});
 
-                pager.add(itemView);
-            }
-            pagerAdapter.notifyDataSetChanged();
-            viewPager.setVisibility(View.VISIBLE);
-        } else {
-            viewPager.setVisibility(View.INVISIBLE);
-        }
-    }
+				pager.add(itemView);
+			}
+			pagerAdapter.notifyDataSetChanged();
+			viewPager.setVisibility(View.VISIBLE);
+		} else {
+			viewPager.setVisibility(View.INVISIBLE);
+		}
+	}
 
-    public void showTrendingRepositoryList(List<Repo> repositories) {
-        if (repositories != null && !repositories.isEmpty()) {
-            repositoryAdapter.refreshObjects(repositories);
-            repositoryAdapter.notifyDataSetChanged();
-            trendingRepositoriesCVG.setVisibility(View.VISIBLE);
-        } else {
-            trendingRepositoriesCVG.setVisibility(View.INVISIBLE);
-        }
-    }
+	public void showTrendingRepositoryList(List<Repo> repositories) {
+		if (repositories != null && !repositories.isEmpty()) {
+			repositoryAdapter.refreshObjects(repositories);
+			repositoryAdapter.notifyDataSetChanged();
+			trendingRepositoriesCVG.setVisibility(View.VISIBLE);
+		} else {
+			trendingRepositoriesCVG.setVisibility(View.INVISIBLE);
+		}
+	}
 }

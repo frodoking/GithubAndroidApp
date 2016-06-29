@@ -6,6 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion getProperty('MIN_SDK_VERSION')
+        vectorDrawables.useSupportLibrary = true
     }
 }
 

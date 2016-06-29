@@ -29,77 +29,77 @@ import java.util.List;
  * Created by frodo on 16/6/10.
  */
 public class TrendingView extends AbstractUIView {
-    private Spinner languageSpinner;
-    private ListView listView;
-    private DevelopersForListViewAdapter developersForListViewAdapter;
-    private RepositoriesForListViewAdapter repositoriesForListViewAdapter;
+	private Spinner languageSpinner;
+	private ListView listView;
+	private DevelopersForListViewAdapter developersForListViewAdapter;
+	private RepositoriesForListViewAdapter repositoriesForListViewAdapter;
 
-    public TrendingView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.uiview_trending);
-    }
+	public TrendingView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
+		super(presenter, inflater, container, R.layout.uiview_trending);
+	}
 
-    @Override
-    public void initView() {
-        languageSpinner = (Spinner) getRootView().findViewById(R.id.language_spinner);
-        listView = (ListView) getRootView().findViewById(R.id.lv);
+	@Override
+	public void initView() {
+		languageSpinner = (Spinner) getRootView().findViewById(R.id.language_spinner);
+		listView = (ListView) getRootView().findViewById(R.id.lv);
 
-        developersForListViewAdapter = new DevelopersForListViewAdapter(getPresenter().getAndroidContext());
-        repositoriesForListViewAdapter = new RepositoriesForListViewAdapter(getPresenter().getAndroidContext());
-    }
+		developersForListViewAdapter = new DevelopersForListViewAdapter(getPresenter().getAndroidContext());
+		repositoriesForListViewAdapter = new RepositoriesForListViewAdapter(getPresenter().getAndroidContext());
+	}
 
-    @Override
-    public void registerListener() {
-        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                GithubLanguage language = (GithubLanguage) parent.getItemAtPosition(position);
-                ((TrendingFragment) getPresenter()).loadListBy(language.slug);
-            }
+	@Override
+	public void registerListener() {
+		languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				GithubLanguage language = (GithubLanguage) parent.getItemAtPosition(position);
+				((TrendingFragment) getPresenter()).loadListBy(language.slug);
+			}
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object item = parent.getItemAtPosition(position);
-                if (item instanceof Repo) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString("repo", ((Repo) item).owner.login + "/" + ((Repo) item).name);
-                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Object item = parent.getItemAtPosition(position);
+				if (item instanceof Repo) {
+					Bundle arguments = new Bundle();
+					arguments.putString("repo", ((Repo) item).owner.login + "/" + ((Repo) item).name);
+					FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), RepositoryFragment.class, arguments);
 
-                } else if (item instanceof User) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString("username", ((User) item).login);
-                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), ProfileFragment.class, arguments);
+				} else if (item instanceof User) {
+					Bundle arguments = new Bundle();
+					arguments.putString("username", ((User) item).login);
+					FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getPresenter().getAndroidContext(), ProfileFragment.class, arguments);
 
-                }
-            }
-        });
-    }
+				}
+			}
+		});
+	}
 
-    public void loadLanguages(List<GithubLanguage> languages) {
-        List<GithubLanguage> githubLanguages = new ArrayList<>(languages.size() + 1);
-        githubLanguages.add(new GithubLanguage("All Languages", ""));
-        githubLanguages.addAll(languages);
-        languageSpinner.setAdapter(new ArrayAdapter<>(getPresenter().getAndroidContext(), android.R.layout.simple_spinner_item, githubLanguages));
-    }
+	public void loadLanguages(List<GithubLanguage> languages) {
+		List<GithubLanguage> githubLanguages = new ArrayList<>(languages.size() + 1);
+		githubLanguages.add(new GithubLanguage("All Languages", ""));
+		githubLanguages.addAll(languages);
+		languageSpinner.setAdapter(new ArrayAdapter<>(getPresenter().getAndroidContext(), android.R.layout.simple_spinner_item, githubLanguages));
+	}
 
-    public void showRepoList(List<Repo> repos) {
-        listView.setAdapter(repositoriesForListViewAdapter);
-        repositoriesForListViewAdapter.refreshObjects(repos);
-    }
+	public void showRepoList(List<Repo> repos) {
+		listView.setAdapter(repositoriesForListViewAdapter);
+		repositoriesForListViewAdapter.refreshObjects(repos);
+	}
 
-    public void showDeveloperList(List<User> developers) {
-        listView.setAdapter(developersForListViewAdapter);
-        developersForListViewAdapter.refreshObjects(developers);
-    }
+	public void showDeveloperList(List<User> developers) {
+		listView.setAdapter(developersForListViewAdapter);
+		developersForListViewAdapter.refreshObjects(developers);
+	}
 
 
-    @Override
-    public void onShowOrHide(boolean isShown) {
-        getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
-    }
+	@Override
+	public void onShowOrHide(boolean isShown) {
+		getPresenter().getModel().getMainController().getLocalBroadcastManager().onBroadcast("drawer", !isShown);
+	}
 }

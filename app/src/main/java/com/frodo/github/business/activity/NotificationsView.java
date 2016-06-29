@@ -23,71 +23,71 @@ import java.util.List;
  */
 public class NotificationsView extends AbstractUIView {
 
-    private View readSignV;
-    private ListView lv;
-    private NotificationsAdapter adapter;
+	private View readSignV;
+	private ListView lv;
+	private NotificationsAdapter adapter;
 
-    public NotificationsView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
-        super(presenter, inflater, container, R.layout.uiview_notifications);
-    }
+	public NotificationsView(AndroidUIViewController presenter, LayoutInflater inflater, ViewGroup container) {
+		super(presenter, inflater, container, R.layout.uiview_notifications);
+	}
 
-    @Override
-    public void initView() {
-        readSignV = getRootView().findViewById(R.id.read_sign_v);
-        OcticonView titleOV = (OcticonView) readSignV.findViewById(R.id.title_ov);
-        titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_bell);
-        titleOV.setText("Unread notifications (5)");
+	@Override
+	public void initView() {
+		readSignV = getRootView().findViewById(R.id.read_sign_v);
+		OcticonView titleOV = (OcticonView) readSignV.findViewById(R.id.title_ov);
+		titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_bell);
+		titleOV.setText("Unread notifications (5)");
 
-        OcticonView moreOV = (OcticonView) readSignV.findViewById(R.id.subtitle_ov);
-        moreOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_chevron_down);
+		OcticonView moreOV = (OcticonView) readSignV.findViewById(R.id.subtitle_ov);
+		moreOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_chevron_down);
 
-        lv = (ListView) getRootView().findViewById(R.id.lv);
-        adapter = new NotificationsAdapter(getPresenter().getAndroidContext());
-        lv.setAdapter(adapter);
-    }
+		lv = (ListView) getRootView().findViewById(R.id.lv);
+		adapter = new NotificationsAdapter(getPresenter().getAndroidContext());
+		lv.setAdapter(adapter);
+	}
 
-    @Override
-    public void registerListener() {
-    }
+	@Override
+	public void registerListener() {
+	}
 
-    public void showDetail(List<Notification> notifications) {
-        adapter.refreshObjects(notifications);
-    }
+	public void showDetail(List<Notification> notifications) {
+		adapter.refreshObjects(notifications);
+	}
 
-    private static class NotificationsAdapter extends BaseListViewAdapter<Notification> {
+	private static class NotificationsAdapter extends BaseListViewAdapter<Notification> {
 
-        public NotificationsAdapter(Context context) {
-            super(context, R.layout.view_notifications_item);
-        }
+		public NotificationsAdapter(Context context) {
+			super(context, R.layout.view_notifications_item);
+		}
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final ViewHolder vh;
-            if (convertView == null) {
-                convertView = inflateItemView();
-                vh = new ViewHolder(convertView);
-                convertView.setTag(vh);
-            } else {
-                vh = (ViewHolder) convertView.getTag();
-            }
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			final ViewHolder vh;
+			if (convertView == null) {
+				convertView = inflateItemView();
+				vh = new ViewHolder(convertView);
+				convertView.setTag(vh);
+			} else {
+				vh = (ViewHolder) convertView.getTag();
+			}
 
-            final Notification notification = getItem(position);
-            vh.titleOV.setText(notification.subject.title);
-            vh.dateTV.setText(String.format("Updated %s by %s", notification.updated_at, notification.repository.owner.login));
+			final Notification notification = getItem(position);
+			vh.titleOV.setText(notification.subject.title);
+			vh.dateTV.setText(String.format("Updated %s by %s", notification.updated_at, notification.repository.owner.login));
 
-            return convertView;
-        }
+			return convertView;
+		}
 
-        class ViewHolder {
-            OcticonView titleOV;
-            TextView dateTV;
+		class ViewHolder {
+			OcticonView titleOV;
+			TextView dateTV;
 
-            ViewHolder(View view) {
-                titleOV = (OcticonView) view.findViewById(R.id.title_ov);
-                titleOV.getFrescoAndIconicsImageView().setColor(ResourceManager.getColor(android.R.color.holo_green_light));
-                titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_issue_opened);
-                dateTV = (TextView) view.findViewById(R.id.date_tv);
-            }
-        }
-    }
+			ViewHolder(View view) {
+				titleOV = (OcticonView) view.findViewById(R.id.title_ov);
+				titleOV.getFrescoAndIconicsImageView().setColor(ResourceManager.getColor(android.R.color.holo_green_light));
+				titleOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_issue_opened);
+				dateTV = (TextView) view.findViewById(R.id.date_tv);
+			}
+		}
+	}
 }

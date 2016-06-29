@@ -20,102 +20,102 @@ import com.frodo.github.R;
  * Created by frodo on 16/5/7.
  */
 public class CircleProgressDialog extends Dialog {
-    private static CircleProgressDialog dialog;
+	private static CircleProgressDialog dialog;
 
-    private SimpleDraweeView draweeView;
+	private SimpleDraweeView draweeView;
 
-    public CircleProgressDialog(Context context) {
-        super(context);
-        init();
-    }
+	public CircleProgressDialog(Context context) {
+		super(context);
+		init();
+	}
 
-    public CircleProgressDialog(Context context, int themeResId) {
-        super(context, themeResId);
-        init();
-    }
+	public CircleProgressDialog(Context context, int themeResId) {
+		super(context, themeResId);
+		init();
+	}
 
-    protected CircleProgressDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-        init();
-    }
+	protected CircleProgressDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
+		super(context, cancelable, cancelListener);
+		init();
+	}
 
-    public static Dialog showLoadingDialog(Context context) {
-        if (dialog == null) {
-            dialog = new CircleProgressDialog(context, R.style.CustomProgressDialog);
-        }
+	public static Dialog showLoadingDialog(Context context) {
+		if (dialog == null) {
+			dialog = new CircleProgressDialog(context, R.style.CustomProgressDialog);
+		}
 
-        if (!dialog.isShowing()) {
-            dialog.show();
-        }
+		if (!dialog.isShowing()) {
+			dialog.show();
+		}
 
 
-        return dialog;
-    }
+		return dialog;
+	}
 
-    public static void hideLoadingDialog() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-    }
+	public static void hideLoadingDialog() {
+		if (dialog != null && dialog.isShowing()) {
+			dialog.dismiss();
+		}
+	}
 
-    public static void destoryLoadingDialog() {
-        if (dialog != null) {
-            dialog = null;
-        }
-    }
+	public static void destoryLoadingDialog() {
+		if (dialog != null) {
+			dialog = null;
+		}
+	}
 
-    private void init() {
-        LinearLayout ll = new LinearLayout(getContext());
-        draweeView = new SimpleDraweeView(getContext());
-        int size = DensityUtils.dp2px(getContext(), 45);
-        ll.addView(draweeView, new LinearLayout.LayoutParams(size, size));
-        Uri uri = Uri.parse("res://" + getContext().getPackageName() + "/" + R.mipmap.octocat_spinner_128);
-        ControllerListener<ImageInfo> controllerListener = new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
-                if (animatable != null) {
-                    animatable.start();
-                }
-            }
+	private void init() {
+		LinearLayout ll = new LinearLayout(getContext());
+		draweeView = new SimpleDraweeView(getContext());
+		int size = DensityUtils.dp2px(getContext(), 45);
+		ll.addView(draweeView, new LinearLayout.LayoutParams(size, size));
+		Uri uri = Uri.parse("res://" + getContext().getPackageName() + "/" + R.mipmap.octocat_spinner_128);
+		ControllerListener<ImageInfo> controllerListener = new BaseControllerListener<ImageInfo>() {
+			@Override
+			public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+				super.onFinalImageSet(id, imageInfo, animatable);
+				if (animatable != null) {
+					animatable.start();
+				}
+			}
 
-            @Override
-            public void onFailure(String id, Throwable throwable) {
-                super.onFailure(id, throwable);
-                Logger.fLog().tag("CircleProgressDialog").e("onFailure", throwable);
-            }
-        };
-        DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setControllerListener(controllerListener)
-                .build();
-        draweeView.setController(draweeController);
-        setContentView(ll);
+			@Override
+			public void onFailure(String id, Throwable throwable) {
+				super.onFailure(id, throwable);
+				Logger.fLog().tag("CircleProgressDialog").e("onFailure", throwable);
+			}
+		};
+		DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+				.setUri(uri)
+				.setControllerListener(controllerListener)
+				.build();
+		draweeView.setController(draweeController);
+		setContentView(ll);
 
-        setCanceledOnTouchOutside(false);
-    }
+		setCanceledOnTouchOutside(false);
+	}
 
-    @Override
-    public void show() {
-        super.show();
-        DraweeController draweeController = draweeView.getController();
-        if (draweeController != null) {
-            Animatable animatable = draweeController.getAnimatable();
-            if (animatable != null && !animatable.isRunning()) {
-                draweeView.getController().getAnimatable().start();
-            }
-        }
-    }
+	@Override
+	public void show() {
+		super.show();
+		DraweeController draweeController = draweeView.getController();
+		if (draweeController != null) {
+			Animatable animatable = draweeController.getAnimatable();
+			if (animatable != null && !animatable.isRunning()) {
+				draweeView.getController().getAnimatable().start();
+			}
+		}
+	}
 
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        DraweeController draweeController = draweeView.getController();
-        if (draweeController != null) {
-            Animatable animatable = draweeController.getAnimatable();
-            if (animatable != null && animatable.isRunning()) {
-                draweeView.getController().getAnimatable().stop();
-            }
-        }
-    }
+	@Override
+	public void dismiss() {
+		super.dismiss();
+		DraweeController draweeController = draweeView.getController();
+		if (draweeController != null) {
+			Animatable animatable = draweeController.getAnimatable();
+			if (animatable != null && animatable.isRunning()) {
+				draweeView.getController().getAnimatable().stop();
+			}
+		}
+	}
 }

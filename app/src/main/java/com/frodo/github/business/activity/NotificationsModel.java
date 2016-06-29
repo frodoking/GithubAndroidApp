@@ -24,40 +24,40 @@ import rx.functions.Func1;
  */
 public class NotificationsModel extends AbstractModel {
 
-    public static final String TAG = NotificationsModel.class.getSimpleName();
-    private AndroidFetchNetworkDataTask fetchReceivedEventsNetworkDataTask;
+	public static final String TAG = NotificationsModel.class.getSimpleName();
+	private AndroidFetchNetworkDataTask fetchReceivedEventsNetworkDataTask;
 
-    public NotificationsModel(MainController controller) {
-        super(controller);
-    }
+	public NotificationsModel(MainController controller) {
+		super(controller);
+	}
 
-    public Observable<List<Notification>> loadNotifications() {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(Subscriber<? super Response> subscriber) {
-                Request request = new Request.Builder()
-                        .method("GET")
-                        .relativeUrl(Path.Activity.NOTIFICATIONS)
-                        .build();
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_GITHUB);
-                fetchReceivedEventsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchReceivedEventsNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<List<Notification>>>() {
-            @Override
-            public Observable<List<Notification>> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    List<Notification> notifications = JsonConverter.convert(rb.string(), new TypeReference<List<Notification>>() {
-                    });
-                    return Observable.just(notifications);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
-    }
+	public Observable<List<Notification>> loadNotifications() {
+		return Observable.create(new Observable.OnSubscribe<Response>() {
+			@Override
+			public void call(Subscriber<? super Response> subscriber) {
+				Request request = new Request.Builder()
+						.method("GET")
+						.relativeUrl(Path.Activity.NOTIFICATIONS)
+						.build();
+				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+				networkTransport.setAPIUrl(Path.HOST_GITHUB);
+				fetchReceivedEventsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				getMainController().getBackgroundExecutor().execute(fetchReceivedEventsNetworkDataTask);
+			}
+		}).flatMap(new Func1<Response, Observable<List<Notification>>>() {
+			@Override
+			public Observable<List<Notification>> call(Response response) {
+				ResponseBody rb = (ResponseBody) response.getBody();
+				try {
+					List<Notification> notifications = JsonConverter.convert(rb.string(), new TypeReference<List<Notification>>() {
+					});
+					return Observable.just(notifications);
+				} catch (IOException e) {
+					return Observable.error(e);
+				}
+			}
+		});
+	}
 
 
 }

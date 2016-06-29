@@ -14,19 +14,19 @@ import com.frodo.github.view.FrescoAndIconicsImageView;
  */
 public class MainFragment extends StatedFragment {
 
-    @Override
-    public UIView createUIView(final Context context, LayoutInflater inflater, ViewGroup container) {
-        return new UIView(this, inflater, container, R.layout.uiview_main) {
+	@Override
+	public UIView createUIView(final Context context, LayoutInflater inflater, ViewGroup container) {
+		return new UIView(this, inflater, container, R.layout.uiview_main) {
 
-            @Override
-            public void initView() {
-                FrescoAndIconicsImageView sdv = (FrescoAndIconicsImageView) getRootView().findViewById(R.id.logo_fiiv);
-                sdv.setImageURI(Uri.parse("https://developer.github.com/assets/images/electrocat.png"));
-            }
+			@Override
+			public void initView() {
+				FrescoAndIconicsImageView sdv = (FrescoAndIconicsImageView) getRootView().findViewById(R.id.logo_fiiv);
+				sdv.setImageURI(Uri.parse("https://developer.github.com/assets/images/electrocat.png"));
+			}
 
-            @Override
-            public void registerListener() {
-            }
-        };
-    }
+			@Override
+			public void registerListener() {
+			}
+		};
+	}
 }

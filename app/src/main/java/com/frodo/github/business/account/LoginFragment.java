@@ -19,51 +19,51 @@ import rx.schedulers.Schedulers;
  * Created by frodo on 2016/5/5.
  */
 public class LoginFragment extends StatedFragment<LoginView, AccountModel> {
-    @Override
-    public LoginView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new LoginView(this, inflater, container);
-    }
+	@Override
+	public LoginView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
+		return new LoginView(this, inflater, container);
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+	}
 
-    @Override
-    public String tag() {
-        return "Sign in";
-    }
+	@Override
+	public String tag() {
+		return "Sign in";
+	}
 
-    public void loginWithReactor(final String username, final String password) {
-        getModel().loginUserWithReactor(username, password)
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<User>() {
-                               @Override
-                               public void call(User user) {
-                                   CircleProgressDialog.hideLoadingDialog();
-                                   getMainController().getLocalBroadcastManager().onBroadcast("drawer", user);
+	public void loginWithReactor(final String username, final String password) {
+		getModel().loginUserWithReactor(username, password)
+				.subscribeOn(Schedulers.io())
+				.doOnSubscribe(new Action0() {
+					@Override
+					public void call() {
+						CircleProgressDialog.showLoadingDialog(getAndroidContext());
+					}
+				})
+				.subscribeOn(AndroidSchedulers.mainThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<User>() {
+					           @Override
+					           public void call(User user) {
+						           CircleProgressDialog.hideLoadingDialog();
+						           getMainController().getLocalBroadcastManager().onBroadcast("drawer", user);
 
-                                   getMainController()
-                                           .getModelFactory()
-                                           .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController())
-                                           .followingUser("frodoking");
-                               }
-                           },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                CircleProgressDialog.hideLoadingDialog();
-                                throwable.printStackTrace();
-                            }
-                        });
-    }
+						           getMainController()
+								           .getModelFactory()
+								           .getOrCreateIfAbsent(UserModel.TAG, UserModel.class, getMainController())
+								           .followingUser("frodoking");
+					           }
+				           },
+						new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								CircleProgressDialog.hideLoadingDialog();
+								throwable.printStackTrace();
+							}
+						});
+	}
 }

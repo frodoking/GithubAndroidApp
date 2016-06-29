@@ -20,86 +20,86 @@ import com.mikepenz.octicons_typeface_library.Octicons;
  */
 public class RepositoriesAdapter extends BaseRecyclerViewAdapter<Repo, RepositoriesAdapter.ViewHolder> {
 
-    private boolean isSimple = false;
+	private boolean isSimple = false;
 
-    public RepositoriesAdapter(Context context) {
-        this(context, false);
-    }
+	public RepositoriesAdapter(Context context) {
+		this(context, false);
+	}
 
-    public RepositoriesAdapter(Context context, boolean isSimple) {
-        super(context, R.layout.view_item);
-        this.isSimple = isSimple;
-    }
+	public RepositoriesAdapter(Context context, boolean isSimple) {
+		super(context, R.layout.view_item);
+		this.isSimple = isSimple;
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (getItemViewType(viewType) == HEADER) {
-            View view = inflateItemView(parent);
-            view.setVisibility(View.INVISIBLE);
-            return new ViewHolder(view);
-        }
-        return new ViewHolder(inflateItemView(parent));
-    }
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (getItemViewType(viewType) == HEADER) {
+			View view = inflateItemView(parent);
+			view.setVisibility(View.INVISIBLE);
+			return new ViewHolder(view);
+		}
+		return new ViewHolder(inflateItemView(parent));
+	}
 
-    @Override
-    public int getItemCount() {
-        return super.getItemCount() + 1;
-    }
+	@Override
+	public int getItemCount() {
+		return super.getItemCount() + 1;
+	}
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return HEADER;
-        } else {
-            return ITEM;
-        }
-    }
+	@Override
+	public int getItemViewType(int position) {
+		if (position == 0) {
+			return HEADER;
+		} else {
+			return ITEM;
+		}
+	}
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if (getItemViewType(position) == HEADER) {
-        } else {
-            final Repo repo = getItem(position - 1);
+	@Override
+	public void onBindViewHolder(ViewHolder holder, int position) {
+		if (getItemViewType(position) == HEADER) {
+		} else {
+			final Repo repo = getItem(position - 1);
 
-            if (isSimple) {
-                if (repo.fork) {
-                    holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_gist_fork);
-                } else {
-                    holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
-                }
+			if (isSimple) {
+				if (repo.fork) {
+					holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_gist_fork);
+				} else {
+					holder.repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
+				}
 
-            } else {
-                if (repo.owner != null && repo.owner.avatar_url != null) {
-                    holder.repoOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(repo.owner.avatar_url));
-                }
-            }
+			} else {
+				if (repo.owner != null && repo.owner.avatar_url != null) {
+					holder.repoOV.getFrescoAndIconicsImageView().setImageURI(Uri.parse(repo.owner.avatar_url));
+				}
+			}
 
-            holder.repoOV.setText(repo.owner.login + "/" + repo.name);
-            holder.starCountOV.setText(String.valueOf(repo.stargazers_count));
+			holder.repoOV.setText(repo.owner.login + "/" + repo.name);
+			holder.starCountOV.setText(String.valueOf(repo.stargazers_count));
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString("repo", repo.owner.login + "/" + repo.name);
-                    FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getContext(), RepositoryFragment.class, arguments);
-                }
-            });
-        }
-    }
+			holder.itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Bundle arguments = new Bundle();
+					arguments.putString("repo", repo.owner.login + "/" + repo.name);
+					FragmentScheduler.nextFragmentWithUniqueTag((FragmentContainerActivity) getContext(), RepositoryFragment.class, arguments);
+				}
+			});
+		}
+	}
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        OcticonView repoOV;
-        OcticonView starCountOV;
+	class ViewHolder extends RecyclerView.ViewHolder {
+		OcticonView repoOV;
+		OcticonView starCountOV;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            repoOV = (OcticonView) itemView.findViewById(R.id.title_ov);
-            starCountOV = (OcticonView) itemView.findViewById(R.id.subtitle_ov);
+		public ViewHolder(View itemView) {
+			super(itemView);
+			repoOV = (OcticonView) itemView.findViewById(R.id.title_ov);
+			starCountOV = (OcticonView) itemView.findViewById(R.id.subtitle_ov);
 
-            repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
-            starCountOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_star);
-        }
-    }
+			repoOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_repo);
+			starCountOV.getFrescoAndIconicsImageView().setIcon(Octicons.Icon.oct_star);
+		}
+	}
 
 }

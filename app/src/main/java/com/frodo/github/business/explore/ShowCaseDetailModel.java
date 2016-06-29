@@ -22,36 +22,36 @@ import rx.functions.Func1;
  */
 public class ShowCaseDetailModel extends AbstractModel {
 
-    private AndroidFetchNetworkDataTask fetchShowCaseDetailNetworkDataTask;
+	private AndroidFetchNetworkDataTask fetchShowCaseDetailNetworkDataTask;
 
-    public ShowCaseDetailModel(MainController controller) {
-        super(controller);
-    }
+	public ShowCaseDetailModel(MainController controller) {
+		super(controller);
+	}
 
-    public Observable<ShowCase> loadShowCaseDetailWithReactor(final String slug) {
-        return Observable.create(new Observable.OnSubscribe<Response>() {
-            @Override
-            public void call(Subscriber<? super Response> subscriber) {
-                Request request = new Request.Builder()
-                        .method("GET")
-                        .relativeUrl(String.format("%s/%s", Path.Explore.SHOWCASES, slug))
-                        .build();
-                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-                networkTransport.setAPIUrl(Path.HOST_CODEHUB);
-                fetchShowCaseDetailNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-                getMainController().getBackgroundExecutor().execute(fetchShowCaseDetailNetworkDataTask);
-            }
-        }).flatMap(new Func1<Response, Observable<ShowCase>>() {
-            @Override
-            public Observable<ShowCase> call(Response response) {
-                ResponseBody rb = (ResponseBody) response.getBody();
-                try {
-                    ShowCase showCase = JsonConverter.convert(rb.string(), ShowCase.class);
-                    return Observable.just(showCase);
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
-    }
+	public Observable<ShowCase> loadShowCaseDetailWithReactor(final String slug) {
+		return Observable.create(new Observable.OnSubscribe<Response>() {
+			@Override
+			public void call(Subscriber<? super Response> subscriber) {
+				Request request = new Request.Builder()
+						.method("GET")
+						.relativeUrl(String.format("%s/%s", Path.Explore.SHOWCASES, slug))
+						.build();
+				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+				networkTransport.setAPIUrl(Path.HOST_CODEHUB);
+				fetchShowCaseDetailNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				getMainController().getBackgroundExecutor().execute(fetchShowCaseDetailNetworkDataTask);
+			}
+		}).flatMap(new Func1<Response, Observable<ShowCase>>() {
+			@Override
+			public Observable<ShowCase> call(Response response) {
+				ResponseBody rb = (ResponseBody) response.getBody();
+				try {
+					ShowCase showCase = JsonConverter.convert(rb.string(), ShowCase.class);
+					return Observable.just(showCase);
+				} catch (IOException e) {
+					return Observable.error(e);
+				}
+			}
+		});
+	}
 }

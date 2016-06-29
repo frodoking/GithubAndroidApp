@@ -4,7 +4,8 @@
     android:shape="rectangle">
     <corners android:radius="@dimen/corner_radius_default"/>
     <solid android:color="@android:color/white"/>
-    <stroke android:color="@android:color/darker_gray"
+    <stroke
+        android:color="@android:color/darker_gray"
         android:width="1px"/>
     <padding
         android:left="@dimen/abc_button_padding_horizontal_material"

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <com.frodo.github.view.FrescoAndIconicsImageView
         android:id="@+id/logo_fiiv"
@@ -16,6 +16,6 @@
         app:roundedCornerRadius="@dimen/corner_radius_default"
         app:actualImageScaleType="fitCenter"
         app:iiv_icon="oct_mark_github"
-        app:iiv_padding="30dp" />
+        app:iiv_padding="30dp"/>
 
 </LinearLayout>

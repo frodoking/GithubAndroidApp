@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_xsmall"
-            android:paddingBottom="@dimen/margin_xsmall" />
+            android:paddingBottom="@dimen/margin_xsmall"/>
 
         <TextView
             android:id="@+id/title_tv"
@@ -32,7 +32,7 @@
             android:layout_marginTop="@dimen/margin_middle"
             android:textSize="@dimen/text_size_xmiddle"
             android:textStyle="bold"
-            android:includeFontPadding="false" />
+            android:includeFontPadding="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                 android:layout_height="@dimen/image_size_default"
                 android:layout_marginRight="@dimen/margin_middle"
                 app:iiv_icon="oct_github_mark"
-                app:iiv_color="@android:color/holo_green_light" />
+                app:iiv_color="@android:color/holo_green_light"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,18 +59,19 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_middle"
                     android:textStyle="bold"
-                    android:includeFontPadding="false" />
+                    android:includeFontPadding="false"/>
 
                 <TextView
                     android:id="@+id/date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xxsmall"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@android:color/darker_gray"/>
             </LinearLayout>
         </LinearLayout>
 
-        <View style="@style/LineStyle"
+        <View
+            style="@style/LineStyle"
             android:layout_marginTop="@dimen/margin_middle"
             android:layout_marginBottom="@dimen/margin_middle"
             />
@@ -86,12 +87,12 @@
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 app:iiv_icon="oct_tag"
-                app:iiv_color="@android:color/darker_gray" />
+                app:iiv_color="@android:color/darker_gray"/>
 
             <com.frodo.github.view.FlowLayout
                 android:id="@+id/labels_ll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <us.feras.mdv.MarkdownView
@@ -100,5 +101,5 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <View style="@style/LineStyle" />
+    <View style="@style/LineStyle"/>
 </LinearLayout>

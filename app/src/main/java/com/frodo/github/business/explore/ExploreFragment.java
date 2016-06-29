@@ -17,6 +17,7 @@ import com.frodo.github.bean.ShowCase;
 import com.frodo.github.bean.dto.response.Repo;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,127 +36,132 @@ import rx.schedulers.Schedulers;
  */
 public class ExploreFragment extends StatedFragment<ExploreView, ExploreModel> {
 
-    private static final String STATE_SHOWCASE = "state_showcase";
-    private static final String STATE_REPOSITORIES = "state_repositories";
-    private ArrayList<ShowCase> showCases;
-    private ArrayList<Repo> repositories;
+	private static final String STATE_SHOWCASE = "state_showcase";
+	private static final String STATE_REPOSITORIES = "state_repositories";
+	private ArrayList<ShowCase> showCases;
+	private ArrayList<Repo> repositories;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-    @Override
-    public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-        return new ExploreView(this, inflater, container);
-    }
+	@Override
+	public ExploreView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
+		return new ExploreView(this, inflater, container);
+	}
 
-    @Override
-    public void onFirstTimeLaunched() {
-        loadDataWithReactor();
-    }
+	@Override
+	public void onFirstTimeLaunched() {
+		loadDataWithReactor();
+	}
 
-    @Override
-    public void onSaveState(Bundle outState) {
-        if (this.showCases != null) {
-            outState.putParcelableArrayList(STATE_SHOWCASE, this.showCases);
-        }
-        if (this.repositories != null) {
-            outState.putParcelableArrayList(STATE_REPOSITORIES, this.repositories);
-        }
-    }
+	@Override
+	public void onSaveState(Bundle outState) {
+		if (this.showCases != null) {
+			outState.putParcelableArrayList(STATE_SHOWCASE, this.showCases);
+		}
+		if (this.repositories != null) {
+			outState.putParcelableArrayList(STATE_REPOSITORIES, this.repositories);
+		}
+	}
 
-    @Override
-    public void onRestoreState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(STATE_SHOWCASE) && savedInstanceState.containsKey(STATE_REPOSITORIES)) {
-            this.showCases = savedInstanceState.getParcelableArrayList(STATE_SHOWCASE);
-            this.repositories = savedInstanceState.getParcelableArrayList(STATE_REPOSITORIES);
-            getUIView().showShowCaseList(showCases);
-            getUIView().showTrendingRepositoryList(repositories);
-        } else {
-            loadDataWithReactor();
-        }
-    }
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		if (savedInstanceState.containsKey(STATE_SHOWCASE) && savedInstanceState.containsKey(STATE_REPOSITORIES)) {
+			this.showCases = savedInstanceState.getParcelableArrayList(STATE_SHOWCASE);
+			this.repositories = savedInstanceState.getParcelableArrayList(STATE_REPOSITORIES);
+			getUIView().showShowCaseList(showCases);
+			getUIView().showTrendingRepositoryList(repositories);
+		} else {
+			loadDataWithReactor();
+		}
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+	}
 
-    @Override
-    public String tag() {
-        return "Explore";
-    }
+	@Override
+	public String tag() {
+		return "Explore";
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_explore, menu);
-    }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_explore, menu);
+		updateMenu(menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_trending:
-                FragmentScheduler.nextFragment((FragmentContainerActivity) getAndroidContext(), TrendingFragment.class);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	private void updateMenu(Menu menu) {
+		ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_trending, Octicons.Icon.oct_pulse);
+	}
 
-    private void loadDataWithReactor() {
-        final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
-        final Observable<List<Repo>> repositoryObservable = getModel().loadTrendingRepositoriesInWeeklyWithReactor();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_trending:
+				FragmentScheduler.nextFragment((FragmentContainerActivity) getAndroidContext(), TrendingFragment.class);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
-        Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repo>, Map<String, Object>>() {
-            @Override
-            public Map<String, Object> call(List<ShowCase> showCases, List<Repo> repositories) {
-                Map<String, Object> map = new HashMap<>(2);
-                map.put(STATE_SHOWCASE, showCases);
-                map.put(STATE_REPOSITORIES, repositories);
-                return map;
-            }
-        }).doOnSubscribe(new Action0() {
-            @Override
-            public void call() {
-                getUIView().showEmptyView();
-                CircleProgressDialog.showLoadingDialog(getAndroidContext());
-            }
-        })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<Map<String, Object>>() {
-                            @Override
-                            public void call(Map<String, Object> result) {
-                                CircleProgressDialog.hideLoadingDialog();
+	private void loadDataWithReactor() {
+		final Observable<List<ShowCase>> showCaseObservable = getModel().loadShowCasesWithReactor();
+		final Observable<List<Repo>> repositoryObservable = getModel().loadTrendingRepositoriesInWeeklyWithReactor();
 
-                                ArrayList<ShowCase> showCases = (ArrayList<ShowCase>) result.get(STATE_SHOWCASE);
-                                ArrayList<Repo> repositories = (ArrayList<Repo>) result.get(STATE_REPOSITORIES);
+		Observable.combineLatest(showCaseObservable, repositoryObservable, new Func2<List<ShowCase>, List<Repo>, Map<String, Object>>() {
+			@Override
+			public Map<String, Object> call(List<ShowCase> showCases, List<Repo> repositories) {
+				Map<String, Object> map = new HashMap<>(2);
+				map.put(STATE_SHOWCASE, showCases);
+				map.put(STATE_REPOSITORIES, repositories);
+				return map;
+			}
+		}).doOnSubscribe(new Action0() {
+			@Override
+			public void call() {
+				getUIView().showEmptyView();
+				CircleProgressDialog.showLoadingDialog(getAndroidContext());
+			}
+		})
+				.subscribeOn(AndroidSchedulers.mainThread())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(
+						new Action1<Map<String, Object>>() {
+							@Override
+							public void call(Map<String, Object> result) {
+								CircleProgressDialog.hideLoadingDialog();
 
-                                ExploreFragment.this.showCases = showCases;
-                                ExploreFragment.this.repositories = repositories;
+								ArrayList<ShowCase> showCases = (ArrayList<ShowCase>) result.get(STATE_SHOWCASE);
+								ArrayList<Repo> repositories = (ArrayList<Repo>) result.get(STATE_REPOSITORIES);
 
-                                getUIView().hideEmptyView();
-                                getUIView().showShowCaseList(showCases);
-                                getUIView().showTrendingRepositoryList(repositories);
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                CircleProgressDialog.hideLoadingDialog();
-                                if (getModel().isEnableCached()) {
-                                    List<ShowCase> showCases = getModel().getShowCasesFromCache();
-                                    if (showCases != null) {
-                                        getUIView().showShowCaseList(showCases);
-                                    }
-                                }
-                                getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
-                            }
-                        });
-    }
+								ExploreFragment.this.showCases = showCases;
+								ExploreFragment.this.repositories = repositories;
+
+								getUIView().hideEmptyView();
+								getUIView().showShowCaseList(showCases);
+								getUIView().showTrendingRepositoryList(repositories);
+							}
+						},
+						new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								CircleProgressDialog.hideLoadingDialog();
+								if (getModel().isEnableCached()) {
+									List<ShowCase> showCases = getModel().getShowCasesFromCache();
+									if (showCases != null) {
+										getUIView().showShowCaseList(showCases);
+									}
+								}
+								getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
+							}
+						});
+	}
 }

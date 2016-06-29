@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <include
         android:id="@+id/read_sign_v"
-        layout="@layout/view_item" />
+        layout="@layout/view_item"/>
 
     <LinearLayout
         android:id="@+id/read_sign_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <View style="@style/LineStyle" />
+    <View style="@style/LineStyle"/>
 
     <ListView
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1px" />
+        android:dividerHeight="1px"/>
 </LinearLayout>

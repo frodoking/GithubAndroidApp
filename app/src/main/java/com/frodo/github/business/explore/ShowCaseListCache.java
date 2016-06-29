@@ -16,50 +16,50 @@ import java.util.List;
  */
 public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
 
-    public static final String CACHE_KEY = "cache_showcases";
+	public static final String CACHE_KEY = "cache_showcases";
 
-    public ShowCaseListCache(CacheSystem cacheSystem) {
-        super(cacheSystem, Type.DISK);
-    }
+	public ShowCaseListCache(CacheSystem cacheSystem) {
+		super(cacheSystem, Type.DISK);
+	}
 
-    @Override
-    public List<ShowCase> get(String key) {
-        if (isCached(key)) {
-            return getCacheSystem().findCacheFromDisk(createAbsoluteKey(key), new TypeReference<List<ShowCase>>() {
-            });
-        }
-        return null;
-    }
+	@Override
+	public List<ShowCase> get(String key) {
+		if (isCached(key)) {
+			return getCacheSystem().findCacheFromDisk(createAbsoluteKey(key), new TypeReference<List<ShowCase>>() {
+			});
+		}
+		return null;
+	}
 
-    @Override
-    public void put(String key, List<ShowCase> value) {
-        getCacheSystem().put(createAbsoluteKey(key), value, getType());
-    }
+	@Override
+	public void put(String key, List<ShowCase> value) {
+		getCacheSystem().put(createAbsoluteKey(key), value, getType());
+	}
 
-    @Override
-    public boolean isCached(String key) {
-        return getCacheSystem().existCacheInDisk(createAbsoluteKey(key));
-    }
+	@Override
+	public boolean isCached(String key) {
+		return getCacheSystem().existCacheInDisk(createAbsoluteKey(key));
+	}
 
-    @Override
-    public boolean isExpired() {
-        return false;
-    }
+	@Override
+	public boolean isExpired() {
+		return false;
+	}
 
-    @Override
-    public void evictAll() {
-        getCacheSystem().evictAll();
-    }
+	@Override
+	public void evictAll() {
+		getCacheSystem().evictAll();
+	}
 
-    private String createAbsoluteKey(String relativeKey) {
-        final FileSystem fs = getCacheSystem().getController().getFileSystem();
-        final String absoluteKey = fs.getFilePath() + File.separator + getCacheKey(relativeKey) + ".cache.tmp";
-        Logger.fLog().tag("ShowCaseListCache").d("Cache path >>>> " + absoluteKey);
-        return absoluteKey;
-    }
+	private String createAbsoluteKey(String relativeKey) {
+		final FileSystem fs = getCacheSystem().getController().getFileSystem();
+		final String absoluteKey = fs.getFilePath() + File.separator + getCacheKey(relativeKey) + ".cache.tmp";
+		Logger.fLog().tag("ShowCaseListCache").d("Cache path >>>> " + absoluteKey);
+		return absoluteKey;
+	}
 
-    private String getCacheKey(String cacheKey) {
-        return HashUtils.computeWeakHash(cacheKey.trim()) + String.format("%04x", cacheKey.length());
-    }
+	private String getCacheKey(String cacheKey) {
+		return HashUtils.computeWeakHash(cacheKey.trim()) + String.format("%04x", cacheKey.length());
+	}
 }
 

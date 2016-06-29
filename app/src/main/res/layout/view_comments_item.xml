@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_marginLeft="@dimen/margin_middle"
-    android:layout_marginRight="@dimen/margin_middle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_marginLeft="@dimen/margin_middle"
+              android:layout_marginRight="@dimen/margin_middle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         app:cardCornerRadius="@dimen/corner_radius_default"
@@ -20,13 +20,13 @@
 
             <include layout="@layout/view_item"/>
 
-            <View style="@style/LineStyle" />
+            <View style="@style/LineStyle"/>
 
             <us.feras.mdv.MarkdownView
                 android:id="@+id/body_mdv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_middle" />
+                android:padding="@dimen/margin_middle"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

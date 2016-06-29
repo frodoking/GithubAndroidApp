@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,14 +17,14 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_middle"
             android:layout_margin="@dimen/margin_middle"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@android:color/darker_gray"/>
 
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-            app:cardCornerRadius="@dimen/corner_radius_default"
-            android:layout_marginLeft="@dimen/margin_middle"
-            android:layout_marginRight="@dimen/margin_middle"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+                                            app:cardCornerRadius="@dimen/corner_radius_default"
+                                            android:layout_marginLeft="@dimen/margin_middle"
+                                            android:layout_marginRight="@dimen/margin_middle"
+                                            android:layout_height="wrap_content"
+                                            android:layout_width="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -48,7 +48,7 @@
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:iiv_icon="oct_git_fork_private" />
+                            app:iiv_icon="oct_git_fork_private"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/issues_count_ov"
@@ -56,7 +56,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_middle"
-                            app:iiv_icon="oct_issue_opened" />
+                            app:iiv_icon="oct_issue_opened"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/date_ov"
@@ -64,7 +64,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_middle"
-                            app:iiv_icon="oct_calendar" />
+                            app:iiv_icon="oct_calendar"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -78,7 +78,7 @@
                             style="@style/OcticonViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:iiv_icon="oct_package" />
+                            app:iiv_icon="oct_package"/>
 
                         <com.frodo.github.view.OcticonView
                             android:id="@+id/size_ov"
@@ -86,7 +86,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_middle"
-                            app:iiv_icon="oct_tools" />
+                            app:iiv_icon="oct_tools"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -105,7 +105,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         app:iiv_icon="oct_person"
-                        android:text="Owner" />
+                        android:text="Owner"/>
 
                     <com.frodo.github.view.OcticonView
                         android:id="@+id/owner_ov"
@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:iiv_icon="oct_chevron_right"
-                        app:iconDirection="end" />
+                        app:iconDirection="end"/>
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -137,7 +137,7 @@
                 android:minHeight="@dimen/item_height_small"
                 android:background="@android:color/holo_green_dark"
                 app:iiv_icon="oct_star"
-                android:text="Star" />
+                android:text="Star"/>
 
             <com.frodo.github.view.OcticonView
                 android:id="@+id/watch_ov"
@@ -149,7 +149,7 @@
                 android:background="@android:color/holo_green_dark"
                 android:layout_marginLeft="@dimen/margin_middle"
                 app:iiv_icon="oct_eye"
-                android:text="Watch" />
+                android:text="Watch"/>
         </LinearLayout>
 
         <LinearLayout
@@ -171,14 +171,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
-                    android:text="Stargazers" />
+                    android:text="Stargazers"/>
             </LinearLayout>
 
             <LinearLayout
@@ -194,14 +194,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
-                    android:text="Watchers" />
+                    android:text="Watchers"/>
             </LinearLayout>
 
             <LinearLayout
@@ -217,18 +217,18 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_xxsmall"
                     android:textColor="@android:color/darker_gray"
-                    android:text="Forks" />
+                    android:text="Forks"/>
             </LinearLayout>
         </LinearLayout>
 
-        <View style="@style/LineStyle" />
+        <View style="@style/LineStyle"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/branchs_cvg"
@@ -239,7 +239,7 @@
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
             app:contentLayout="@layout/view_card_container"
-            app:footerLayout="@layout/view_repository_branch_footer" />
+            app:footerLayout="@layout/view_repository_branch_footer"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/readme_cvg"
@@ -250,7 +250,7 @@
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
             app:contentLayout="@layout/view_card_container"
-            app:footerLayout="@layout/view_footer" />
+            app:footerLayout="@layout/view_footer"/>
 
 
         <com.frodo.github.view.CardViewGroup
@@ -262,7 +262,7 @@
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
             app:contentLayout="@layout/view_card_container"
-            app:footerLayout="@layout/view_footer" />
+            app:footerLayout="@layout/view_footer"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/issues_cvg"
@@ -273,7 +273,7 @@
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
             app:contentLayout="@layout/view_card_container"
-            app:footerLayout="@layout/view_footer" />
+            app:footerLayout="@layout/view_footer"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/pull_requests_cvg"
@@ -284,7 +284,7 @@
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
             app:contentLayout="@layout/view_card_container"
-            app:footerLayout="@layout/view_footer" />
+            app:footerLayout="@layout/view_footer"/>
 
         <com.frodo.github.view.CardViewGroup
             android:id="@+id/notifications_cvg"
@@ -292,6 +292,6 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             app:headerLayout="@layout/view_item"
-            app:contentLayout="@layout/view_repository_notifications" />
+            app:contentLayout="@layout/view_repository_notifications"/>
     </LinearLayout>
 </ScrollView>

@@ -2,10 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_repositories"
-        android:title="@string/menu_repositories"
-        android:icon="@drawable/octicon_repo"/>
+        android:title="@string/menu_repositories"/>
     <item
         android:id="@+id/action_developers"
-        android:title="@string/menu_developers"
-        android:icon="@drawable/octicon_mark_github"/>
+        android:title="@string/menu_developers"/>
 </menu>

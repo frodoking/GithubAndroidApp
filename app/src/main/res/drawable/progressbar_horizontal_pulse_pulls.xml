@@ -2,23 +2,23 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <corners android:radius="@dimen/corner_radius_default" />
-            <solid android:color="@android:color/holo_green_dark" />
+            <corners android:radius="@dimen/corner_radius_default"/>
+            <solid android:color="@android:color/holo_green_dark"/>
         </shape>
     </item>
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <corners android:radius="@dimen/corner_radius_default" />
-                <solid android:color="@color/colorPrimaryDark" />
+                <corners android:radius="@dimen/corner_radius_default"/>
+                <solid android:color="@color/colorPrimaryDark"/>
             </shape>
         </clip>
     </item>
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <corners android:radius="@dimen/corner_radius_default" />
-                <solid android:color="@color/colorPrimary" />
+                <corners android:radius="@dimen/corner_radius_default"/>
+                <solid android:color="@color/colorPrimary"/>
             </shape>
         </clip>
     </item>

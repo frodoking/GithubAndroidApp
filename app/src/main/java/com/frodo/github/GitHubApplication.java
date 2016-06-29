@@ -3,6 +3,7 @@ package com.frodo.github;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.frodo.app.android.ApplicationDelegation;
 import com.frodo.app.android.MicroContextLoader;
@@ -34,111 +35,130 @@ import java.util.List;
  */
 public class GitHubApplication extends Application implements ApplicationDelegation {
 
-    private MicroContextLoader contextLoader;
+	private MicroContextLoader contextLoader;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        beforeLoad();
-        contextLoader = loadMicroContextLoader();
-        afterLoad();
-    }
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		beforeLoad();
+		contextLoader = loadMicroContextLoader();
+		afterLoad();
+		Log.i("Application_Life_Cycle", "onCreate");
+	}
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Log.i("Application_Life_Cycle", "onLowMemory");
+	}
 
-    @Override
-    public void beforeLoad() {
-    }
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+		Log.i("Application_Life_Cycle", "onTerminate");
+	}
 
-    @Override
-    public MicroContextLoader loadMicroContextLoader() {
-        return new MicroContextLoader(this) {
-            @Override
-            public Theme loadTheme() {
-                return new Theme() {
-                    @Override
-                    public int themeColor() {
-                        return ResourceManager.getColor(R.color.colorPrimaryDark);
-                    }
-                };
-            }
+	@Override
+	public void onTrimMemory(int level) {
+		super.onTrimMemory(level);
+		Log.i("Application_Life_Cycle", "onTrimMemory -- > level:" + level);
+	}
 
-            @Override
-            public Configuration loadConfiguration() {
-                final Environment environment = new Environment(0, "githubV3", "api.github.com", "", BuildConfig.DEBUG);
-                return new AndroidConfig(getMainController(), environment);
-            }
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
+	}
 
-            @Override
-            public LogCollector loadLogCollector() {
-                return new AndroidLogCollectorSystem(getMainController(), BuildConfig.DEBUG ? LogCollector.VERBOSE : LogCollector.ASSERT) {
-                    @Override
-                    public void uploadLeakBlocking(File file, String leakInfo) {
-                    }
-                };
-            }
+	@Override
+	public void beforeLoad() {
+	}
 
-            @Override
-            public NetworkTransport loadNetworkTransport() {
-                return new SimpleAndroidNetworkSystem(getMainController());
-            }
+	@Override
+	public MicroContextLoader loadMicroContextLoader() {
+		return new MicroContextLoader(this) {
+			@Override
+			public Theme loadTheme() {
+				return new Theme() {
+					@Override
+					public int themeColor() {
+						return ResourceManager.getColor(R.color.colorPrimaryDark);
+					}
+				};
+			}
 
-            @Override
-            public void loadServerConfiguration() {
-                getMainController()
-                        .getModelFactory()
-                        .getOrCreateIfAbsent(ServerConfigurationModel.TAG, ServerConfigurationModel.class, getMainController())
-                        .initBusiness();
-            }
-        };
-    }
+			@Override
+			public Configuration loadConfiguration() {
+				final Environment environment = new Environment(0, "githubV3", "api.github.com", "", BuildConfig.DEBUG);
+				return new AndroidConfig(getMainController(), environment);
+			}
 
-    @Override
-    public void afterLoad() {
-        MobileAds.initialize(this, "ca-app-pub-5257007452683157~9157734222");
+			@Override
+			public LogCollector loadLogCollector() {
+				return new AndroidLogCollectorSystem(getMainController(), BuildConfig.DEBUG ? LogCollector.VERBOSE : LogCollector.ASSERT) {
+					@Override
+					public void uploadLeakBlocking(File file, String leakInfo) {
+					}
+				};
+			}
 
-        getMainController()
-                .getModelFactory()
-                .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController())
-                .initBusiness();
-    }
+			@Override
+			public NetworkTransport loadNetworkTransport() {
+				return new SimpleAndroidNetworkSystem(getMainController());
+			}
 
-    @Override
-    public MainController getMainController() {
-        return contextLoader.getMainController();
-    }
+			@Override
+			public void loadServerConfiguration() {
+				getMainController()
+						.getModelFactory()
+						.getOrCreateIfAbsent(ServerConfigurationModel.TAG, ServerConfigurationModel.class, getMainController())
+						.initBusiness();
+			}
+		};
+	}
 
-    private static class SimpleAndroidNetworkSystem extends AndroidNetworkSystem {
+	@Override
+	public void afterLoad() {
+		MobileAds.initialize(this, "ca-app-pub-5257007452683157~9157734222");
 
-        private SimpleAndroidNetworkSystem(IController controller) {
-            super(controller);
-            setAPIUrl(controller.getConfig().getCurrentEnvironment().getUrl());
-            addInterceptor(new NetworkInterceptor.RequestInterceptor() {
-                @Override
-                public Void intercept(Request request) {
-                    return super.intercept(request);
-                }
-            });
-            addInterceptor(new NetworkInterceptor.ResponseSuccessInterceptor() {
-                @Override
-                public Void intercept(Response response) {
-                    List<Header> headers = response.getHeaders();
-                    if (headers != null && !headers.isEmpty()) {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("\n");
-                        for (Header header : headers) {
-                            sb.append(header.getName()).append(" : ").append(header.getValue()).append("\n");
-                        }
-                        Logger.fLog().tag("Response").i(sb.toString());
-                    }
+		getMainController()
+				.getModelFactory()
+				.getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController())
+				.initBusiness();
+	}
 
-                    return super.intercept(response);
-                }
-            });
-        }
-    }
+	@Override
+	public MainController getMainController() {
+		return contextLoader.getMainController();
+	}
+
+	private static class SimpleAndroidNetworkSystem extends AndroidNetworkSystem {
+
+		private SimpleAndroidNetworkSystem(IController controller) {
+			super(controller);
+			setAPIUrl(controller.getConfig().getCurrentEnvironment().getUrl());
+			addInterceptor(new NetworkInterceptor.RequestInterceptor() {
+				@Override
+				public Void intercept(Request request) {
+					return super.intercept(request);
+				}
+			});
+			addInterceptor(new NetworkInterceptor.ResponseSuccessInterceptor() {
+				@Override
+				public Void intercept(Response response) {
+					List<Header> headers = response.getHeaders();
+					if (headers != null && !headers.isEmpty()) {
+						StringBuilder sb = new StringBuilder();
+						sb.append("\n");
+						for (Header header : headers) {
+							sb.append(header.getName()).append(" : ").append(header.getValue()).append("\n");
+						}
+						Logger.fLog().tag("Response").i(sb.toString());
+					}
+
+					return super.intercept(response);
+				}
+			});
+		}
+	}
 }

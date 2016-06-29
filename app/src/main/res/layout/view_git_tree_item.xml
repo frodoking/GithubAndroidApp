@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/item_height_default"
-    android:gravity="center_vertical"
-    android:padding="@dimen/margin_middle"
-    android:background="@drawable/item_selector">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:minHeight="@dimen/item_height_default"
+              android:gravity="center_vertical"
+              android:padding="@dimen/margin_middle"
+              android:background="@drawable/item_selector">
 
     <com.frodo.github.view.OcticonView
         android:id="@+id/title_ov"
@@ -18,7 +18,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/text_size_middle"
         app:iiv_color="?attr/colorPrimary"
-        app:iconDirection="start" />
+        app:iconDirection="start"/>
 
     <TextView
         android:id="@+id/update_time_tv"
@@ -26,5 +26,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="21dp"
         android:textSize="@dimen/text_size_xxsmall"
-        android:textColor="@android:color/darker_gray" />
+        android:textColor="@android:color/darker_gray"/>
 </LinearLayout>
