@@ -34,9 +34,9 @@ Android studio 2.0
 
 ## App Master Drawing
 <figure class="half">
-<img  src="http://frodoking.github.io/img/github-client/github-home.png" width="160" height="284"/>
-<img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="160" height="284"/>
-<img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="160" height="284"/>
+ <img  src="http://frodoking.github.io/img/github-client/github-home.png"/>
+ <img  src="http://frodoking.github.io/img/github-client/github-drawer.png"/>
+ <img  src="http://frodoking.github.io/img/github-client/github-profile.png"/>
 </figure>
 <img  src="http://frodoking.github.io/img/github-client/github-notifications.png" width="160" height="284">\
 <img  src="http://frodoking.github.io/img/github-client/github-issues.png" width="160" height="284">\
