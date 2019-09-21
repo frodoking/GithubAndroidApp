@@ -30,26 +30,20 @@ Android studio 2.0
 * Blog：http://frodoking.github.io/
 
 ## Apk (v1.0.x snapshots)
-> * [github-v1.0.1-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk)
-* [github-v1.0.2-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk)
-* [github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
-* [github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk) 
+> * [github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk) 
 
 ## App Master Drawing
-<img  src="http://frodoking.github.io/img/github-client/github-home.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-notifications.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-issues.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-events.png" width="240" height="427">
+<img  src="http://frodoking.github.io/img/github-client/github-home.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-notifications.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-issues.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-events.png" width="160" height="284">
 
-<img  src="http://frodoking.github.io/img/github-client/github-explore.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-showcases.png" width="240" height="427">
+<img  src="http://frodoking.github.io/img/github-client/github-explore.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-showcases.png" width="160" height="284">
 
-<img  src="http://frodoking.github.io/img/github-client/github-repo.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-repo-issues.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-repo-pulse.png" width="240" height="427">
-<img  src="http://frodoking.github.io/img/github-client/github-repo-contents.png" width="240" height="427">
-
-
-
+<img  src="http://frodoking.github.io/img/github-client/github-repo.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-repo-issues.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-repo-pulse.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-repo-contents.png" width="160" height="284">
