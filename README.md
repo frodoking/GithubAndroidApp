@@ -33,9 +33,11 @@ Android studio 2.0
 > * [github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk) 
 
 ## App Master Drawing
-<img  src="http://frodoking.github.io/img/github-client/github-home.png" width="160" height="284">\
-<img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="160" height="284">\
-<img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="160" height="284">\
+<figure class="third">
+<img  src="http://frodoking.github.io/img/github-client/github-home.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="160" height="284">
+<img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="160" height="284">
+</figure>
 <img  src="http://frodoking.github.io/img/github-client/github-notifications.png" width="160" height="284">\
 <img  src="http://frodoking.github.io/img/github-client/github-issues.png" width="160" height="284">\
 <img  src="http://frodoking.github.io/img/github-client/github-events.png" width="160" height="284">\
