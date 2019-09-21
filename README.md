@@ -2,7 +2,7 @@
 
 This project is a Github client on Android platform, This App drawing  is based on the design of Github Web page(H5).
 
-##Feature
+## Feature
 1. account (Auth2.0/Sign in/Sign out)
 2. explore (showcases/repos)
 3. user (profile/followers/following)
@@ -11,15 +11,15 @@ This project is a Github client on Android platform, This App drawing  is based 
 6. trending
 there are many features not yet implemented, you can contribute to it if you are interested in this project.
 
-##API
+## API
 1. [Github Developer](https://developer.github.com/v3/)
 2. [Octions](https://octicons.github.com/)
  
-##About Open Source
+## About Open Source
 ####IDE
 Android studio 2.0
 
-####Third Party Project
+#### Third Party Project
 1. [App-Architecture](https://github.com/frodoking/App-Architecture.git)
     app architecture on android platform.
 2. [MarkdownView](https://github.com/falnatsheh/MarkdownView)
@@ -29,13 +29,13 @@ Android studio 2.0
 * Email: awangyun8@gmail.com
 * Blog：http://frodoking.github.io/
 
-##Apk (v1.0.x snapshots)
+## Apk (v1.0.x snapshots)
 > * [github-v1.0.1-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk)
 * [github-v1.0.2-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk)
 * [github-v1.0.3-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk)
 * [github-v1.0.4-snapshots-release.apk](https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.4-snapshots-release.apk) 
 
-##App Master Drawing
+## App Master Drawing
 <img  src="http://frodoking.github.io/img/github-client/github-home.png" width="240" height="427">
 <img  src="http://frodoking.github.io/img/github-client/github-drawer.png" width="240" height="427">
 <img  src="http://frodoking.github.io/img/github-client/github-profile.png" width="240" height="427">
