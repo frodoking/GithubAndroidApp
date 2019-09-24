@@ -24,13 +24,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by frodo on 2016/5/5.
@@ -87,9 +89,10 @@ public class AccountModel extends AbstractModel {
 		createAuthorization.client_secret = AuthorizationConfig.CLIENT_SECRET;
 		createAuthorization.note = AuthorizationConfig.NOTE;
 		return createAuthorization(username, password, createAuthorization)
-				.flatMap(new Func1<GithubAuthorization, Observable<User>>() {
-					@Override
-					public Observable<User> call(final GithubAuthorization authorization) {
+				.flatMap(new Function<GithubAuthorization, ObservableSource<User>>()
+				{
+					@Override public ObservableSource<User> apply(final GithubAuthorization authorization)
+					{
 						final String tokenKey = getBase64(username).trim();
 						getMainController().getCacheSystem().put(tokenKey, authorization.token, Cache.Type.INTERNAL);
 						getMainController().getNetworkTransport().addInterceptor(new NetworkInterceptor.RequestInterceptor() {
@@ -102,9 +105,10 @@ public class AccountModel extends AbstractModel {
 
 						return userModel.loadUserWithReactor0(username);
 					}
-				}).doOnNext(new Action1<User>() {
-					@Override
-					public void call(User user) {
+				}).doAfterNext(new Consumer<User>()
+				{
+					@Override public void accept(User user)
+					{
 						if (user != null) {
 							getMainController().getCacheSystem().put("login", user.login, Cache.Type.INTERNAL);
 							login = user.login;
@@ -118,18 +122,19 @@ public class AccountModel extends AbstractModel {
 	}
 
 	public Observable<Void> logoutUserWithReactor() {
-		return Observable.create(new Observable.OnSubscribe<Void>() {
-			@Override
-			public void call(Subscriber<? super Void> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Void>() {
+
+			@Override public void subscribe(ObservableEmitter<Void> emitter)
+			{
 				try {
 					getMainController().getCacheSystem().evict(getBase64(login).trim(), Cache.Type.INTERNAL);
 					login = null;
 					isSignIn = false;
-					subscriber.onNext(null);
+					emitter.onNext(null);
 				} catch (Exception e) {
-					subscriber.onError(e);
+					emitter.onError(e);
 				}
-				subscriber.onCompleted();
+				emitter.onComplete();
 			}
 		});
 	}
@@ -144,9 +149,10 @@ public class AccountModel extends AbstractModel {
 	 * @return
 	 */
 	private Observable<GithubAuthorization> createAuthorization(final String username, final String password, final CreateAuthorization createAuthorization) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				List<Header> headerList = new ArrayList<>();
 				RequestBody requestBody = RequestBody.create(MediaType.parse(GitHubMediaTypes.BasicJson), JsonConverter.toJson(createAuthorization));
 				String userCredentials = username + ":" + password;
@@ -162,12 +168,14 @@ public class AccountModel extends AbstractModel {
 						.build();
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				createAuthorizationNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				createAuthorizationNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(createAuthorizationNetworkDataTask);
 			}
-		}).flatMap(new Func1<Response, Observable<GithubAuthorization>>() {
+		}).flatMap(new Function<Response, ObservableSource<GithubAuthorization>>()
+		{
+
 			@Override
-			public Observable<GithubAuthorization> call(Response response) {
+			public ObservableSource<GithubAuthorization> apply(Response response) {
 				ResponseBody rb = (ResponseBody) response.getBody();
 				try {
 					GithubAuthorization githubAuthorization = JsonConverter.convert(rb.string(), GithubAuthorization.class);
