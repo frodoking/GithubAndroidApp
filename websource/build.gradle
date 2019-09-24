@@ -19,6 +19,5 @@ dependencies {
     api "com.mikepenz:iconics-core:2.6.6@aar"
     api 'com.mikepenz:octicons-typeface:3.2.0.1@aar'
 
-    implementation 'org.jsoup:jsoup:1.9.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
+    api 'org.jsoup:jsoup:1.9.1'
 }
