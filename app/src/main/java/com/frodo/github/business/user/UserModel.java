@@ -1,10 +1,10 @@
 package com.frodo.github.business.user;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import android.content.Context;
 import android.support.v4.util.Pair;
 import android.webkit.WebSettings;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
@@ -16,7 +16,6 @@ import com.frodo.app.framework.net.Response;
 import com.frodo.app.framework.task.BackgroundCallTask;
 import com.frodo.app.framework.toolbox.TextUtils;
 import com.frodo.github.bean.dto.response.User;
-import com.frodo.github.bean.dto.response.search.ReposSearch;
 import com.frodo.github.bean.dto.response.search.UsersSearch;
 import com.frodo.github.common.Path;
 import com.frodo.github.datasource.WebApiProvider;
@@ -24,11 +23,13 @@ import com.frodo.github.datasource.WebApiProvider;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * Created by frodo on 2016/5/30.
@@ -52,9 +53,9 @@ public class UserModel extends AbstractModel {
 	}
 
 	public Observable<User> loadUserWithReactor(final String username) {
-		return Observable.combineLatest(loadUserWithReactor0(username), loadUserFromWebWithReactor(username), new Func2<User, User, User>() {
-			@Override
-			public User call(User user, User webUser) {
+		return Observable.combineLatest(loadUserWithReactor0(username), loadUserFromWebWithReactor(username), new BiFunction<User, User, User>() {
+			@Override public User apply(User user, User webUser)
+			{
 				user.starred = webUser.starred;
 				user.popularRepositories = webUser.popularRepositories;
 				user.contributeToRepositories = webUser.contributeToRepositories;
@@ -64,21 +65,21 @@ public class UserModel extends AbstractModel {
 	}
 
 	public Observable<User> loadUserWithReactor0(final String username) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				Request request = new Request.Builder()
 						.method("GET")
 						.relativeUrl(Path.replace(Path.Users.USER, new Pair<>("username", username)))
 						.build();
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
 			}
-		}).flatMap(new Func1<Response, Observable<User>>() {
-			@Override
-			public Observable<User> call(Response response) {
+		}).flatMap(new Function<Response, ObservableSource<User>>() {
+			@Override public ObservableSource<User> apply(Response response)
+			{
 				ResponseBody rb = (ResponseBody) response.getBody();
 				try {
 					User user = JsonConverter.convert(rb.string(), User.class);
@@ -91,9 +92,9 @@ public class UserModel extends AbstractModel {
 	}
 
 	private Observable<User> loadUserFromWebWithReactor(final String username) {
-		return Observable.create(new Observable.OnSubscribe<User>() {
-			@Override
-			public void call(final Subscriber<? super User> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<User>() {
+			@Override public void subscribe(final ObservableEmitter<User> emitter)
+			{
 				fetchUserFromWebTask = new BackgroundCallTask<User>() {
 					@Override
 					public String key() {
@@ -105,7 +106,7 @@ public class UserModel extends AbstractModel {
 						try {
 							return webApiProvider.getUser(username);
 						} catch (Exception e) {
-							subscriber.onError(e);
+							emitter.onError(e);
 							return null;
 						}
 					}
@@ -113,9 +114,9 @@ public class UserModel extends AbstractModel {
 					@Override
 					public void postExecute(User user) {
 						if (user != null) {
-							subscriber.onNext(user);
+							emitter.onNext(user);
 						}
-						subscriber.onCompleted();
+						emitter.onComplete();
 					}
 				};
 				getMainController().getBackgroundExecutor().execute(fetchUserFromWebTask);
@@ -140,21 +141,21 @@ public class UserModel extends AbstractModel {
 	}
 
 	private Observable<List<User>> loadUsers(final String path) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				Request request = new Request.Builder()
 						.method("GET")
 						.relativeUrl(path)
 						.build();
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
 			}
-		}).flatMap(new Func1<Response, Observable<List<User>>>() {
-			@Override
-			public Observable<List<User>> call(Response response) {
+		}).flatMap(new Function<Response, ObservableSource<List<User>>>() {
+			@Override public ObservableSource<List<User>> apply(Response response)
+			{
 				ResponseBody rb = (ResponseBody) response.getBody();
 				try {
 					List<User> users = JsonConverter.convert(rb.string(), new TypeReference<List<User>>() {
@@ -168,9 +169,9 @@ public class UserModel extends AbstractModel {
 	}
 
 	public Observable<Boolean> followingUser(final String username) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				Request request = new Request.Builder()
 						.method("GET")
 						.relativeUrl(Path.replace(Path.Users.USER_FOLLOW, new Pair<>("username", username)))
@@ -178,12 +179,12 @@ public class UserModel extends AbstractModel {
 				request.getHeaders().add(new Header("Content-Length", "0"));
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				fetchUserNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(fetchUserNetworkDataTask);
 			}
-		}).map(new Func1<Response, Boolean>() {
-			@Override
-			public Boolean call(Response response) {
+		}).map(new Function<Response, Boolean>() {
+			@Override public Boolean apply(Response response)
+			{
 				return response.getStatus() == 204;
 			}
 		});
@@ -194,9 +195,9 @@ public class UserModel extends AbstractModel {
 	}
 
 	public Observable<UsersSearch> searchUsers(final String q, final String sort, final String order, final int page, final int perPage) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(final Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				Request request = new Request.Builder()
 						.method("GET")
 						.relativeUrl(Path.Search.USERS)
@@ -216,12 +217,12 @@ public class UserModel extends AbstractModel {
 
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				searchUsersNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				searchUsersNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(searchUsersNetworkDataTask);
 			}
-		}).flatMap(new Func1<Response, Observable<UsersSearch>>() {
-			@Override
-			public Observable<UsersSearch> call(Response response) {
+		}).flatMap(new Function<Response, ObservableSource<UsersSearch>>() {
+			@Override public ObservableSource<UsersSearch> apply(Response response)
+			{
 				ResponseBody rb = (ResponseBody) response.getBody();
 				try {
 					UsersSearch usersSearch = JsonConverter.convert(rb.string(), new TypeReference<UsersSearch>() {
@@ -235,14 +236,14 @@ public class UserModel extends AbstractModel {
 	}
 
 	Observable<Void> doFollow(String username) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(final Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 
 			}
-		}).map(new Func1<Response, Void>() {
-			@Override
-			public Void call(Response response) {
+		}).map(new Function<Response, Void>() {
+			@Override public Void apply(Response response) throws Exception
+			{
 				return null;
 			}
 		});
