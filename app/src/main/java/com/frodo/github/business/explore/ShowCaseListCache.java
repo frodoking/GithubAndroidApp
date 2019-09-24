@@ -1,12 +1,12 @@
 package com.frodo.github.business.explore;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.toolbox.HashUtils;
 import com.frodo.app.framework.cache.AbstractCache;
 import com.frodo.app.framework.cache.CacheSystem;
 import com.frodo.app.framework.filesystem.FileSystem;
 import com.frodo.app.framework.log.Logger;
 import com.frodo.github.bean.ShowCase;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.List;
@@ -25,8 +25,8 @@ public class ShowCaseListCache extends AbstractCache<String, List<ShowCase>> {
 	@Override
 	public List<ShowCase> get(String key) {
 		if (isCached(key)) {
-			return getCacheSystem().findCacheFromDisk(createAbsoluteKey(key), new TypeReference<List<ShowCase>>() {
-			});
+			return getCacheSystem().findCacheFromDisk(createAbsoluteKey(key), new TypeToken<List<ShowCase>>() {
+			}.getType());
 		}
 		return null;
 	}
