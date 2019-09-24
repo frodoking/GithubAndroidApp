@@ -1,5 +1,6 @@
 package com.frodo.github.business.repository;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,145 +14,179 @@ import com.frodo.github.view.ViewProvider;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function4;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by frodo on 16/6/11.
  */
-public class RepositoryIssuesFragment extends StatedFragment<RepositoryIssuesView, RepositoryModel> {
+public class RepositoryIssuesFragment extends StatedFragment<RepositoryIssuesView, RepositoryModel>
+{
 
-	private boolean isAccount;
-	private String repoOwner;
-	private String repo;
+    private boolean isAccount;
 
-	private List<Issue> openIssues;
-	private List<Issue> closedIssues;
-	private List<Issue> yoursIssues;
+    private String repoOwner;
 
-	@Override
-	public RepositoryIssuesView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-		return new RepositoryIssuesView(this, inflater, container);
-	}
+    private String repo;
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Issues");
-	}
+    private List<Issue> openIssues;
 
-	@Override
-	public void onFirstTimeLaunched() {
-		Bundle bundle = getArguments();
-		//TODO issues_account
-		// issues_repo_{owner}_{repo}
-		if (bundle != null && bundle.containsKey("issues_args")) {
-			String[] argsArray = bundle.getString("issues_args").split("_");
+    private List<Issue> closedIssues;
 
-			if (argsArray[0].equalsIgnoreCase("issues")) {
-				if (argsArray[1].equalsIgnoreCase("account")) {
-					isAccount = true;
-				} else if (argsArray[1].equalsIgnoreCase("repo")) {
-					repoOwner = argsArray[2];
-					repo = argsArray[3];
-				}
-				loadOpenIssuesWithReactor();
-			}
-		}
-	}
+    private List<Issue> yoursIssues;
 
+    @Override public RepositoryIssuesView createUIView(Context context, LayoutInflater inflater, ViewGroup container)
+    {
+        return new RepositoryIssuesView(this, inflater, container);
+    }
 
-	public void loadOpenIssuesWithReactor() {
-		if (checkIssues(openIssues)) return;
+    @Override public void onResume()
+    {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Issues");
+    }
 
-		Observable<List<Issue>> observable;
-		if (isAccount) {
-			observable = getModel().loadIssuesForAccountWithReactor("all", "open", null, null, null, null, -1, -1);
-		} else {
-			observable = getModel().loadIssuesForRepoWithReactor(repoOwner, repo, "all", "open", null, null, null, null, -1, -1);
-		}
-		observable.doOnNext(new Action1<List<Issue>>() {
-			@Override
-			public void call(List<Issue> issues) {
-				openIssues = issues;
-			}
-		});
+    @Override public void onFirstTimeLaunched()
+    {
+        Bundle bundle = getArguments();
+        //TODO issues_account
+        // issues_repo_{owner}_{repo}
+        if (bundle != null && bundle.containsKey("issues_args"))
+        {
+            String[] argsArray = bundle.getString("issues_args").split("_");
 
-		handleObservable(observable);
-	}
+            if (argsArray[0].equalsIgnoreCase("issues"))
+            {
+                if (argsArray[1].equalsIgnoreCase("account"))
+                {
+                    isAccount = true;
+                }
+                else if (argsArray[1].equalsIgnoreCase("repo"))
+                {
+                    repoOwner = argsArray[2];
+                    repo = argsArray[3];
+                }
+                loadOpenIssuesWithReactor();
+            }
+        }
+    }
 
-	public void loadClosedIssuesWithReactor() {
-		if (checkIssues(closedIssues)) return;
+    @SuppressLint ("CheckResult") public void loadOpenIssuesWithReactor()
+    {
+        if (checkIssues(openIssues))
+            return;
 
-		Observable<List<Issue>> observable;
-		if (isAccount) {
-			observable = getModel().loadIssuesForAccountWithReactor("all", "closed", null, null, null, null, -1, -1);
-		} else {
-			observable = getModel().loadIssuesForRepoWithReactor(repoOwner, repo, "all", "closed", null, null, null, null, -1, -1);
-		}
-		observable.doOnNext(new Action1<List<Issue>>() {
-			@Override
-			public void call(List<Issue> issues) {
-				closedIssues = issues;
-			}
-		});
-		handleObservable(observable);
-	}
+        Observable<List<Issue>> observable;
+        if (isAccount)
+        {
+            observable = getModel().loadIssuesForAccountWithReactor("all", "open", null, null, null, null, -1, -1);
+        }
+        else
+        {
+            observable = getModel()
+                    .loadIssuesForRepoWithReactor(repoOwner, repo, "all", "open", null, null, null, null, -1, -1);
+        }
+        observable.doOnNext(new Consumer<List<Issue>>()
+        {
+            @Override public void accept(List<Issue> issues)
+            {
+                openIssues = issues;
+            }
+        });
 
-	public void loadYoursIssuesWithReactor() {
-		if (checkIssues(yoursIssues)) return;
+        handleObservable(observable);
+    }
 
-		Observable<List<Issue>> observable;
-		if (isAccount) {
-			observable = getModel().loadIssuesForAccountWithReactor(null, null, null, null, null, null, -1, -1);
-		} else {
-			observable = getModel().loadIssuesForRepoWithReactor(repoOwner, repo, null, null, null, null, null, null, -1, -1);
-		}
-		observable.doOnNext(new Action1<List<Issue>>() {
-			@Override
-			public void call(List<Issue> issues) {
-				yoursIssues = issues;
-			}
-		});
+    @SuppressLint ("CheckResult") public void loadClosedIssuesWithReactor()
+    {
+        if (checkIssues(closedIssues))
+            return;
 
-		handleObservable(observable);
-	}
+        Observable<List<Issue>> observable;
+        if (isAccount)
+        {
+            observable = getModel().loadIssuesForAccountWithReactor("all", "closed", null, null, null, null, -1, -1);
+        }
+        else
+        {
+            observable = getModel()
+                    .loadIssuesForRepoWithReactor(repoOwner, repo, "all", "closed", null, null, null, null, -1, -1);
+        }
+        observable.doOnNext(new Consumer<List<Issue>>()
+        {
+            @Override public void accept(List<Issue> issues)
+            {
+                closedIssues = issues;
+            }
+        });
+        handleObservable(observable);
+    }
 
-	private boolean checkIssues(List<Issue> issues) {
-		if (issues != null && !issues.isEmpty()) {
-			getUIView().hideEmptyView();
-			getUIView().showDetail(issues);
-			return true;
-		}
-		return false;
-	}
+    @SuppressLint ("CheckResult") public void loadYoursIssuesWithReactor()
+    {
+        if (checkIssues(yoursIssues))
+            return;
 
-	private void handleObservable(Observable<List<Issue>> observable) {
-		observable.subscribeOn(Schedulers.io())
-				.doOnSubscribe(new Action0() {
-					@Override
-					public void call() {
-						CircleProgressDialog.showLoadingDialog(getAndroidContext());
-					}
-				})
-				.subscribeOn(AndroidSchedulers.mainThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<List<Issue>>() {
-					           @Override
-					           public void call(List<Issue> issues) {
-						           CircleProgressDialog.hideLoadingDialog();
-						           getUIView().showDetail(issues);
-					           }
-				           },
-						new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								CircleProgressDialog.hideLoadingDialog();
-								getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
-							}
-						});
-	}
+        Observable<List<Issue>> observable;
+        if (isAccount)
+        {
+            observable = getModel().loadIssuesForAccountWithReactor(null, null, null, null, null, null, -1, -1);
+        }
+        else
+        {
+            observable = getModel()
+                    .loadIssuesForRepoWithReactor(repoOwner, repo, null, null, null, null, null, null, -1, -1);
+        }
+        observable.doOnNext(new Consumer<List<Issue>>()
+        {
+            @Override public void accept(List<Issue> issues)
+            {
+                yoursIssues = issues;
+            }
+        });
+
+        handleObservable(observable);
+    }
+
+    private boolean checkIssues(List<Issue> issues)
+    {
+        if (issues != null && !issues.isEmpty())
+        {
+            getUIView().hideEmptyView();
+            getUIView().showDetail(issues);
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressLint ("CheckResult") private void handleObservable(Observable<List<Issue>> observable)
+    {
+        observable.subscribeOn(Schedulers.io()).doOnSubscribe(new Consumer<Disposable>()
+        {
+            @Override public void accept(Disposable disposable)
+            {
+                CircleProgressDialog.showLoadingDialog(getAndroidContext());
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Issue>>()
+                {
+                    @Override public void accept(List<Issue> issues)
+                    {
+                        CircleProgressDialog.hideLoadingDialog();
+                        getUIView().showDetail(issues);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override public void accept(Throwable throwable)
+                    {
+                        CircleProgressDialog.hideLoadingDialog();
+                        getUIView().showErrorView(
+                                ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
+                    }
+                });
+    }
 }
