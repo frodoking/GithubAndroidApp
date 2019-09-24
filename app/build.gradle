@@ -59,7 +59,7 @@ dependencies {
     api 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'us.feras.mdv:markdownview:1.1.0'
 
-    implementation 'com.google.firebase:firebase-ads:18.2.0'
+    api 'com.google.firebase:firebase-ads:18.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
