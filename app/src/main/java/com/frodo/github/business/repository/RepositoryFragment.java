@@ -1,5 +1,6 @@
 package com.frodo.github.business.repository;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,248 +24,276 @@ import com.mikepenz.octicons_typeface_library.Octicons;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func4;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function4;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by frodo on 2016/5/7.
  */
-public class RepositoryFragment extends StatedFragment<RepositoryView, RepositoryModel> {
-	private String repoName;
-	private Repo repo;
-	private Content content;
-	private int closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount;
-	private ArrayList<Issue> issues;
-	private ArrayList<Issue> pullRequests;
+public class RepositoryFragment extends StatedFragment<RepositoryView, RepositoryModel>
+{
+    private String repoName;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
+    private Repo repo;
 
-	@Override
-	public RepositoryView createUIView(Context context, LayoutInflater inflater, ViewGroup container) {
-		return new RepositoryView(this, inflater, container);
-	}
+    private Content content;
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_repo, menu);
-		updateMenu(menu);
-	}
+    private int closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount;
 
-	private void updateMenu(Menu menu) {
-		ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_code, Octicons.Icon.oct_code);
-		ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_issues, Octicons.Icon.oct_issue_opened);
-		ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_pull_requests, Octicons.Icon.oct_git_pull_request);
-		ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_pulse, Octicons.Icon.oct_pulse);
-	}
+    private ArrayList<Issue> issues;
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
+    private ArrayList<Issue> pullRequests;
 
-	@Override
-	public void onFirstTimeLaunched() {
-		Bundle bundle = getArguments();
-		if (bundle != null && bundle.containsKey("repo")) {
-			repoName = bundle.getString("repo");
-			if (repoName != null && repoName.contains("/")) {
-				String[] strings = repoName.split("/");
-				loadRepositoryWithReactor(strings[0], strings[1]);
-			}
-		}
-	}
+    @Override public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
-	}
+    @Override public RepositoryView createUIView(Context context, LayoutInflater inflater, ViewGroup container)
+    {
+        return new RepositoryView(this, inflater, container);
+    }
 
-	@Override
-	public void onSaveState(Bundle outState) {
-		if (repo != null)
-			outState.putParcelable("repo", repo);
-		if (content != null)
-			outState.putParcelable("content", content);
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_repo, menu);
+        updateMenu(menu);
+    }
 
-		outState.putInt("closedPullsCount", closedPullsCount);
-		outState.putInt("openedPullsCount", openedPullsCount);
-		outState.putInt("closedIssuesCount", closedIssuesCount);
-		outState.putInt("openedIssuesCount", openedIssuesCount);
+    private void updateMenu(Menu menu)
+    {
+        ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_code, Octicons.Icon.oct_code);
+        ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_issues, Octicons.Icon.oct_issue_opened);
+        ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_pull_requests,
+                Octicons.Icon.oct_git_pull_request);
+        ViewProvider.updateMenuItem(getAndroidContext(), menu, R.id.action_pulse, Octicons.Icon.oct_pulse);
+    }
 
-		if (issues != null && !issues.isEmpty())
-			outState.putParcelableArrayList("issues", issues);
-		if (pullRequests != null && !pullRequests.isEmpty())
-			outState.putParcelableArrayList("pullRequests", pullRequests);
-	}
+    @Override public boolean onOptionsItemSelected(MenuItem item)
+    {
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
-		repo = savedInstanceState.getParcelable("repo");
-		content = savedInstanceState.getParcelable("content");
+    @Override public void onFirstTimeLaunched()
+    {
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("repo"))
+        {
+            repoName = bundle.getString("repo");
+            if (repoName != null && repoName.contains("/"))
+            {
+                String[] strings = repoName.split("/");
+                loadRepositoryWithReactor(strings[0], strings[1]);
+            }
+        }
+    }
 
-		closedPullsCount = savedInstanceState.getInt("closedPullsCount");
-		openedPullsCount = savedInstanceState.getInt("openedPullsCount");
-		closedIssuesCount = savedInstanceState.getInt("closedIssuesCount");
-		openedIssuesCount = savedInstanceState.getInt("openedIssuesCount");
+    @Override public void onResume()
+    {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(tag());
+    }
 
-		issues = savedInstanceState.getParcelableArrayList("issues");
-		pullRequests = savedInstanceState.getParcelableArrayList("pullRequests");
+    @Override public void onSaveState(Bundle outState)
+    {
+        if (repo != null)
+            outState.putParcelable("repo", repo);
+        if (content != null)
+            outState.putParcelable("content", content);
 
-		getUIView().showDetail(repo);
-		getUIView().showReadme(content);
-		getUIView().showPulse(closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount);
-		getUIView().showIssues(issues);
-		getUIView().showPullRequests(pullRequests);
-	}
+        outState.putInt("closedPullsCount", closedPullsCount);
+        outState.putInt("openedPullsCount", openedPullsCount);
+        outState.putInt("closedIssuesCount", closedIssuesCount);
+        outState.putInt("openedIssuesCount", openedIssuesCount);
 
-	@Override
-	public String tag() {
-		return TextUtils.isEmpty(repoName) ? "Repository" : repoName;
-	}
+        if (issues != null && !issues.isEmpty())
+            outState.putParcelableArrayList("issues", issues);
+        if (pullRequests != null && !pullRequests.isEmpty())
+            outState.putParcelableArrayList("pullRequests", pullRequests);
+    }
 
-	private void loadRepositoryWithReactor(final String ownerName, final String repoName) {
-		getModel().loadRepositoryDetailWithReactor(ownerName, repoName)
-				.subscribeOn(Schedulers.io())
-				.doOnSubscribe(new Action0() {
-					@Override
-					public void call() {
-						getUIView().showEmptyView();
-						CircleProgressDialog.showLoadingDialog(getAndroidContext());
-					}
-				})
-				.subscribeOn(AndroidSchedulers.mainThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<Repo>() {
-					           @Override
-					           public void call(Repo repository) {
-						           RepositoryFragment.this.repo = repository;
-						           if (repository != null) {
-							           getUIView().hideEmptyView();
-							           getUIView().showDetail(repository);
-							           loadMoreInfoWithReactor(repository);
-                                   } else {
-							           getUIView().showEmptyView();
-						           }
+    @Override public void onRestoreState(Bundle savedInstanceState)
+    {
+        repo = savedInstanceState.getParcelable("repo");
+        content = savedInstanceState.getParcelable("content");
 
-						           CircleProgressDialog.hideLoadingDialog();
-					           }
-				           },
-						new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								CircleProgressDialog.hideLoadingDialog();
-								getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
-							}
-						});
-	}
+        closedPullsCount = savedInstanceState.getInt("closedPullsCount");
+        openedPullsCount = savedInstanceState.getInt("openedPullsCount");
+        closedIssuesCount = savedInstanceState.getInt("closedIssuesCount");
+        openedIssuesCount = savedInstanceState.getInt("openedIssuesCount");
 
-	private void loadMoreInfoWithReactor(Repo repo) {
-		loadReadMeFileWithReactor(repo);
-		loadPulseInPastWeekWithReactor(repo);
-		loadRecentIssuesWithReactor(repo);
-		loadRecentPullRequestsWithReactor(repo);
-		AccountModel accountModel = getMainController().getModelFactory()
-				.getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
-		getUIView().showNotifications(accountModel.isSignIn(), "");
-	}
+        issues = savedInstanceState.getParcelableArrayList("issues");
+        pullRequests = savedInstanceState.getParcelableArrayList("pullRequests");
 
-	private void loadReadMeFileWithReactor(Repo repo) {
-		if (!TextUtils.isEmpty(repo.contents_url)) {
-			getModel().loadReadmeWithReactor(repo.owner.login, repo.name)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Action1<Content>() {
-						@Override
-						public void call(Content content) {
-							RepositoryFragment.this.content = content;
-							getUIView().showReadme(content);
-						}
-					}, new Action1<Throwable>() {
-						@Override
-						public void call(Throwable throwable) {
-							throwable.printStackTrace();
-						}
-					});
-		}
-	}
+        getUIView().showDetail(repo);
+        getUIView().showReadme(content);
+        getUIView().showPulse(closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount);
+        getUIView().showIssues(issues);
+        getUIView().showPullRequests(pullRequests);
+    }
 
-	private void loadPulseInPastWeekWithReactor(final Repo repo) {
-		Observable<Integer> mergedPullsObservable = getModel().loadMergedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
-		Observable<Integer> proposedPullsObservable = getModel().loadProposedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+    @Override public String tag()
+    {
+        return TextUtils.isEmpty(repoName) ? "Repository" : repoName;
+    }
 
-		Observable<Integer> closedIssuesObservable = getModel().loadClosedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
-		Observable<Integer> openedIssuesObservable = getModel().loadCreatedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
-		Observable.combineLatest(mergedPullsObservable, proposedPullsObservable,
-				closedIssuesObservable, openedIssuesObservable,
-				new Func4<Integer, Integer, Integer, Integer, Integer[]>() {
-					@Override
-					public Integer[] call(Integer closedPullsCount, Integer openedPullsCount,
-					                      Integer closedIssuesCount, Integer openedIssuesCount) {
-						RepositoryFragment.this.closedPullsCount = closedPullsCount;
-						RepositoryFragment.this.openedPullsCount = openedPullsCount;
-						RepositoryFragment.this.closedIssuesCount = closedIssuesCount;
-						RepositoryFragment.this.openedIssuesCount = openedIssuesCount;
-						return new Integer[]{closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount};
-					}
-				}).subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<Integer[]>() {
-					@Override
-					public void call(Integer[] counts) {
-						getUIView().showPulse(counts[0], counts[1], counts[2], counts[3]);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						getUIView().showPulse(0, 0, 0, 0);
-					}
-				});
-	}
+    @SuppressLint ("CheckResult") private void loadRepositoryWithReactor(final String ownerName, final String repoName)
+    {
+        getModel().loadRepositoryDetailWithReactor(ownerName, repoName).subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Consumer<Disposable>()
+                {
+                    @Override public void accept(Disposable disposable)
+                    {
+                        getUIView().showEmptyView();
+                        CircleProgressDialog.showLoadingDialog(getAndroidContext());
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Repo>()
+                {
+                    @Override public void accept(Repo repository)
+                    {
+                        RepositoryFragment.this.repo = repository;
+                        if (repository != null)
+                        {
+                            getUIView().hideEmptyView();
+                            getUIView().showDetail(repository);
+                            loadMoreInfoWithReactor(repository);
+                        }
+                        else
+                        {
+                            getUIView().showEmptyView();
+                        }
 
-	private void loadRecentIssuesWithReactor(Repo repo) {
-		getModel().loadRecentIssuesWithReactor(repo.owner.login, repo.name)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<List<Issue>>() {
-					@Override
-					public void call(List<Issue> issues) {
-						RepositoryFragment.this.issues = (ArrayList<Issue>) issues;
-						getUIView().showIssues(issues);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						getUIView().showIssues(null);
-						throwable.printStackTrace();
-					}
-				});
-	}
+                        CircleProgressDialog.hideLoadingDialog();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override public void accept(Throwable throwable)
+                    {
+                        CircleProgressDialog.hideLoadingDialog();
+                        getUIView().showErrorView(
+                                ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
+                    }
+                });
+    }
 
-	private void loadRecentPullRequestsWithReactor(Repo repo) {
-		getModel().loadRecentPullsWithReactor(repo.owner.login, repo.name)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<List<Issue>>() {
-					@Override
-					public void call(List<Issue> pullRequests) {
-						RepositoryFragment.this.pullRequests = (ArrayList<Issue>) pullRequests;
-						getUIView().showPullRequests(pullRequests);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						getUIView().showPullRequests(null);
-						throwable.printStackTrace();
-					}
-				});
-	}
+    private void loadMoreInfoWithReactor(Repo repo)
+    {
+        loadReadMeFileWithReactor(repo);
+        loadPulseInPastWeekWithReactor(repo);
+        loadRecentIssuesWithReactor(repo);
+        loadRecentPullRequestsWithReactor(repo);
+        AccountModel accountModel = getMainController().getModelFactory()
+                .getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController());
+        getUIView().showNotifications(accountModel.isSignIn(), "");
+    }
+
+    @SuppressLint ("CheckResult") private void loadReadMeFileWithReactor(Repo repo)
+    {
+        if (!TextUtils.isEmpty(repo.contents_url))
+        {
+            getModel().loadReadmeWithReactor(repo.owner.login, repo.name).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Content>()
+                    {
+                        @Override public void accept(Content content)
+                        {
+                            RepositoryFragment.this.content = content;
+                            getUIView().showReadme(content);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override public void accept(Throwable throwable)
+                        {
+                            throwable.printStackTrace();
+                        }
+                    });
+        }
+    }
+
+    @SuppressLint ("CheckResult") private void loadPulseInPastWeekWithReactor(final Repo repo)
+    {
+        Observable<Integer> mergedPullsObservable =
+                getModel().loadMergedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<Integer> proposedPullsObservable =
+                getModel().loadProposedPullsInPastWeekWithReactor(repo.owner.login, repo.name);
+
+        Observable<Integer> closedIssuesObservable =
+                getModel().loadClosedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable<Integer> openedIssuesObservable =
+                getModel().loadCreatedIssuesInPastWeekWithReactor(repo.owner.login, repo.name);
+        Observable.combineLatest(mergedPullsObservable, proposedPullsObservable, closedIssuesObservable,
+                openedIssuesObservable, new Function4<Integer, Integer, Integer, Integer, Integer[]>()
+                {
+
+                    @Override public Integer[] apply(Integer closedPullsCount, Integer openedPullsCount,
+                            Integer closedIssuesCount, Integer openedIssuesCount)
+                    {
+                        RepositoryFragment.this.closedPullsCount = closedPullsCount;
+                        RepositoryFragment.this.openedPullsCount = openedPullsCount;
+                        RepositoryFragment.this.closedIssuesCount = closedIssuesCount;
+                        RepositoryFragment.this.openedIssuesCount = openedIssuesCount;
+                        return new Integer[] {closedPullsCount, openedPullsCount, closedIssuesCount, openedIssuesCount};
+                    }
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer[]>()
+                {
+                    @Override public void accept(Integer[] counts)
+                    {
+                        getUIView().showPulse(counts[0], counts[1], counts[2], counts[3]);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override public void accept(Throwable throwable)
+                    {
+
+                        getUIView().showPulse(0, 0, 0, 0);
+                    }
+                });
+    }
+
+    @SuppressLint ("CheckResult") private void loadRecentIssuesWithReactor(Repo repo)
+    {
+        getModel().loadRecentIssuesWithReactor(repo.owner.login, repo.name).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Issue>>()
+        {
+            @Override public void accept(List<Issue> issues)
+            {
+                RepositoryFragment.this.issues = (ArrayList<Issue>) issues;
+                getUIView().showIssues(issues);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override public void accept(Throwable throwable)
+            {
+                getUIView().showIssues(null);
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+    @SuppressLint ("CheckResult") private void loadRecentPullRequestsWithReactor(Repo repo)
+    {
+        getModel().loadRecentPullsWithReactor(repo.owner.login, repo.name).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Issue>>()
+        {
+            @Override public void accept(List<Issue> pullRequests)
+            {
+                RepositoryFragment.this.pullRequests = (ArrayList<Issue>) pullRequests;
+                getUIView().showPullRequests(pullRequests);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override public void accept(Throwable throwable)
+            {
+                getUIView().showPullRequests(null);
+                throwable.printStackTrace();
+            }
+        });
+    }
 }
