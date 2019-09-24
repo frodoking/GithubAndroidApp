@@ -1,5 +1,6 @@
 package com.frodo.github.business.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,15 +12,14 @@ import com.frodo.app.android.ui.fragment.StatedFragment;
 import com.frodo.github.bean.dto.response.GithubEvent;
 import com.frodo.github.view.CircleProgressDialog;
 import com.frodo.github.view.ViewProvider;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by frodo on 16/6/10.
@@ -54,6 +54,7 @@ public class EventsFragment extends StatedFragment<EventsView, EventsModel> {
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
 	}
 
+	@SuppressLint ("CheckResult")
 	@Override
 	public void onFirstTimeLaunched() {
 		Bundle bundle = getArguments();
@@ -77,27 +78,26 @@ public class EventsFragment extends StatedFragment<EventsView, EventsModel> {
 
 				if (observable != null) {
 					observable.subscribeOn(Schedulers.io())
-							.doOnSubscribe(new Action0() {
-								@Override
-								public void call() {
+							.doOnSubscribe(new Consumer<Disposable>() {
+								@Override public void accept(Disposable disposable) throws Exception
+								{
 									getUIView().showEmptyView();
 									CircleProgressDialog.showLoadingDialog(getAndroidContext());
 								}
 							})
-							.subscribeOn(AndroidSchedulers.mainThread())
 							.observeOn(AndroidSchedulers.mainThread())
-							.subscribe(new Action1<List<GithubEvent>>() {
-								           @Override
-								           public void call(List<GithubEvent> events) {
-									           stateContents = events;
-									           CircleProgressDialog.hideLoadingDialog();
-									           getUIView().hideEmptyView();
-									           getUIView().showDetail(events);
-								           }
+							.subscribe(new Consumer<List<GithubEvent>>() {
+										   @Override public void accept(List<GithubEvent> events)
+										   {
+											   stateContents = events;
+											   CircleProgressDialog.hideLoadingDialog();
+											   getUIView().hideEmptyView();
+											   getUIView().showDetail(events);
+										   }
 							           },
-									new Action1<Throwable>() {
-										@Override
-										public void call(Throwable throwable) {
+									new Consumer<Throwable>() {
+										@Override public void accept(Throwable throwable)
+										{
 											CircleProgressDialog.hideLoadingDialog();
 											getUIView().showErrorView(ViewProvider.handleError(getMainController().getConfig().isDebug(), throwable));
 										}
