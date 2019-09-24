@@ -34,25 +34,32 @@ android {
             shrinkResources false
         }
     }
+    flavorDimensions "api", "mode"
     productFlavors {
-        google{}
-        snapshots{}
+        google {
+            dimension "api"
+            versionCode 10000 + android.defaultConfig.versionCode
+            versionNameSuffix "-minApi18"
+        }
+        snapshots {
+            dimension "mode"
+            versionCode 20000 + android.defaultConfig.versionCode
+            versionNameSuffix "-minApi21"
+        }
     }
 }
 
 dependencies {
-    compile 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.3'
 
-    compile "com.github.frodoking:app-architecture-android:1.2.9-SNAPSHOT"
-    compile "com.facebook.fresco:animated-gif:0.10.0"
-    compile project(':websource')
+    implementation "com.github.frodoking:app-architecture-android:1.5"
+    implementation "com.facebook.fresco:animated-gif:2.0.0"
+    implementation project(':websource')
 
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'us.feras.mdv:markdownview:1.1.0'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'us.feras.mdv:markdownview:1.1.0'
 
-    compile 'com.google.firebase:firebase-ads:9.0.2'
+    implementation 'com.google.firebase:firebase-ads:18.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-
