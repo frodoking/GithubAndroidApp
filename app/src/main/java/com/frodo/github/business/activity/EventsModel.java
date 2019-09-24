@@ -2,7 +2,6 @@ package com.frodo.github.business.activity;
 
 import android.support.v4.util.Pair;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.frodo.app.android.core.task.AndroidFetchNetworkDataTask;
 import com.frodo.app.android.core.toolbox.JsonConverter;
 import com.frodo.app.framework.controller.AbstractModel;
@@ -16,10 +15,13 @@ import com.frodo.github.common.Path;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * Created by frodo on 16/6/10.
@@ -41,25 +43,25 @@ public class EventsModel extends AbstractModel {
 	}
 
 	private Observable<List<GithubEvent>> loadEventsWithReactor(final String path) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
+		return Observable.create(new ObservableOnSubscribe<Response>() {
+			@Override public void subscribe(ObservableEmitter<Response> emitter)
+			{
 				Request request = new Request.Builder()
 						.method("GET")
 						.relativeUrl(path)
 						.build();
 				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
 				networkTransport.setAPIUrl(Path.HOST_GITHUB);
-				fetchReceivedEventsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
+				fetchReceivedEventsNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
 				getMainController().getBackgroundExecutor().execute(fetchReceivedEventsNetworkDataTask);
 			}
-		}).flatMap(new Func1<Response, Observable<List<GithubEvent>>>() {
-			@Override
-			public Observable<List<GithubEvent>> call(Response response) {
+		}).flatMap(new Function<Response, ObservableSource<List<GithubEvent>>>() {
+			@Override public ObservableSource<List<GithubEvent>> apply(Response response)
+			{
 				ResponseBody rb = (ResponseBody) response.getBody();
 				try {
-					List<GithubEvent> events = JsonConverter.convert(rb.string(), new TypeReference<List<GithubEvent>>() {
-					});
+					List<GithubEvent> events = JsonConverter.convert(rb.string(), new TypeToken<List<GithubEvent>>() {
+					}.getType());
 					return Observable.just(events);
 				} catch (IOException e) {
 					return Observable.error(e);
