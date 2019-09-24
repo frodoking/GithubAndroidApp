@@ -12,46 +12,55 @@ import com.frodo.github.common.Path;
 
 import java.io.IOException;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * Created by frodo on 2016/5/3.
  */
-public class ShowCaseDetailModel extends AbstractModel {
+public class ShowCaseDetailModel extends AbstractModel
+{
 
-	private AndroidFetchNetworkDataTask fetchShowCaseDetailNetworkDataTask;
+    private AndroidFetchNetworkDataTask fetchShowCaseDetailNetworkDataTask;
 
-	public ShowCaseDetailModel(MainController controller) {
-		super(controller);
-	}
+    public ShowCaseDetailModel(MainController controller)
+    {
+        super(controller);
+    }
 
-	public Observable<ShowCase> loadShowCaseDetailWithReactor(final String slug) {
-		return Observable.create(new Observable.OnSubscribe<Response>() {
-			@Override
-			public void call(Subscriber<? super Response> subscriber) {
-				Request request = new Request.Builder()
-						.method("GET")
-						.relativeUrl(String.format("%s/%s", Path.Explore.SHOWCASES, slug))
-						.build();
-				final NetworkTransport networkTransport = getMainController().getNetworkTransport();
-				networkTransport.setAPIUrl(Path.HOST_CODEHUB);
-				fetchShowCaseDetailNetworkDataTask = new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, subscriber);
-				getMainController().getBackgroundExecutor().execute(fetchShowCaseDetailNetworkDataTask);
-			}
-		}).flatMap(new Func1<Response, Observable<ShowCase>>() {
-			@Override
-			public Observable<ShowCase> call(Response response) {
-				ResponseBody rb = (ResponseBody) response.getBody();
-				try {
-					ShowCase showCase = JsonConverter.convert(rb.string(), ShowCase.class);
-					return Observable.just(showCase);
-				} catch (IOException e) {
-					return Observable.error(e);
-				}
-			}
-		});
-	}
+    public Observable<ShowCase> loadShowCaseDetailWithReactor(final String slug)
+    {
+        return Observable.create(new ObservableOnSubscribe<Response>()
+        {
+            @Override public void subscribe(ObservableEmitter<Response> emitter)
+            {
+                Request request = new Request.Builder().method("GET")
+                        .relativeUrl(String.format("%s/%s", Path.Explore.SHOWCASES, slug)).build();
+                final NetworkTransport networkTransport = getMainController().getNetworkTransport();
+                networkTransport.setAPIUrl(Path.HOST_CODEHUB);
+                fetchShowCaseDetailNetworkDataTask =
+                        new AndroidFetchNetworkDataTask(getMainController().getNetworkTransport(), request, emitter);
+                getMainController().getBackgroundExecutor().execute(fetchShowCaseDetailNetworkDataTask);
+            }
+        }).flatMap(new Function<Response, ObservableSource<ShowCase>>()
+        {
+            @Override public ObservableSource<ShowCase> apply(Response response)
+            {
+                ResponseBody rb = (ResponseBody) response.getBody();
+                try
+                {
+                    ShowCase showCase = JsonConverter.convert(rb.string(), ShowCase.class);
+                    return Observable.just(showCase);
+                }
+                catch (IOException e)
+                {
+                    return Observable.error(e);
+                }
+            }
+        });
+    }
 }
