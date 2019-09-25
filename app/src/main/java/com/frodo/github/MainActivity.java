@@ -146,7 +146,8 @@ public class MainActivity extends FragmentContainerActivity
                 }
                 else
                 {
-                    FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
+                    // FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
+                    FragmentScheduler.doDirect(MainActivity.this, FragmentScheduler.schema() + "/login");
                 }
             }
         });
