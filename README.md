@@ -1,6 +1,6 @@
-## GithubAndroidClient 
+## GithubAndroidApp
 
-This project is a Github client on Android platform, This App drawing  is based on the design of Github Web page(H5).
+This project is a Github application on Android platform, This App drawing  is based on the design of Github Web page(H5).
 
 ## Feature
 1. account (Auth2.0/Sign in/Sign out)
