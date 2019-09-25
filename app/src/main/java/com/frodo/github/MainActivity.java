@@ -173,7 +173,8 @@ public class MainActivity extends FragmentContainerActivity
                         FragmentScheduler.nextFragment(MainActivity.this, NotificationsFragment.class);
                         break;
                     case R.id.action_sign_in:
-                        FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
+                        // FragmentScheduler.nextFragment(MainActivity.this, LoginFragment.class);
+                        FragmentScheduler.doDirect(MainActivity.this, FragmentScheduler.schema() + "/login");
                         break;
                     case R.id.action_sign_out:
                         onLogout();
