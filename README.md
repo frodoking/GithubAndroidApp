@@ -35,13 +35,13 @@ Android studio 2.0
 ## App Master Drawing
 <img src="http://frodoking.github.io/img/github-client/github-home.png" width="204"/>&nbsp;
 <img src="http://frodoking.github.io/img/github-client/github-drawer.png" width="204"/>&nbsp;
-<img src="http://frodoking.github.io/img/github-client/github-profile.png" width="160" height="284" align='left'/>
-<img src="http://frodoking.github.io/img/github-client/github-notifications.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-issues.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-events.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-explore.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-showcases.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-repo.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-repo-issues.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-repo-pulse.png" width="160" height="284" align='left'>
-<img src="http://frodoking.github.io/img/github-client/github-repo-contents.png" width="160" height="284" align='left'>
+<img src="http://frodoking.github.io/img/github-client/github-profile.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-notifications.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-issues.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-events.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-explore.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-showcases.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-repo.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-repo-issues.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-repo-pulse.png" width="204"/>&nbsp;
+<img src="http://frodoking.github.io/img/github-client/github-repo-contents.png" width="204"/>
