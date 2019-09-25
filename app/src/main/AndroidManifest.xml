@@ -24,6 +24,28 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        
+        <activity
+                android:name="com.frodo.app.android.ui.activity.RedirectActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="redirect"
+                tools:node="merge">
+            <intent-filter tools:node="replace">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:scheme="github_android_app"
+                        android:host="redirect"
+                        tools:replace="scheme"/>
+            </intent-filter>
+            <meta-data
+                    android:name="REDIRECT_SCHEME_KEY"
+                    android:value="github_android_app"
+                    tools:replace="value" />
+        </activity>
 
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
