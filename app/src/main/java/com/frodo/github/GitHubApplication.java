@@ -11,6 +11,7 @@ import com.frodo.app.android.core.config.AndroidConfig;
 import com.frodo.app.android.core.log.AndroidLogCollectorSystem;
 import com.frodo.app.android.core.network.AndroidNetworkSystem;
 import com.frodo.app.android.core.toolbox.ResourceManager;
+import com.frodo.app.android.ui.FragmentScheduler;
 import com.frodo.app.framework.config.Configuration;
 import com.frodo.app.framework.config.Environment;
 import com.frodo.app.framework.controller.IController;
@@ -26,6 +27,9 @@ import com.frodo.app.framework.theme.Theme;
 import com.frodo.github.business.ServerConfigurationModel;
 import com.frodo.github.business.account.AccountModel;
 import com.google.android.gms.ads.MobileAds;
+
+
+import com.frodo.github.business.account.LoginFragment;
 
 import java.io.File;
 import java.util.List;
@@ -125,6 +129,8 @@ public class GitHubApplication extends Application implements ApplicationDelegat
 				.getModelFactory()
 				.getOrCreateIfAbsent(AccountModel.TAG, AccountModel.class, getMainController())
 				.initBusiness();
+		
+		FragmentScheduler.registerWithDefaultSchemaHost("login", LoginFragment.class);
 	}
 
 	@Override
